@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Founder Atlas — Map (Residential & Traditional)</title>
+<title>Founder LAB MAP — Map (Residential & Traditional)</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,6 +27,11 @@
   #hero-canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.55}
   .hero-content{position:relative;z-index:2}
   .kicker{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--a2);font-weight:600;margin-bottom:8px}
+  .viewnav{display:flex;gap:6px;margin-bottom:10px}
+  .viewnav a{flex:1;text-align:center;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:11px;
+    padding:6px 8px;border-radius:9px;border:1px solid var(--line2);color:var(--muted);background:rgba(8,10,22,.5);transition:.15s}
+  .viewnav a:hover{color:var(--text);border-color:var(--a1)}
+  .viewnav a.active{background:var(--grad);color:#08101f;border-color:transparent}
   h1{font-family:'Space Grotesk',sans-serif;font-size:19px;line-height:1.18;margin:0 0 8px;font-weight:700;
     background:linear-gradient(100deg,#fff 10%,#c9c2ff 55%,#9be9ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
   .sub{font-size:11.5px;color:var(--muted);line-height:1.5;max-width:300px}
@@ -132,9 +137,14 @@
     <div class="hero">
       <canvas id="hero-canvas"></canvas>
       <div class="hero-content">
-        <div class="kicker">Founder Atlas · 2026</div>
+        <div class="kicker">Founder LAB MAP · 2026</div>
+        <nav class="viewnav" aria-label="Views">
+          <a href="/dashboard" >Dashboard</a>
+          <a href="/" class="active">Map</a>
+          <a href="/startup-programs-globe">Globe</a>
+        </nav>
         <h1 id="title">Residencies, Hacker Houses &amp; Startup Campuses</h1>
-        <div class="sub" id="subtitle">A living map of founder programs worldwide. Click a pin or list item for details. Status as of June 2026 — verify on each site.</div>
+        <div class="sub" id="subtitle">Where founders find living &amp; building support programs worldwide. Click a pin or list item for details. Status as of June 2026 — verify on each site.</div>
       </div>
     </div>
     <div class="toggle" id="toggle">

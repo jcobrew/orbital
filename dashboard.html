@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Founder LAB MAP — Dashboard (agent-friendly directory)</title>
+<meta name="description" content="Searchable, URL-navigable directory of founder living & building support programs — residencies, hacker houses, campuses, accelerators & incubators. Optimized for AI agents: JSON API, llms.txt, deep links and structured data." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg0:#070912; --panel:rgba(18,22,46,.72);
+    --line:rgba(150,160,220,.14); --line2:rgba(150,160,220,.22);
+    --text:#eef1ff; --muted:#9aa3c8; --a1:#7c5cff; --a2:#19d3ff;
+    --grad:linear-gradient(120deg,#7c5cff 0%,#19d3ff 100%);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%;font-family:'Inter',system-ui,sans-serif;color:var(--text);
+    background:radial-gradient(1200px 700px at 12% -8%,rgba(124,92,255,.20),transparent 60%),
+      radial-gradient(1000px 700px at 105% 110%,rgba(25,211,255,.16),transparent 55%),var(--bg0)}
+  a{color:var(--a2)}
+  header.top{padding:22px 28px 0;max-width:1400px;margin:0 auto}
+  .kicker{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--a2);font-weight:600;margin-bottom:8px}
+  .viewnav{display:flex;gap:6px;margin-bottom:14px;max-width:420px}
+  .viewnav a{flex:1;text-align:center;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12px;
+    padding:7px 8px;border-radius:9px;border:1px solid var(--line2);color:var(--muted);background:rgba(8,10,22,.5);transition:.15s}
+  .viewnav a:hover{color:var(--text);border-color:var(--a1)}
+  .viewnav a.active{background:var(--grad);color:#08101f;border-color:transparent}
+  h1{font-family:'Space Grotesk',sans-serif;font-size:26px;line-height:1.15;margin:0 0 8px;font-weight:700;
+    background:linear-gradient(100deg,#fff 10%,#c9c2ff 55%,#9be9ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{font-size:13px;color:var(--muted);line-height:1.5;max-width:680px;margin-bottom:6px}
+  .sub a{font-weight:600}
+  main{padding:18px 28px 60px;max-width:1400px;margin:0 auto}
+  .toggle{display:inline-flex;gap:4px;padding:4px;border-radius:13px;border:1px solid var(--line2);background:rgba(8,10,22,.5);margin-bottom:14px}
+  .toggle button{border:none;background:none;color:var(--muted);font-family:'Space Grotesk',sans-serif;font-weight:600;
+    font-size:12.5px;padding:8px 16px;border-radius:10px;cursor:pointer;transition:.16s}
+  .toggle button.active{background:var(--grad);color:#08101f}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+  .field{position:relative;flex:1;min-width:240px}
+  .field svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);opacity:.5}
+  input[type=text]{width:100%;padding:10px 12px 10px 34px;border-radius:11px;border:1px solid var(--line2);
+    background:rgba(8,10,22,.6);color:var(--text);font-size:13px;font-family:inherit;transition:.18s}
+  input[type=text]:focus{outline:none;border-color:var(--a1);box-shadow:0 0 0 3px rgba(124,92,255,.18)}
+  select{padding:9px 30px 9px 11px;border-radius:11px;border:1px solid var(--line2);
+    background:rgba(8,10,22,.6);color:var(--text);font-size:12.5px;font-family:inherit;cursor:pointer;appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239aa3c8'><path d='M2 4l4 4 4-4z'/></svg>");
+    background-repeat:no-repeat;background-position:right 12px center}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:11px;border:1px solid var(--line2);
+    background:rgba(8,10,22,.6);color:var(--text);font-size:12.5px;font-weight:600;font-family:inherit;cursor:pointer;transition:.15s;text-decoration:none}
+  .btn:hover{border-color:var(--a1)}
+  .btn.primary{background:var(--grad);color:#08101f;border-color:transparent}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:20px;cursor:pointer;
+    font-size:11.5px;font-weight:600;border:1px solid var(--line2);background:rgba(8,10,22,.4);color:var(--muted);transition:.16s;user-select:none}
+  .chip:hover{color:var(--text);transform:translateY(-1px)}
+  .chip.active{color:#08101f;border-color:transparent}
+  .chip .k{width:8px;height:8px;border-radius:50%}
+  .count{font-size:11.5px;color:var(--muted);margin-bottom:10px;letter-spacing:.02em;font-weight:600}
+  .count code{background:rgba(8,10,22,.6);border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:var(--a2);font-size:11px}
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:rgba(10,13,28,.55)}
+  table{border-collapse:collapse;width:100%;font-size:12.5px}
+  thead th{position:sticky;top:0;background:rgba(14,18,40,.96);backdrop-filter:blur(6px);text-align:left;
+    font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);
+    font-weight:600;padding:11px 14px;border-bottom:1px solid var(--line2);white-space:nowrap;cursor:pointer;user-select:none}
+  thead th:hover{color:var(--text)}
+  thead th .ar{opacity:.5;font-size:9px;margin-left:4px}
+  tbody td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+  tbody tr:hover{background:rgba(124,92,255,.08)}
+  .nm{font-weight:600;font-size:13px}
+  .nm a{color:var(--text);text-decoration:none}
+  .nm a:hover{color:var(--a2)}
+  .muted{color:var(--muted)}
+  .ds{font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:700;padding:2px 7px;border-radius:6px;
+    border:1px solid var(--line2);color:var(--muted)}
+  .ds.residential{color:#9be9ff;border-color:rgba(155,233,255,.4)}
+  .ds.traditional{color:#c9c2ff;border-color:rgba(201,194,255,.4)}
+  .badge{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;
+    color:#08101f;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}
+  .focus{max-width:280px;color:var(--muted);font-size:11.5px}
+  .visit{color:var(--a2);text-decoration:none;font-weight:600;white-space:nowrap}
+  .empty{padding:40px;text-align:center;color:var(--muted)}
+  .err{padding:30px;text-align:center;color:#ff9a9a}
+  footer{max-width:1400px;margin:0 auto;padding:0 28px 50px;color:var(--muted);font-size:12px;line-height:1.6}
+  footer code{background:rgba(8,10,22,.6);border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:var(--a2)}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--grad);color:#08101f;
+    font-weight:700;font-size:12.5px;padding:10px 18px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:50}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="kicker">Founder LAB MAP · Dashboard · 2026</div>
+  <nav class="viewnav" aria-label="Views">
+    <a href="/dashboard" class="active" aria-current="page">Dashboard</a>
+    <a href="/">Map</a>
+    <a href="/startup-programs-globe">Globe</a>
+  </nav>
+  <h1>The founder programs directory</h1>
+  <p class="sub">Where founders find all kinds of <strong>living and building</strong> support programs worldwide — searchable like a PhD portal. Built for agentic navigation: drive every filter by URL, share deep links, or pull the data straight from the <a href="/api/programs.json">JSON API</a> and <a href="/llms.txt">llms.txt</a>. Status as of June 2026 — verify on each site.</p>
+</header>
+
+<main>
+  <div class="toggle" id="toggle" role="tablist" aria-label="Dataset">
+    <button data-k="all" role="tab">All</button>
+    <button data-k="residential" role="tab">Residential</button>
+    <button data-k="traditional" role="tab">Traditional</button>
+  </div>
+
+  <div class="controls">
+    <div class="field">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9aa3c8" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="search" type="text" aria-label="Search programs" placeholder="Search name, city, country, focus, operator…" />
+    </div>
+    <select id="fType" aria-label="Filter by type"><option value="">All types</option></select>
+    <select id="fCountry" aria-label="Filter by country"><option value="">All countries</option></select>
+    <button class="btn" id="copyLink" title="Copy a link to this exact filtered view">🔗 Copy link</button>
+    <a class="btn" id="apiLink" href="/api/programs.json">{ } API</a>
+  </div>
+
+  <div class="chips" id="statusChips" aria-label="Filter by recruiting status"></div>
+  <div class="count" id="count"></div>
+
+  <div class="tablewrap">
+    <table aria-label="Founder programs">
+      <thead>
+        <tr id="headrow"></tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+</main>
+
+<footer>
+  <p><strong>For agents:</strong> this page is fully URL-navigable. Compose filters with
+  <code>?dataset=all|residential|traditional&amp;q=…&amp;type=…&amp;country=…&amp;status=…&amp;focus=…&amp;sort=…</code>.
+  The canonical machine data is <code>/api/programs.json</code> (unified, with facets); discovery lives at <code>/llms.txt</code>.
+  Each row also emits schema.org JSON-LD.</p>
+</footer>
+
+<div class="toast" id="toast">Link copied</div>
+
+<script type="application/ld+json" id="ldjson">{}</script>
+<script>
+/* ---- Shared status model (kept in sync with index.html) ---- */
+const STATUS={
+  rolling:{label:"Rolling / always open",color:"#25e0a4"},
+  open:{label:"Cohort open",color:"#4f9dff"},
+  "closing-soon":{label:"Closing soon",color:"#ffc24b"},
+  "opening-soon":{label:"Opening soon",color:"#b388ff"},
+  running:{label:"Running now",color:"#ff6fae"},
+  closed:{label:"Closed — check next cycle",color:"#707a9c"}
+};
+const STATUS_ORDER=["running","open","closing-soon","opening-soon","rolling","closed"];
+
+/* Columns: key on the program object + display label + sortable flag */
+const COLUMNS=[
+  {key:"name",label:"Program"},
+  {key:"type",label:"Type"},
+  {key:"dataset",label:"Track"},
+  {key:"city",label:"City"},
+  {key:"country",label:"Country"},
+  {key:"status",label:"Status"},
+  {key:"focus",label:"Focus"},
+  {key:"stage",label:"Stage"},
+  {key:"url",label:"Apply",sortable:false},
+];
+
+let ALL=[];                 // every program, tagged with dataset
+let PROGRAMS=[];            // active dataset slice
+const state={dataset:"all",q:"",type:"",country:"",status:"",focus:"",sort:"status",dir:1};
+
+const el=id=>document.getElementById(id);
+const searchEl=el("search"),fType=el("fType"),fCountry=el("fCountry"),
+      chipsEl=el("statusChips"),rowsEl=el("rows"),countEl=el("count"),
+      headRow=el("headrow"),toggle=el("toggle");
+
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---- URL state (deep links) ---- */
+function readURL(){
+  const u=new URLSearchParams(location.search);
+  state.dataset=["all","residential","traditional"].includes(u.get("dataset"))?u.get("dataset"):"all";
+  state.q=u.get("q")||""; state.type=u.get("type")||""; state.country=u.get("country")||"";
+  state.status=STATUS[u.get("status")]?u.get("status"):""; state.focus=u.get("focus")||"";
+  if(u.get("sort"))state.sort=u.get("sort");
+  if(u.get("dir"))state.dir=u.get("dir")==="-1"?-1:1;
+}
+function writeURL(){
+  const u=new URLSearchParams();
+  if(state.dataset!=="all")u.set("dataset",state.dataset);
+  if(state.q)u.set("q",state.q);
+  if(state.type)u.set("type",state.type);
+  if(state.country)u.set("country",state.country);
+  if(state.status)u.set("status",state.status);
+  if(state.focus)u.set("focus",state.focus);
+  if(state.sort!=="status")u.set("sort",state.sort);
+  if(state.dir!==1)u.set("dir",state.dir);
+  const qs=u.toString();
+  history.replaceState(null,"",qs?location.pathname+"?"+qs:location.pathname);
+}
+
+/* ---- Filtering (mirrors index.html passes()) ---- */
+function passes(p){
+  const q=state.q.trim().toLowerCase();
+  const hay=(p.name+p.city+p.country+p.focus+p.operator+p.type).toLowerCase();
+  return (!q||hay.includes(q))
+    && (!state.type||p.type===state.type)
+    && (!state.country||p.country===state.country)
+    && (!state.status||p.status===state.status)
+    && (!state.focus||(p.focus||"").toLowerCase().includes(state.focus.trim().toLowerCase()));
+}
+
+function activeSlice(){return state.dataset==="all"?ALL:ALL.filter(p=>p.dataset===state.dataset);}
+
+function rebuildFilters(){
+  const cur=PROGRAMS;
+  fType.innerHTML='<option value="">All types</option>';
+  [...new Set(cur.map(p=>p.type))].sort().forEach(t=>{const o=document.createElement("option");o.value=t;o.textContent=t;o.selected=t===state.type;fType.appendChild(o);});
+  fCountry.innerHTML='<option value="">All countries</option>';
+  [...new Set(cur.map(p=>p.country))].sort().forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;o.selected=c===state.country;fCountry.appendChild(o);});
+  // selected filter values may not exist in the new dataset — clear if so
+  if(state.type&&!cur.some(p=>p.type===state.type)){state.type="";fType.value="";}
+  if(state.country&&!cur.some(p=>p.country===state.country)){state.country="";fCountry.value="";}
+}
+
+function buildChips(){
+  chipsEl.innerHTML="";
+  STATUS_ORDER.forEach(k=>{
+    const s=STATUS[k],n=PROGRAMS.filter(p=>p.status===k).length;if(!n)return;
+    const c=document.createElement("div");c.className="chip"+(state.status===k?" active":"");c.dataset.k=k;
+    if(state.status===k)c.style.background=s.color;
+    c.innerHTML=`<span class="k" style="background:${s.color}"></span>${s.label.replace(" — check next cycle","")} <span style="opacity:.6">${n}</span>`;
+    c.onclick=()=>{state.status=state.status===k?"":k;writeURL();render();buildChips();};
+    chipsEl.appendChild(c);
+  });
+}
+
+function buildHead(){
+  headRow.innerHTML="";
+  COLUMNS.forEach(col=>{
+    const th=document.createElement("th");
+    const arrow=state.sort===col.key?`<span class="ar">${state.dir===1?"▲":"▼"}</span>`:"";
+    th.innerHTML=col.label+arrow;
+    th.setAttribute("scope","col");
+    if(col.sortable!==false){
+      th.onclick=()=>{if(state.sort===col.key)state.dir*=-1;else{state.sort=col.key;state.dir=1;}writeURL();render();};
+    }else th.style.cursor="default";
+    headRow.appendChild(th);
+  });
+}
+
+function sortFn(a,b){
+  const k=state.sort;
+  let av,bv;
+  if(k==="status"){av=STATUS_ORDER.indexOf(a.status);bv=STATUS_ORDER.indexOf(b.status);}
+  else{av=(a[k]||"").toString().toLowerCase();bv=(b[k]||"").toString().toLowerCase();}
+  if(av<bv)return -1*state.dir;
+  if(av>bv)return 1*state.dir;
+  return a.name.localeCompare(b.name);
+}
+
+function render(){
+  const list=PROGRAMS.filter(passes).sort(sortFn);
+  rowsEl.innerHTML="";
+  if(!list.length){
+    rowsEl.innerHTML=`<tr><td class="empty" colspan="${COLUMNS.length}">No programs match these filters.</td></tr>`;
+  }else{
+    const frag=document.createDocumentFragment();
+    list.forEach(p=>{
+      const s=STATUS[p.status]||{label:p.status,color:"#999"};
+      const tr=document.createElement("tr");
+      tr.innerHTML=`
+        <td class="nm"><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.name)}</a>
+          ${p.operator?`<div class="muted" style="font-size:11px;font-weight:400">${esc(p.operator)}</div>`:""}</td>
+        <td class="muted">${esc(p.type)}</td>
+        <td><span class="ds ${p.dataset}">${esc(p.dataset)}</span></td>
+        <td>${esc(p.city)}</td>
+        <td>${esc(p.country)}</td>
+        <td><span class="badge" style="background:${s.color}" title="${esc(s.label)}">${esc(s.label.replace(" — check next cycle",""))}</span></td>
+        <td class="focus">${esc(p.focus)}</td>
+        <td class="muted">${esc(p.stage)}</td>
+        <td><a class="visit" href="${esc(p.url)}" target="_blank" rel="noopener">Visit →</a></td>`;
+      frag.appendChild(tr);
+    });
+    rowsEl.appendChild(frag);
+  }
+  countEl.innerHTML=`Showing <code>${list.length}</code> of <code>${PROGRAMS.length}</code> programs`+
+    (state.dataset==="all"?"":` in the <code>${state.dataset}</code> track`);
+  updateLDJSON(list);
+}
+
+/* ---- Structured data for agents/crawlers ---- */
+function updateLDJSON(list){
+  const items=list.slice(0,200).map((p,i)=>({
+    "@type":"ListItem","position":i+1,
+    "item":{
+      "@type":"EducationalOccupationalProgram",
+      "name":p.name,"programType":p.type,"url":p.url,
+      "applicationStartDate":undefined,
+      "provider":p.operator?{"@type":"Organization","name":p.operator}:undefined,
+      "areaServed":[p.city,p.country].filter(Boolean).join(", "),
+      "occupationalCategory":p.focus,
+      "description":p.status_detail||p.highlight||undefined
+    }
+  }));
+  el("ldjson").textContent=JSON.stringify({
+    "@context":"https://schema.org","@type":"ItemList",
+    "name":"Founder LAB MAP — founder programs","numberOfItems":list.length,
+    "itemListElement":items
+  });
+}
+
+/* ---- Dataset toggle ---- */
+function setActiveToggle(){toggle.querySelectorAll("button").forEach(b=>b.classList.toggle("active",b.dataset.k===state.dataset));}
+toggle.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+  if(b.dataset.k===state.dataset)return;
+  state.dataset=b.dataset.k;state.status="";
+  PROGRAMS=activeSlice();setActiveToggle();rebuildFilters();buildChips();writeURL();render();
+});
+
+searchEl.oninput=()=>{state.q=searchEl.value;writeURL();render();};
+fType.onchange=()=>{state.type=fType.value;writeURL();buildChips();render();};
+fCountry.onchange=()=>{state.country=fCountry.value;writeURL();buildChips();render();};
+
+el("copyLink").onclick=async()=>{
+  try{await navigator.clipboard.writeText(location.href);}catch(e){}
+  const t=el("toast");t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1400);
+};
+
+async function boot(){
+  readURL();
+  try{
+    // Prefer the unified API; fall back to the two source files.
+    let programs;
+    try{
+      const api=await fetch("api/programs.json").then(r=>{if(!r.ok)throw 0;return r.json();});
+      programs=api.programs;
+    }catch(e){
+      const [res,trad]=await Promise.all([
+        fetch("startup-programs-data.json").then(r=>r.json()),
+        fetch("traditional-programs-data.json").then(r=>r.json())
+      ]);
+      programs=[...res.programs.map(p=>({dataset:"residential",...p})),
+                ...trad.programs.map(p=>({dataset:"traditional",...p}))];
+    }
+    ALL=programs;
+    PROGRAMS=activeSlice();
+    setActiveToggle();
+    searchEl.value=state.q;
+    buildHead();rebuildFilters();buildChips();render();
+  }catch(e){
+    console.error("Data load failed",e);
+    rowsEl.innerHTML=`<tr><td class="err" colspan="${COLUMNS.length}">Could not load program data. Serve over HTTP (not file://) — see README.</td></tr>`;
+  }
+}
+boot();
+</script>
+</body>
+</html>
