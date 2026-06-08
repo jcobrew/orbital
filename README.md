@@ -3,7 +3,7 @@
 A living, interactive map of founder programs worldwide — residencies, hacker houses, startup
 campuses, accelerators and incubators. Built as static files (HTML + JSON), deployed on Vercel.
 
-**Live site:** _(add your Vercel URL here once deployed)_
+**Live site:** https://founder-atlas.vercel.app/
 
 ## Views
 
