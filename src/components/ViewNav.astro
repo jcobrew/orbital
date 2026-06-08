@@ -1,0 +1,27 @@
+---
+// Cross-view nav shared by all pages. `current` highlights the active view.
+interface Props {
+  current: 'dashboard' | 'map' | 'globe';
+}
+const { current } = Astro.props;
+
+const links = [
+  { key: 'dashboard', href: '/dashboard', label: 'Dashboard' },
+  { key: 'map', href: '/', label: 'Map' },
+  { key: 'globe', href: '/startup-programs-globe', label: 'Globe' },
+] as const;
+---
+
+<nav class="viewnav" aria-label="Views">
+  {
+    links.map((l) => (
+      <a
+        href={l.href}
+        class={current === l.key ? 'active' : ''}
+        aria-current={current === l.key ? 'page' : undefined}
+      >
+        {l.label}
+      </a>
+    ))
+  }
+</nav>

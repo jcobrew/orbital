@@ -1,0 +1,33 @@
+{
+  "name": "founder-lab-map",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/react": "^4.4.2",
+    "@nanostores/react": "^1.1.0",
+    "@tailwindcss/vite": "^4.3.0",
+    "astro": "^5.18.2",
+    "globe.gl": "^2.46.1",
+    "leaflet": "^1.9.4",
+    "motion": "^12.40.0",
+    "nanostores": "^1.3.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "tailwindcss": "^4.3.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@types/leaflet": "^1.9.21",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^6.0.3"
+  }
+}
