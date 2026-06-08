@@ -313,10 +313,12 @@ boot();
    Dense regions (lots of overlapping pins) get a zoomed-in "callout" card floating over
    open water, so they stay legible at world zoom. Cards auto-hide once you zoom in. */
 const CLUSTERS=[
-  {id:'sf', label:'SF Bay Area', bounds:[[37.20,-122.65],[37.95,-121.70]], anchor:[37.62,-122.10], offset:{dx:-340,dy:30}},
-  {id:'nyc',label:'New York',    bounds:[[40.45,-74.20],[40.95,-73.65]],  anchor:[40.71,-74.01],  offset:{dx:130, dy:20}},
-  {id:'ldn',label:'London',      bounds:[[51.25,-0.55],[51.72,0.30]],     anchor:[51.51,-0.12],   offset:{dx:-30, dy:-215}},
-  {id:'blr',label:'Bangalore',   bounds:[[12.78,77.40],[13.18,77.85]],    anchor:[12.97,77.59],   offset:{dx:-235,dy:60}},
+  // `place` is an open-ocean lat/lng where the callout card floats; `anchor` is the true
+  // location the leader line points back to. Placing cards over water keeps them off land pins.
+  {id:'sf', label:'SF Bay Area', bounds:[[37.20,-122.65],[37.95,-121.70]], anchor:[37.62,-122.10], place:[32.0,-132.0]}, // Eastern Pacific
+  {id:'nyc',label:'New York',    bounds:[[40.45,-74.20],[40.95,-73.65]],  anchor:[40.71,-74.01],  place:[39.0,-57.0]},  // North Atlantic
+  {id:'ldn',label:'London',      bounds:[[51.25,-0.55],[51.72,0.30]],     anchor:[51.51,-0.12],   place:[52.0,-40.0]},  // North Atlantic, above NYC
+  {id:'blr',label:'Bangalore',   bounds:[[12.78,77.40],[13.18,77.85]],    anchor:[12.97,77.59],   place:[3.0,80.0]},    // Indian Ocean
 ];
 const INSET_MIN_MEMBERS=3, INSET_SHOW_MAX_ZOOM=5;
 let insets=[];
@@ -380,7 +382,10 @@ function updateInsets(){
     if(!zoomOK||!anchorVisible){o.card.classList.add('hidden');return;}
     o.card.classList.remove('hidden');
     const cw=o.card.offsetWidth||190,ch=o.card.offsetHeight||178;
-    let left=ap.x+o.cfg.offset.dx,top=ap.y+o.cfg.offset.dy;
+    // Position the card over its open-ocean `place` point (centered on it); the leader still
+    // draws from `ap` (the true anchor) so the connection back to the city stays clear.
+    const pp=map.latLngToContainerPoint(o.cfg.place);
+    let left=pp.x-cw/2,top=pp.y-ch/2;
     left=Math.max(M,Math.min(left,W-cw-M));
     top=Math.max(M,Math.min(top,H-ch-M));
     o.card.style.left=left+'px';o.card.style.top=top+'px';
