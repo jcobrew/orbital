@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Founder Atlas — Map (Residential & Traditional)</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg0:#070912; --panel:rgba(18,22,46,.72);
+    --line:rgba(150,160,220,.14); --line2:rgba(150,160,220,.22);
+    --text:#eef1ff; --muted:#9aa3c8; --a1:#7c5cff; --a2:#19d3ff;
+    --grad:linear-gradient(120deg,#7c5cff 0%,#19d3ff 100%);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;font-family:'Inter',system-ui,sans-serif;color:var(--text);
+    background:radial-gradient(1200px 700px at 12% -8%,rgba(124,92,255,.20),transparent 60%),
+      radial-gradient(1000px 700px at 105% 110%,rgba(25,211,255,.16),transparent 55%),var(--bg0);overflow:hidden}
+  #app{display:flex;height:100vh}
+  #sidebar{width:360px;min-width:360px;display:flex;flex-direction:column;
+    background:var(--panel);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);
+    border-right:1px solid var(--line);position:relative;z-index:5}
+  .hero{position:relative;padding:18px 20px 12px;overflow:hidden;border-bottom:1px solid var(--line)}
+  #hero-canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.55}
+  .hero-content{position:relative;z-index:2}
+  .kicker{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--a2);font-weight:600;margin-bottom:8px}
+  h1{font-family:'Space Grotesk',sans-serif;font-size:19px;line-height:1.18;margin:0 0 8px;font-weight:700;
+    background:linear-gradient(100deg,#fff 10%,#c9c2ff 55%,#9be9ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{font-size:11.5px;color:var(--muted);line-height:1.5;max-width:300px}
+  .toggle{display:flex;gap:4px;margin:12px 20px 0;padding:4px;border-radius:13px;border:1px solid var(--line2);background:rgba(8,10,22,.5)}
+  .toggle button{flex:1;border:none;background:none;color:var(--muted);font-family:'Space Grotesk',sans-serif;font-weight:600;
+    font-size:12px;padding:9px 8px;border-radius:10px;cursor:pointer;transition:.16s;display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.1}
+  .toggle button small{font-weight:500;font-size:9.5px;opacity:.7;font-family:'Inter'}
+  .toggle button.active{background:var(--grad);color:#08101f}
+  .controls{padding:12px 20px 8px}
+  .field{position:relative;margin-bottom:9px}
+  .field svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);opacity:.5}
+  input[type=text]{width:100%;padding:10px 12px 10px 34px;border-radius:11px;border:1px solid var(--line2);
+    background:rgba(8,10,22,.6);color:var(--text);font-size:13px;font-family:inherit;transition:.18s}
+  input[type=text]:focus{outline:none;border-color:var(--a1);box-shadow:0 0 0 3px rgba(124,92,255,.18)}
+  select{width:100%;padding:9px 11px;border-radius:11px;border:1px solid var(--line2);
+    background:rgba(8,10,22,.6);color:var(--text);font-size:12.5px;font-family:inherit;cursor:pointer;appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239aa3c8'><path d='M2 4l4 4 4-4z'/></svg>");
+    background-repeat:no-repeat;background-position:right 12px center}
+  .selrow{display:flex;gap:8px}.selrow select{flex:1}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;padding:6px 20px 12px;border-bottom:1px solid var(--line)}
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;cursor:pointer;
+    font-size:11px;font-weight:600;border:1px solid var(--line2);background:rgba(8,10,22,.4);color:var(--muted);transition:.16s;user-select:none}
+  .chip:hover{color:var(--text);transform:translateY(-1px)}
+  .chip.active{color:#08101f;border-color:transparent}
+  .chip .k{width:8px;height:8px;border-radius:50%}
+  .count{font-size:11px;color:var(--muted);padding:11px 20px 7px;letter-spacing:.02em;text-transform:uppercase;font-weight:600}
+  #list{overflow-y:auto;flex:1;padding-bottom:14px}
+  #list::-webkit-scrollbar{width:9px}#list::-webkit-scrollbar-thumb{background:rgba(150,160,220,.2);border-radius:8px}
+  .item{display:flex;gap:12px;padding:11px 20px;cursor:pointer;align-items:center;border-left:2px solid transparent;transition:.15s}
+  .item:hover{background:rgba(124,92,255,.10);border-left-color:var(--a1)}
+  .logo{width:38px;height:38px;border-radius:10px;background:#0a0e1e;display:flex;align-items:center;justify-content:center;
+    flex:0 0 38px;overflow:hidden;border:1px solid var(--line2)}
+  .logo img{width:100%;height:100%;object-fit:contain;background:#fff}
+  .logo .ini{font-family:'Space Grotesk';font-size:13px;font-weight:700;color:#fff;background:var(--grad);width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+  .item .meta{min-width:0;flex:1}
+  .item .nm{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .item .lc{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+  .item .dot{width:9px;height:9px;border-radius:50%;flex:0 0 9px}
+  #map{flex:1;height:100%;background:var(--bg0)}
+  .leaflet-tile-pane{filter:saturate(.62) brightness(.82) contrast(1.06)}
+  .map-tint{position:absolute;inset:0;pointer-events:none;z-index:450;mix-blend-mode:soft-light;
+    background:radial-gradient(70% 60% at 30% 20%,rgba(124,92,255,.55),transparent 60%),
+               radial-gradient(70% 60% at 80% 90%,rgba(25,211,255,.45),transparent 60%)}
+  .pin{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:#0a0e1e;cursor:pointer;transition:transform .16s ease;position:relative}
+  .pin .pin-inner{width:36px;height:36px;border-radius:50%;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center}
+  .pin .pin-inner img{width:100%;height:100%;object-fit:contain}
+  .pin .ini{font-family:'Space Grotesk';font-weight:700;font-size:12px;color:#fff;background:var(--grad);width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+  .pin{box-shadow:0 0 0 3px var(--ring),0 0 14px -1px var(--ring),0 4px 14px rgba(0,0,0,.55)}
+  .pin:hover{transform:scale(1.16)}
+  .leaflet-popup-content-wrapper{background:rgba(14,18,40,.92);backdrop-filter:blur(16px);color:var(--text);
+    border-radius:16px;border:1px solid var(--line2);box-shadow:0 18px 50px rgba(0,0,0,.6)}
+  .leaflet-popup-tip{background:rgba(14,18,40,.92)}
+  .leaflet-popup-content{margin:0;width:300px!important}
+  .pop{padding:16px 16px 14px}
+  .pop-head{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+  .pop-logo{width:46px;height:46px;border-radius:12px;overflow:hidden;background:#fff;flex:0 0 46px;display:flex;align-items:center;justify-content:center}
+  .pop-logo img{width:100%;height:100%;object-fit:contain}
+  .pop-logo .ini{font-family:'Space Grotesk';font-weight:700;color:#fff;background:var(--grad);width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:15px}
+  .pop-title{font-family:'Space Grotesk';font-size:15.5px;font-weight:700;line-height:1.2}
+  .pop-type{font-size:11px;color:var(--a2);margin-top:3px;font-weight:600}
+  .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:20px;font-size:10.5px;font-weight:700;color:#08101f;margin:6px 0 8px;letter-spacing:.03em;text-transform:uppercase}
+  .badge .k{width:7px;height:7px;border-radius:50%;background:rgba(8,16,31,.5)}
+  .rows{display:flex;flex-direction:column;gap:6px}
+  .row{font-size:12px;line-height:1.45;display:flex;gap:8px}
+  .row .ic{flex:0 0 16px;opacity:.85}
+  .row b{color:var(--muted);font-weight:600;margin-right:3px}
+  .hl{font-size:11.5px;color:var(--muted);font-style:italic;margin-top:9px;padding-top:9px;border-top:1px solid var(--line);line-height:1.5}
+  .pop-link{display:inline-flex;align-items:center;gap:6px;margin-top:11px;background:var(--grad);color:#08101f;font-weight:700;font-size:12px;padding:8px 14px;border-radius:10px;text-decoration:none}
+  .pop-link:hover{filter:brightness(1.08)}
+  .legend{background:rgba(14,18,40,.85);backdrop-filter:blur(12px);color:var(--text);padding:12px 14px;border-radius:13px;
+    border:1px solid var(--line2);font-size:11px;line-height:1.95;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+  .legend b{font-family:'Space Grotesk';font-size:11px;display:block;margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+  .legend .k{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:middle}
+  .leaflet-control-zoom a{background:rgba(14,18,40,.9)!important;color:#fff!important;border-color:var(--line)!important}
+  .leaflet-bar{border:none!important;box-shadow:0 6px 18px rgba(0,0,0,.5)!important}
+  @media(max-width:760px){#sidebar{display:none}}
+  /* Off-coast cluster insets */
+  .inset-leaders{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:540}
+  .inset-leaders line{stroke:var(--a2);stroke-width:1.4;stroke-dasharray:3 4;opacity:.65}
+  .inset-leaders circle{fill:var(--a2)}
+  .inset-card{position:absolute;z-index:560;width:212px;background:rgba(10,13,28,.86);
+    backdrop-filter:blur(10px) saturate(140%);-webkit-backdrop-filter:blur(10px) saturate(140%);
+    border:1px solid var(--line2);border-radius:14px;overflow:hidden;
+    box-shadow:0 14px 36px rgba(0,0,0,.55);transition:opacity .25s;pointer-events:auto}
+  .inset-card.hidden{opacity:0;pointer-events:none}
+  .inset-head{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 11px;
+    font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;color:var(--text);
+    border-bottom:1px solid var(--line);background:linear-gradient(90deg,rgba(124,92,255,.28),rgba(25,211,255,.12))}
+  .inset-head .lbl{display:flex;align-items:center;gap:6px;letter-spacing:.02em}
+  .inset-head .lbl::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--a2);box-shadow:0 0 8px var(--a2)}
+  .inset-head b{color:var(--a2);font-size:11px;font-weight:700}
+  .inset-map{width:100%;height:172px;background:#070912}
+  .inset-map .pin{width:26px;height:26px;box-shadow:0 0 0 2px var(--ring),0 0 8px -1px var(--ring),0 3px 8px rgba(0,0,0,.5)}
+  .inset-map .pin .pin-inner{width:21px;height:21px}
+  .inset-map .pin .ini{font-size:9px}
+  @media(max-width:760px){.inset-card,.inset-leaders{display:none}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="sidebar">
+    <div class="hero">
+      <canvas id="hero-canvas"></canvas>
+      <div class="hero-content">
+        <div class="kicker">Founder Atlas · 2026</div>
+        <h1 id="title">Residencies, Hacker Houses &amp; Startup Campuses</h1>
+        <div class="sub" id="subtitle">A living map of founder programs worldwide. Click a pin or list item for details. Status as of June 2026 — verify on each site.</div>
+      </div>
+    </div>
+    <div class="toggle" id="toggle">
+      <button data-k="residential" class="active">Residential<small>residencies · houses · campuses</small></button>
+      <button data-k="traditional">Traditional<small>accelerators · incubators</small></button>
+    </div>
+    <div class="controls">
+      <div class="field">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9aa3c8" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="search" type="text" placeholder="Search name, city, focus, operator…" />
+      </div>
+      <div class="selrow">
+        <select id="fType"><option value="">All types</option></select>
+        <select id="fCountry"><option value="">All countries</option></select>
+      </div>
+    </div>
+    <div class="chips" id="statusChips"></div>
+    <div class="count" id="count"></div>
+    <div id="list"></div>
+  </div>
+  <div id="map"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const STATUS={
+  rolling:{label:"Rolling / always open",color:"#25e0a4"},
+  open:{label:"Cohort open",color:"#4f9dff"},
+  "closing-soon":{label:"Closing soon",color:"#ffc24b"},
+  "opening-soon":{label:"Opening soon",color:"#b388ff"},
+  running:{label:"Running now",color:"#ff6fae"},
+  closed:{label:"Closed — check next cycle",color:"#707a9c"}
+};
+const STATUS_ORDER=["running","open","closing-soon","opening-soon","rolling","closed"];
+const TITLES={
+  residential:{t:"Residencies, Hacker Houses & Startup Campuses",s:"Programs that house or relocate founders — residencies, hacker houses, co-living & campuses. Click a pin for details. Status as of June 2026 — verify on each site."},
+  traditional:{t:"Traditional Accelerators & Incubators",s:"Active accelerators, incubators, talent investors & startup campuses worldwide — no live-in component. Click a pin for details. Status as of June 2026 — verify on each site."}
+};
+let DATASETS={residential:[],traditional:[]};
+
+function jitter(arr){const seen={};arr.forEach(p=>{const k=p.lat.toFixed(4)+","+p.lng.toFixed(4);
+  if(seen[k]){const n=seen[k]++;const a=n*2.3;p.lat+=0.012*Math.cos(a);p.lng+=0.012*Math.sin(a);}else seen[k]=1;});}
+
+let PROGRAMS=DATASETS.residential, activeKey='residential', activeStatus="";
+
+function initials(name){return name.replace(/\(.*?\)/g,'').replace(/[—-].*$/,'').trim()
+  .split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();}
+function logoMarkup(p){
+  const ini=initials(p.name);
+  if(!p.domain)return `<span class="ini">${ini}</span>`;
+  const srcs=['https://logo.clearbit.com/'+p.domain,
+              'https://icons.duckduckgo.com/ip3/'+p.domain+'.ico',
+              'https://www.google.com/s2/favicons?domain='+p.domain+'&sz=128'];
+  return `<img src="${srcs[0]}" data-s='${JSON.stringify(srcs)}' data-i="0" data-ini="${ini}" onerror="logoFallback(this)"/>`;
+}
+window.logoFallback=function(img){const s=JSON.parse(img.dataset.s);let i=parseInt(img.dataset.i)+1;
+  if(i<s.length){img.dataset.i=i;img.src=s[i];}
+  else{const sp=document.createElement('span');sp.className='ini';sp.textContent=img.dataset.ini;img.replaceWith(sp);}};
+
+const map=L.map('map',{worldCopyJump:true,minZoom:2,zoomControl:true}).setView([28,4],2.4);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+  {attribution:'&copy; OpenStreetMap &copy; CARTO',subdomains:'abcd',maxZoom:19}).addTo(map);
+const tint=document.createElement('div');tint.className='map-tint';map.getContainer().appendChild(tint);
+const markerLayer=L.layerGroup().addTo(map);
+
+function popupHTML(p){
+  const s=STATUS[p.status]||{label:p.status,color:'#999'};
+  const r=(ic,label,val)=>`<div class="row"><span class="ic">${ic}</span><div><b>${label}</b>${val}</div></div>`;
+  return `<div class="pop">
+    <div class="pop-head"><div class="pop-logo">${logoMarkup(p)}</div>
+      <div><div class="pop-title">${p.name}</div><div class="pop-type">${p.type}</div></div></div>
+    <span class="badge" style="background:${s.color}"><span class="k"></span>${s.label}</span>
+    <div class="rows">
+      ${r('📍','Location: ',p.city+', '+p.country)}
+      ${r('🎯','Focus: ',p.focus)}
+      ${r('🧭','Run by: ',p.operator||'Not publicly listed')}
+      ${r('🌱','Stage: ',p.stage)}
+      ${r('📨','Recruiting: ',p.status_detail)}
+    </div>
+    ${p.highlight?`<div class="hl">${p.highlight}</div>`:''}
+    <a class="pop-link" href="${p.url}" target="_blank" rel="noopener">Visit program →</a>
+  </div>`;
+}
+function buildMarkers(){
+  markerLayer.clearLayers();
+  PROGRAMS.forEach(p=>{
+    const color=(STATUS[p.status]||{}).color||'#999';
+    const icon=L.divIcon({className:'',iconSize:[42,42],iconAnchor:[21,21],popupAnchor:[0,-22],
+      html:`<div class="pin" style="--ring:${color}"><div class="pin-inner">${logoMarkup(p)}</div></div>`});
+    const m=L.marker([p.lat,p.lng],{icon,riseOnHover:true});
+    m.bindPopup(popupHTML(p),{maxWidth:320});m.addTo(markerLayer);p._m=m;
+  });
+}
+
+const listEl=document.getElementById('list'),countEl=document.getElementById('count'),
+      searchEl=document.getElementById('search'),fType=document.getElementById('fType'),
+      fCountry=document.getElementById('fCountry'),chipsEl=document.getElementById('statusChips');
+
+function rebuildFilters(){
+  fType.innerHTML='<option value="">All types</option>';
+  [...new Set(PROGRAMS.map(p=>p.type))].sort().forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=t;fType.appendChild(o);});
+  fCountry.innerHTML='<option value="">All countries</option>';
+  [...new Set(PROGRAMS.map(p=>p.country))].sort().forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;fCountry.appendChild(o);});
+  fType.value='';fCountry.value='';
+}
+function buildChips(){
+  chipsEl.innerHTML='';
+  STATUS_ORDER.forEach(k=>{const s=STATUS[k];const n=PROGRAMS.filter(p=>p.status===k).length;if(!n)return;
+    const c=document.createElement('div');c.className='chip';c.dataset.k=k;
+    c.innerHTML=`<span class="k" style="background:${s.color}"></span>${s.label.replace(' — check next cycle','')} <span style="opacity:.6">${n}</span>`;
+    c.onclick=()=>{activeStatus=activeStatus===k?"":k;
+      [...chipsEl.children].forEach(x=>{const on=x.dataset.k===activeStatus;x.classList.toggle('active',on);x.style.background=on?STATUS[x.dataset.k].color:'';});
+      render();};
+    chipsEl.appendChild(c);});
+}
+function passes(p){const q=searchEl.value.trim().toLowerCase(),t=fType.value,co=fCountry.value;
+  const hay=(p.name+p.city+p.country+p.focus+p.operator+p.type).toLowerCase();
+  return (!q||hay.includes(q))&&(!t||p.type===t)&&(!co||p.country===co)&&(!activeStatus||p.status===activeStatus);}
+function render(){
+  listEl.innerHTML='';let n=0;
+  const sorted=[...PROGRAMS].sort((a,b)=>STATUS_ORDER.indexOf(a.status)-STATUS_ORDER.indexOf(b.status)||a.name.localeCompare(b.name));
+  sorted.forEach(p=>{
+    const ok=passes(p);
+    if(p._m){p._m.setOpacity(ok?1:.12);if(p._m._icon){p._m._icon.style.pointerEvents=ok?'auto':'none';
+      p._m._icon.style.display=insetCovered.has(p)?'none':'';}}
+    if(!ok)return;n++;
+    const s=STATUS[p.status]||{color:'#999'};
+    const d=document.createElement('div');d.className='item';
+    d.innerHTML=`<div class="logo">${logoMarkup(p)}</div>
+      <div class="meta"><div class="nm">${p.name}</div><div class="lc">${p.city}, ${p.country} · ${p.type}</div></div>
+      <div class="dot" style="background:${s.color}" title="${s.label}"></div>`;
+    d.onclick=()=>{map.flyTo([p.lat,p.lng],Math.max(map.getZoom(),5),{duration:.8});setTimeout(()=>p._m&&p._m.openPopup(),350);};
+    listEl.appendChild(d);
+  });
+  countEl.textContent=`${n} of ${PROGRAMS.length} programs`;
+}
+
+const toggle=document.getElementById('toggle');
+toggle.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  if(b.dataset.k===activeKey)return;
+  activeKey=b.dataset.k;PROGRAMS=DATASETS[activeKey];activeStatus="";searchEl.value="";
+  toggle.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x.dataset.k===activeKey));
+  document.getElementById('title').textContent=TITLES[activeKey].t;
+  document.getElementById('subtitle').textContent=TITLES[activeKey].s;
+  buildMarkers();rebuildFilters();buildChips();render();buildInsets();
+  map.flyTo([28,4],2.4,{duration:.8});
+});
+
+searchEl.oninput=render;fType.onchange=render;fCountry.onchange=render;
+async function boot(){
+  try{
+    const [res,trad]=await Promise.all([
+      fetch('startup-programs-data.json').then(r=>r.json()),
+      fetch('traditional-programs-data.json').then(r=>r.json())
+    ]);
+    DATASETS.residential=res.programs; DATASETS.traditional=trad.programs;
+    jitter(DATASETS.residential); jitter(DATASETS.traditional);
+    PROGRAMS=DATASETS[activeKey];
+    buildMarkers();rebuildFilters();buildChips();render();
+    if(typeof buildInsets==='function')buildInsets();
+  }catch(e){console.error('Data load failed',e);document.getElementById('count').textContent='Could not load program data. Run via a web server (not file://).';}
+}
+boot();
+
+/* ---------- Off-coast cluster insets ----------
+   Dense regions (lots of overlapping pins) get a zoomed-in "callout" card floating over
+   open water, so they stay legible at world zoom. Cards auto-hide once you zoom in. */
+const CLUSTERS=[
+  {id:'sf', label:'SF Bay Area', bounds:[[37.20,-122.65],[37.95,-121.70]], anchor:[37.62,-122.10], offset:{dx:-340,dy:30}},
+  {id:'nyc',label:'New York',    bounds:[[40.45,-74.20],[40.95,-73.65]],  anchor:[40.71,-74.01],  offset:{dx:130, dy:20}},
+  {id:'ldn',label:'London',      bounds:[[51.25,-0.55],[51.72,0.30]],     anchor:[51.51,-0.12],   offset:{dx:-30, dy:-215}},
+  {id:'blr',label:'Bangalore',   bounds:[[12.78,77.40],[13.18,77.85]],    anchor:[12.97,77.59],   offset:{dx:-235,dy:60}},
+];
+const INSET_MIN_MEMBERS=3, INSET_SHOW_MAX_ZOOM=5;
+let insets=[];
+let insetCovered=new Set(); // programs currently represented by a visible inset (hidden on the main map)
+const leaderSvg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+leaderSvg.setAttribute('class','inset-leaders');
+map.getContainer().appendChild(leaderSvg);
+
+function focusProgram(p){
+  map.flyTo([p.lat,p.lng],Math.max(map.getZoom(),12),{duration:.8});
+  setTimeout(()=>p._m&&p._m.openPopup(),650);
+}
+function inBounds(p,b){return p.lat>=b[0][0]&&p.lat<=b[1][0]&&p.lng>=b[0][1]&&p.lng<=b[1][1];}
+
+function clearInsets(){insets.forEach(o=>{o.mini.remove();o.card.remove();});insets=[];leaderSvg.innerHTML='';}
+
+function buildInsets(){
+  clearInsets();
+  const cont=map.getContainer();
+  CLUSTERS.forEach(cfg=>{
+    const members=PROGRAMS.filter(p=>inBounds(p,cfg.bounds));
+    if(members.length<INSET_MIN_MEMBERS)return;
+    const card=document.createElement('div');card.className='inset-card';card.dataset.id=cfg.id;
+    card.innerHTML=`<div class="inset-head"><span class="lbl">${cfg.label}</span><b>${members.length}</b></div><div class="inset-map"></div>`;
+    cont.appendChild(card);
+    const mini=L.map(card.querySelector('.inset-map'),{zoomControl:false,attributionControl:false,
+      dragging:false,scrollWheelZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,touchZoom:false,tap:false,fadeAnimation:false});
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      {subdomains:'abcd',maxZoom:19}).addTo(mini);
+    members.forEach(p=>{
+      const color=(STATUS[p.status]||{}).color||'#999';
+      const icon=L.divIcon({className:'',iconSize:[30,30],iconAnchor:[15,15],
+        html:`<div class="pin" style="--ring:${color}"><div class="pin-inner">${logoMarkup(p)}</div></div>`});
+      L.marker([p.lat,p.lng],{icon,riseOnHover:true}).on('click',()=>focusProgram(p)).addTo(mini);
+    });
+    const b=L.latLngBounds(members.map(p=>[p.lat,p.lng]));
+    // Only size/fit once the mini-map container actually has dimensions —
+    // otherwise no tiles get requested. A ResizeObserver also keeps it framed
+    // through window/layout resizes.
+    const mapEl=card.querySelector('.inset-map');
+    const fit=()=>{if(mapEl.clientWidth&&mapEl.clientHeight){mini.invalidateSize();mini.fitBounds(b,{maxZoom:13,padding:[14,14]});}};
+    new ResizeObserver(fit).observe(mapEl);
+    requestAnimationFrame(fit);
+    insets.push({cfg,card,mini,members});
+  });
+  updateInsets();
+}
+
+function updateInsets(){
+  const cont=map.getContainer(),W=cont.clientWidth,H=cont.clientHeight,M=24;
+  leaderSvg.setAttribute('width',W);leaderSvg.setAttribute('height',H);
+  leaderSvg.innerHTML='';
+  const zoomOK=map.getZoom()<=INSET_SHOW_MAX_ZOOM;
+  const covered=new Set();
+  insets.forEach(o=>{
+    const ap=map.latLngToContainerPoint(o.cfg.anchor);
+    // Hide this cluster's main-map markers whenever we're zoomed out (region-level),
+    // independent of where the card lands — keeps hiding in sync with the callout.
+    if(zoomOK)o.members.forEach(p=>covered.add(p));
+    const anchorVisible=ap.x>=-40&&ap.x<=W+40&&ap.y>=-40&&ap.y<=H+40;
+    if(!zoomOK||!anchorVisible){o.card.classList.add('hidden');return;}
+    o.card.classList.remove('hidden');
+    const cw=o.card.offsetWidth||190,ch=o.card.offsetHeight||178;
+    let left=ap.x+o.cfg.offset.dx,top=ap.y+o.cfg.offset.dy;
+    left=Math.max(M,Math.min(left,W-cw-M));
+    top=Math.max(M,Math.min(top,H-ch-M));
+    o.card.style.left=left+'px';o.card.style.top=top+'px';
+    // leader line from the anchor to the nearest point on the card border
+    const tx=Math.max(left,Math.min(ap.x,left+cw)),ty=Math.max(top,Math.min(ap.y,top+ch));
+    const ns='http://www.w3.org/2000/svg';
+    const ln=document.createElementNS(ns,'line');
+    ln.setAttribute('x1',ap.x);ln.setAttribute('y1',ap.y);ln.setAttribute('x2',tx);ln.setAttribute('y2',ty);
+    const dot=document.createElementNS(ns,'circle');
+    dot.setAttribute('cx',ap.x);dot.setAttribute('cy',ap.y);dot.setAttribute('r',3);
+    leaderSvg.appendChild(ln);leaderSvg.appendChild(dot);
+  });
+  // Hide/show main-map markers that are (no longer) represented by a visible inset,
+  // so a dense region shows as one tidy callout instead of an overlapping blob.
+  insetCovered.forEach(p=>{if(!covered.has(p)&&p._m&&p._m._icon)p._m._icon.style.display='';});
+  covered.forEach(p=>{if(p._m&&p._m._icon)p._m._icon.style.display='none';});
+  insetCovered=covered;
+}
+map.on('move zoom moveend zoomend resize',updateInsets);
+window.addEventListener('resize',updateInsets);
+
+const legend=L.control({position:'bottomright'});
+legend.onAdd=function(){const d=L.DomUtil.create('div','legend');let h='<b>Recruiting status</b>';
+  STATUS_ORDER.forEach(k=>{const s=STATUS[k];h+=`<div><span class="k" style="background:${s.color}"></span>${s.label}</div>`;});
+  d.innerHTML=h;return d;};
+legend.addTo(map);
+
+(function(){const cv=document.getElementById('hero-canvas');if(!cv)return;const ctx=cv.getContext('2d');
+  let w,h,pts;function size(){const r=cv.getBoundingClientRect();w=cv.width=r.width*devicePixelRatio;h=cv.height=r.height*devicePixelRatio;
+    pts=Array.from({length:24},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.18*devicePixelRatio,vy:(Math.random()-.5)*.18*devicePixelRatio}));}
+  size();new ResizeObserver(size).observe(cv);
+  function loop(){ctx.clearRect(0,0,w,h);
+    for(const p of pts){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>w)p.vx*=-1;if(p.y<0||p.y>h)p.vy*=-1;}
+    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const a=pts[i],b=pts[j],dist=Math.hypot(a.x-b.x,a.y-b.y),max=120*devicePixelRatio;
+      if(dist<max){ctx.strokeStyle=`rgba(124,92,255,${(1-dist/max)*.35})`;ctx.lineWidth=devicePixelRatio;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}
+    for(const p of pts){ctx.fillStyle='rgba(25,211,255,.8)';ctx.beginPath();ctx.arc(p.x,p.y,1.6*devicePixelRatio,0,7);ctx.fill();}
+    requestAnimationFrame(loop);}loop();})();
+</script>
+</body>
+</html>
