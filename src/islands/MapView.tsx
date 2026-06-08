@@ -26,11 +26,13 @@ const TITLES: Record<string, { t: string; s: string }> = {
 };
 
 // Off-coast cluster callouts for dense regions (ported from index.html).
+// `place` is an open-ocean lat/lng where the card floats; `anchor` is the true
+// location the leader line points back to — keeps cards off land pins.
 const CLUSTERS = [
-  { id: 'sf', label: 'SF Bay Area', bounds: [[37.2, -122.65], [37.95, -121.7]], anchor: [37.62, -122.1], offset: { dx: -340, dy: 30 } },
-  { id: 'nyc', label: 'New York', bounds: [[40.45, -74.2], [40.95, -73.65]], anchor: [40.71, -74.01], offset: { dx: 130, dy: 20 } },
-  { id: 'ldn', label: 'London', bounds: [[51.25, -0.55], [51.72, 0.3]], anchor: [51.51, -0.12], offset: { dx: -30, dy: -215 } },
-  { id: 'blr', label: 'Bangalore', bounds: [[12.78, 77.4], [13.18, 77.85]], anchor: [12.97, 77.59], offset: { dx: -235, dy: 60 } },
+  { id: 'sf', label: 'SF Bay Area', bounds: [[37.2, -122.65], [37.95, -121.7]], anchor: [37.62, -122.1], place: [32.0, -132.0] }, // Eastern Pacific
+  { id: 'nyc', label: 'New York', bounds: [[40.45, -74.2], [40.95, -73.65]], anchor: [40.71, -74.01], place: [39.0, -57.0] }, // North Atlantic
+  { id: 'ldn', label: 'London', bounds: [[51.25, -0.55], [51.72, 0.3]], anchor: [51.51, -0.12], place: [52.0, -40.0] }, // North Atlantic, above NYC
+  { id: 'blr', label: 'Bangalore', bounds: [[12.78, 77.4], [13.18, 77.85]], anchor: [12.97, 77.59], place: [3.0, 80.0] }, // Indian Ocean
 ] as const;
 const INSET_MIN_MEMBERS = 3;
 const INSET_SHOW_MAX_ZOOM = 5;
@@ -253,8 +255,11 @@ export default function MapView({ programs }: { programs: Program[] }) {
       o.card.classList.remove('hidden');
       const cw = o.card.offsetWidth || 190;
       const ch = o.card.offsetHeight || 178;
-      let left = ap.x + o.cfg.offset.dx;
-      let top = ap.y + o.cfg.offset.dy;
+      // Position the card centered over its open-ocean `place` point; the leader
+      // still draws from `ap` (the true anchor) so the link to the city stays clear.
+      const pp = map.latLngToContainerPoint([...o.cfg.place] as L.LatLngTuple);
+      let left = pp.x - cw / 2;
+      let top = pp.y - ch / 2;
       left = Math.max(M, Math.min(left, W - cw - M));
       top = Math.max(M, Math.min(top, H - ch - M));
       o.card.style.left = left + 'px';
