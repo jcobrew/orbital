@@ -2,3 +2,7 @@
 *.log
 node_modules/
 .vercel/
+
+# Astro
+dist/
+.astro/

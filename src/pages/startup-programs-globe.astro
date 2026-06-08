@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import GlobeView from '../islands/GlobeView.tsx';
+import { PROGRAMS } from '../data/programs';
+---
+
+<Base
+  title="Founder LAB MAP — 3D Globe (Residential & Traditional)"
+  description="3D globe of founder living & building support programs worldwide — spin the globe or pick a program to fly there."
+  fullscreen
+>
+  <!-- Globe.gl (Three.js) needs the DOM; render this island client-only. -->
+  <GlobeView programs={PROGRAMS} client:only="react" />
+  <div slot="head"></div>
+</Base>

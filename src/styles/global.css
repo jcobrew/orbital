@@ -1,0 +1,258 @@
+@import 'tailwindcss';
+
+/* ---- Design tokens (Tailwind v4 theme) ----
+   Exposes utilities like bg-bg0, text-muted, text-a1, font-display, etc. */
+@theme {
+  --color-bg0: #070912;
+  --color-panel: rgba(18, 22, 46, 0.72);
+  --color-line: rgba(150, 160, 220, 0.14);
+  --color-line2: rgba(150, 160, 220, 0.22);
+  --color-text: #eef1ff;
+  --color-muted: #9aa3c8;
+  --color-a1: #7c5cff;
+  --color-a2: #19d3ff;
+
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+/* Plain CSS custom properties for imperative code (Leaflet/Globe islands,
+   inline styles, the --ring pin trick) that can't use utility classes. */
+:root {
+  --bg0: #070912;
+  --panel: rgba(18, 22, 46, 0.72);
+  --line: rgba(150, 160, 220, 0.14);
+  --line2: rgba(150, 160, 220, 0.22);
+  --text: #eef1ff;
+  --muted: #9aa3c8;
+  --a1: #7c5cff;
+  --a2: #19d3ff;
+  --grad: linear-gradient(120deg, #7c5cff 0%, #19d3ff 100%);
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--text);
+  background:
+    radial-gradient(1200px 700px at 12% -8%, rgba(124, 92, 255, 0.2), transparent 60%),
+    radial-gradient(1000px 700px at 105% 110%, rgba(25, 211, 255, 0.16), transparent 55%),
+    var(--bg0);
+}
+a {
+  color: var(--a2);
+}
+
+/* ---- Cross-view nav (shared by all pages) ---- */
+.viewnav {
+  display: flex;
+  gap: 6px;
+}
+.viewnav a {
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 11px;
+  padding: 7px 8px;
+  border-radius: 9px;
+  border: 1px solid var(--line2);
+  color: var(--muted);
+  background: rgba(8, 10, 22, 0.5);
+  transition: 0.15s;
+}
+.viewnav a:hover {
+  color: var(--text);
+  border-color: var(--a1);
+}
+.viewnav a.active {
+  background: var(--grad);
+  color: #08101f;
+  border-color: transparent;
+}
+
+/* ---- Map pins (Leaflet + Globe islands) ---- */
+.pin {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a0e1e;
+  cursor: pointer;
+  transition: transform 0.16s ease;
+  position: relative;
+  box-shadow:
+    0 0 0 3px var(--ring),
+    0 0 14px -1px var(--ring),
+    0 4px 14px rgba(0, 0, 0, 0.55);
+}
+.pin .pin-inner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pin .pin-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.pin .ini {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 12px;
+  color: #fff;
+  background: var(--grad);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pin:hover {
+  transform: scale(1.16);
+}
+
+/* ---- Leaflet popup theming ---- */
+.leaflet-tile-pane {
+  filter: saturate(0.62) brightness(0.82) contrast(1.06);
+}
+.map-tint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 450;
+  mix-blend-mode: soft-light;
+  background:
+    radial-gradient(70% 60% at 30% 20%, rgba(124, 92, 255, 0.55), transparent 60%),
+    radial-gradient(70% 60% at 80% 90%, rgba(25, 211, 255, 0.45), transparent 60%);
+}
+.leaflet-popup-content-wrapper {
+  background: rgba(14, 18, 40, 0.92);
+  backdrop-filter: blur(16px);
+  color: var(--text);
+  border-radius: 16px;
+  border: 1px solid var(--line2);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
+}
+.leaflet-popup-tip {
+  background: rgba(14, 18, 40, 0.92);
+}
+.leaflet-popup-content {
+  margin: 0;
+  width: 300px !important;
+}
+.leaflet-control-zoom a {
+  background: rgba(14, 18, 40, 0.9) !important;
+  color: #fff !important;
+  border-color: var(--line) !important;
+}
+.leaflet-bar {
+  border: none !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* ---- Off-coast cluster insets (map only) ---- */
+.inset-leaders {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 540;
+}
+.inset-leaders line {
+  stroke: var(--a2);
+  stroke-width: 1.4;
+  stroke-dasharray: 3 4;
+  opacity: 0.65;
+}
+.inset-leaders circle {
+  fill: var(--a2);
+}
+.inset-card {
+  position: absolute;
+  z-index: 560;
+  width: 212px;
+  background: rgba(10, 13, 28, 0.86);
+  backdrop-filter: blur(10px) saturate(140%);
+  border: 1px solid var(--line2);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55);
+  transition: opacity 0.25s;
+  pointer-events: auto;
+}
+.inset-card.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.inset-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 11px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text);
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, rgba(124, 92, 255, 0.28), rgba(25, 211, 255, 0.12));
+}
+.inset-head .lbl {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.02em;
+}
+.inset-head .lbl::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--a2);
+  box-shadow: 0 0 8px var(--a2);
+}
+.inset-head b {
+  color: var(--a2);
+  font-size: 11px;
+  font-weight: 700;
+}
+.inset-map {
+  width: 100%;
+  height: 172px;
+  background: #070912;
+}
+.inset-map .pin {
+  width: 26px;
+  height: 26px;
+  box-shadow:
+    0 0 0 2px var(--ring),
+    0 0 8px -1px var(--ring),
+    0 3px 8px rgba(0, 0, 0, 0.5);
+}
+.inset-map .pin .pin-inner {
+  width: 21px;
+  height: 21px;
+}
+.inset-map .pin .ini {
+  font-size: 9px;
+}
+@media (max-width: 760px) {
+  .inset-card,
+  .inset-leaders {
+    display: none;
+  }
+}

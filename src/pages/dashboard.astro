@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro';
+import ViewNav from '../components/ViewNav.astro';
+import FilterSidebar from '../components/FilterSidebar.tsx';
+import ProgramsTable from '../components/ProgramsTable.tsx';
+import { PROGRAMS } from '../data/programs';
+
+// Server-rendered schema.org JSON-LD for the full catalog — ships in the HTML
+// so agents/crawlers get structured records without running JS.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Founder LAB MAP — founder programs',
+  numberOfItems: PROGRAMS.length,
+  itemListElement: PROGRAMS.map((p, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'EducationalOccupationalProgram',
+      name: p.name,
+      programType: p.type,
+      url: p.url,
+      provider: p.operator ? { '@type': 'Organization', name: p.operator } : undefined,
+      areaServed: [p.city, p.country].filter(Boolean).join(', '),
+      occupationalCategory: p.focus,
+      description: p.status_detail || p.highlight || undefined,
+    },
+  })),
+};
+---
+
+<Base
+  title="Founder LAB MAP — Dashboard (agent-friendly directory)"
+  description="Searchable, URL-navigable directory of founder living & building support programs — residencies, hacker houses, campuses, accelerators & incubators. Optimized for AI agents: JSON API, llms.txt, deep links and structured data."
+>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} slot="head" />
+
+  <header class="mx-auto max-w-[1400px] px-7 pt-6">
+    <div class="mb-2 font-display text-[10.5px] font-semibold uppercase tracking-[.22em] text-a2">
+      Founder LAB MAP · Dashboard · 2026
+    </div>
+    <div class="mb-3.5 max-w-[420px]">
+      <ViewNav current="dashboard" />
+    </div>
+    <h1
+      class="m-0 mb-2 font-display text-[26px] font-bold leading-[1.15]"
+      style="background:linear-gradient(100deg,#fff 10%,#c9c2ff 55%,#9be9ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent"
+    >
+      The founder programs directory
+    </h1>
+    <p class="mb-1.5 max-w-[680px] text-[13px] leading-normal text-muted">
+      Where founders find all kinds of <strong>living and building</strong> support programs worldwide — searchable like a
+      PhD portal. Built for agentic navigation: drive every filter by URL, share deep links, or pull the data straight from the
+      <a href="/api/programs.json" class="font-semibold">JSON API</a> and <a href="/llms.txt" class="font-semibold">llms.txt</a>.
+      Status as of June 2026 — verify on each site.
+    </p>
+  </header>
+
+  <main class="mx-auto max-w-[1400px] px-7 pb-16 pt-4">
+    <div class="mb-3.5">
+      <FilterSidebar programs={PROGRAMS} variant="dashboard" client:load />
+    </div>
+    <ProgramsTable programs={PROGRAMS} client:load />
+  </main>
+
+  <footer class="mx-auto max-w-[1400px] px-7 pb-12 text-[12px] leading-relaxed text-muted">
+    <p>
+      <strong>For agents:</strong> this page is fully URL-navigable. Compose filters with
+      <code class="rounded bg-[rgba(8,10,22,.6)] px-1.5 py-px text-a2"
+        >?dataset=all|residential|traditional&amp;q=…&amp;type=…&amp;country=…&amp;status=…&amp;focus=…&amp;sort=…</code
+      >. The canonical machine data is
+      <code class="rounded bg-[rgba(8,10,22,.6)] px-1.5 py-px text-a2">/api/programs.json</code>; discovery lives at
+      <code class="rounded bg-[rgba(8,10,22,.6)] px-1.5 py-px text-a2">/llms.txt</code>. Each program also has schema.org JSON-LD.
+    </p>
+  </footer>
+</Base>
