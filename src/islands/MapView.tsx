@@ -329,7 +329,7 @@ export default function MapView({ programs }: { programs: Program[] }) {
           </div>
           <h1
             className="m-0 mb-2 font-display text-[19px] font-bold leading-[1.18]"
-            style={{ background: 'linear-gradient(100deg,#fff 10%,#c9c2ff 55%,#9be9ff 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}
+            style={{ color: 'var(--text)' }}
           >
             {title.t}
           </h1>

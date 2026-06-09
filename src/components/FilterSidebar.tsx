@@ -70,7 +70,7 @@ export default function FilterSidebar({
               role="tab"
               aria-selected={active}
               onClick={() => setFilters({ dataset: d.k, status: '' })}
-              className={`flex-1 rounded-[10px] px-3 py-2 font-display text-[12.5px] font-semibold transition ${
+              className={`flex-1 rounded-[3px] px-3 py-2 font-display text-[12.5px] font-semibold transition ${
                 active ? 'text-[#08101f]' : 'text-muted hover:text-text'
               }`}
               style={active ? { background: 'var(--grad)' } : undefined}
@@ -163,7 +163,7 @@ export default function FilterSidebar({
               <button
                 key={k}
                 onClick={() => setFilters({ status: active ? '' : k })}
-                className={`inline-flex select-none items-center gap-1.5 rounded-full border px-2.5 py-[5px] text-[11.5px] font-semibold transition ${
+                className={`inline-flex select-none items-center gap-1.5 rounded-[3px] border px-2.5 py-[5px] text-[11.5px] font-semibold transition ${
                   active ? 'border-transparent text-[#08101f]' : 'border-line2 text-muted hover:text-text'
                 }`}
                 style={active ? { background: s.color } : { background: 'rgba(8,10,22,.4)' }}

@@ -40,13 +40,13 @@ const jsonLd = {
     <a href="/countries" class="text-[12px] text-muted hover:text-text">← All countries</a>
     <h1
       class="m-0 mb-2 mt-1 font-display text-[30px] font-bold leading-[1.12]"
-      style="background:linear-gradient(100deg,#fff 10%,#c9c2ff 55%,#9be9ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent"
+      style="color:var(--text)"
     >
       {country.name}
     </h1>
     <div class="mb-3 flex flex-wrap items-center gap-2 text-[12px] text-muted">
-      <span class="rounded-full border border-line2 px-2.5 py-1">{country.region}</span>
-      <a href={dashboardHref} class="rounded-full border border-line2 px-2.5 py-1 font-semibold text-text hover:border-a1">
+      <span class="rounded-[3px] border border-line2 px-2.5 py-1">{country.region}</span>
+      <a href={dashboardHref} class="rounded-[3px] border border-line2 px-2.5 py-1 font-semibold text-text hover:border-a1">
         {country.programCount} program{country.programCount === 1 ? '' : 's'} on the map →
       </a>
     </div>
