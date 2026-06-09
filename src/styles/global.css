@@ -126,7 +126,7 @@ a {
 
 /* ---- Leaflet popup theming ---- */
 .leaflet-tile-pane {
-  filter: saturate(0.62) brightness(0.82) contrast(1.06);
+  filter: saturate(0.85) contrast(1.08);
 }
 .map-tint {
   position: absolute;
@@ -255,4 +255,149 @@ a {
   .inset-leaders {
     display: none;
   }
+}
+
+/* ---- Recruiting-status legend (fixed div, used by globe & map) ---- */
+.legend {
+  background: rgba(14, 18, 40, 0.85);
+  backdrop-filter: blur(12px);
+  color: var(--text);
+  padding: 12px 14px;
+  border-radius: 13px;
+  border: 1px solid var(--line2);
+  font-size: 11px;
+  line-height: 1.95;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+.legend b {
+  font-family: var(--font-display);
+  font-size: 11px;
+  display: block;
+  margin-bottom: 6px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.legend .k {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 7px;
+  vertical-align: middle;
+}
+
+/* ---- Tabbed, resizable city minimap dock (globe page) ---- */
+#cityrow {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 264px;
+  min-height: 184px;
+  background: #070912;
+  border-top: 1px solid var(--line2);
+}
+#cityresize {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 11px;
+  cursor: ns-resize;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+}
+#cityresize::before {
+  content: '';
+  width: 46px;
+  height: 4px;
+  border-radius: 3px;
+  background: var(--line2);
+  transition: 0.15s;
+}
+#cityresize:hover::before {
+  background: var(--a1);
+  width: 64px;
+}
+#citytabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 13px 12px 9px;
+}
+.citytab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line2);
+  background: rgba(14, 18, 40, 0.6);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: 0.15s;
+}
+.citytab:hover {
+  color: var(--text);
+  border-color: var(--a1);
+}
+.citytab.active {
+  color: var(--text);
+  border-color: var(--a1);
+  background: rgba(20, 26, 58, 0.9);
+}
+.citytab .led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--a2);
+  box-shadow: 0 0 8px var(--a2);
+}
+.citytab b {
+  color: var(--a2);
+  font-weight: 700;
+}
+#citystage {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+}
+.citymap {
+  position: absolute;
+  inset: 0;
+  background: #070912;
+  display: none;
+}
+.citymap.active {
+  display: block;
+}
+.citymap.empty {
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 12px;
+}
+.citymap.empty.active {
+  display: flex;
+}
+.citymap .pin {
+  width: 28px;
+  height: 28px;
+  box-shadow:
+    0 0 0 2px var(--ring),
+    0 0 8px -1px var(--ring),
+    0 3px 8px rgba(0, 0, 0, 0.5);
+}
+.citymap .pin .pin-inner {
+  width: 22px;
+  height: 22px;
+}
+.citymap .pin .ini {
+  font-size: 9px;
 }

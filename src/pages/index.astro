@@ -1,15 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
-import MapView from '../islands/MapView.tsx';
+import GlobeView from '../islands/GlobeView.tsx';
 import { PROGRAMS } from '../data/programs';
 ---
 
 <Base
-  title="Founder Atlas — Map of the best places to build"
-  description="Founder Atlas maps the best places in the world for founders to relocate and the startup support waiting there — residencies, hacker houses, startup campuses, accelerators & incubators."
+  title="Founder Atlas — 3D Globe of the best places to build"
+  description="A 3D globe of the best places for founders to build — relocation programs and startup support worldwide. Spin the globe or pick a program to fly there; dense cities have their own minimaps below."
   fullscreen
 >
-  <!-- Leaflet needs the DOM; render this island client-only. -->
-  <MapView programs={PROGRAMS} client:only="react" />
+  <!-- Globe.gl (Three.js) needs the DOM; render this island client-only. -->
+  <GlobeView programs={PROGRAMS} client:only="react" />
   <div slot="head"></div>
 </Base>
