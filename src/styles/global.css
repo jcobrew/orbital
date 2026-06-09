@@ -369,9 +369,15 @@ a {
   min-height: 0;
 }
 .citymap {
+  /* Inset with a clear border so the minimap reads as a contained card —
+     it doesn't bleed to the screen edges or touch the globe / neighbours. */
   position: absolute;
-  inset: 0;
+  inset: 0 14px 14px;
   background: #070912;
+  border: 1px solid var(--line2);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   display: none;
 }
 .citymap.active {

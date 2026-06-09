@@ -279,10 +279,8 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
           </div>
           <div className="mb-2.5">
             <nav className="viewnav" aria-label="Views">
+              <a href="/" className="active" aria-current="page">Home</a>
               <a href="/dashboard">Dashboard</a>
-              <a href="/" className="active" aria-current="page">Globe</a>
-              <a href="/map">Map</a>
-              <a href="/countries">Countries</a>
             </nav>
           </div>
           <h1

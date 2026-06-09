@@ -6,10 +6,8 @@ interface Props {
 const { current } = Astro.props;
 
 const links = [
+  { key: 'globe', href: '/', label: 'Home' },
   { key: 'dashboard', href: '/dashboard', label: 'Dashboard' },
-  { key: 'globe', href: '/', label: 'Globe' },
-  { key: 'map', href: '/map', label: 'Map' },
-  { key: 'countries', href: '/countries', label: 'Countries' },
 ] as const;
 ---
 
