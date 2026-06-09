@@ -110,7 +110,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
       .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
       .showAtmosphere(true)
-      .atmosphereColor('#6c8cff')
+      .atmosphereColor('#8a93b5')
       .atmosphereAltitude(0.16)
       .htmlLat('lat')
       .htmlLng('lng')
@@ -285,7 +285,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
           </div>
           <h1
             className="m-0 mb-2 font-display text-[19px] font-bold leading-[1.18]"
-            style={{ background: 'linear-gradient(100deg,#fff 10%,#c9c2ff 55%,#9be9ff 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}
+            style={{ color: 'var(--text)' }}
           >
             {title.t}
           </h1>
@@ -335,7 +335,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
             </button>
             <button className={btn} onClick={reset}>↺ Reset view</button>
           </div>
-          <div className="absolute bottom-4 left-4 z-20 rounded-[10px] border border-line bg-[rgba(14,18,40,.6)] px-2.5 py-1.5 text-[11px] text-muted backdrop-blur">
+          <div className="absolute bottom-4 left-4 z-20 rounded-[3px] border border-line bg-[rgba(14,18,40,.6)] px-2.5 py-1.5 text-[11px] text-muted backdrop-blur">
             Drag to rotate · scroll to zoom · dense cities are mapped below
           </div>
 
@@ -353,7 +353,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
           </div>
 
           {selected && (
-            <div className="absolute right-[18px] top-1/2 z-[25] w-[330px] -translate-y-1/2 rounded-[18px] border border-line2 bg-[rgba(12,16,36,.94)] p-[18px] shadow-[0_24px_70px_rgba(0,0,0,.65)] backdrop-blur-[18px]">
+            <div className="absolute right-[18px] top-1/2 z-[25] w-[330px] -translate-y-1/2 rounded-[3px] border border-line2 bg-[rgba(12,16,36,.94)] p-[18px] shadow-[0_24px_70px_rgba(0,0,0,.65)] backdrop-blur-[18px]">
               <button className="absolute right-3.5 top-3 border-none bg-transparent text-[18px] text-muted hover:text-white" onClick={() => setSelected(null)}>
                 ✕
               </button>

@@ -10,7 +10,7 @@ export default function StatusBadge({ status, full = false }: Props) {
   const s = statusMeta(status);
   return (
     <span
-      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px] text-[10px] font-bold uppercase tracking-wide whitespace-nowrap"
+      className="inline-flex items-center gap-1.5 rounded-[3px] px-2.5 py-[3px] text-[10px] font-bold uppercase tracking-wide whitespace-nowrap"
       style={{ background: s.color, color: '#08101f' }}
       title={s.label}
     >
