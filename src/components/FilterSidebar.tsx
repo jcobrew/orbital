@@ -150,28 +150,31 @@ export default function FilterSidebar({
         )}
       </div>
 
-      {/* Status chips */}
-      <div className="flex flex-wrap gap-1.5" aria-label="Filter by recruiting status">
-        {STATUS_ORDER.map((k) => {
-          const n = slice.filter((p) => p.status === k).length;
-          if (!n) return null;
-          const s = statusMeta(k);
-          const active = filters.status === k;
-          return (
-            <button
-              key={k}
-              onClick={() => setFilters({ status: active ? '' : k })}
-              className={`inline-flex select-none items-center gap-1.5 rounded-full border px-2.5 py-[5px] text-[11.5px] font-semibold transition ${
-                active ? 'border-transparent text-[#08101f]' : 'border-line2 text-muted hover:text-text'
-              }`}
-              style={active ? { background: s.color } : { background: 'rgba(8,10,22,.4)' }}
-            >
-              <span className="h-2 w-2 rounded-full" style={{ background: s.color }} />
-              {shortStatusLabel(k)} <span className="opacity-60">{n}</span>
-            </button>
-          );
-        })}
-      </div>
+      {/* Status chips — only on the dashboard. On the map/globe sidebars these
+          duplicate the on-canvas status legend, so they're hidden there. */}
+      {variant === 'dashboard' && (
+        <div className="flex flex-wrap gap-1.5" aria-label="Filter by recruiting status">
+          {STATUS_ORDER.map((k) => {
+            const n = slice.filter((p) => p.status === k).length;
+            if (!n) return null;
+            const s = statusMeta(k);
+            const active = filters.status === k;
+            return (
+              <button
+                key={k}
+                onClick={() => setFilters({ status: active ? '' : k })}
+                className={`inline-flex select-none items-center gap-1.5 rounded-full border px-2.5 py-[5px] text-[11.5px] font-semibold transition ${
+                  active ? 'border-transparent text-[#08101f]' : 'border-line2 text-muted hover:text-text'
+                }`}
+                style={active ? { background: s.color } : { background: 'rgba(8,10,22,.4)' }}
+              >
+                <span className="h-2 w-2 rounded-full" style={{ background: s.color }} />
+                {shortStatusLabel(k)} <span className="opacity-60">{n}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {toast && (
         <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-xl px-4 py-2.5 text-[12.5px] font-bold text-[#08101f]" style={{ background: 'var(--grad)' }}>
