@@ -1,14 +1,15 @@
 ---
 // Cross-view nav shared by all pages. `current` highlights the active view.
 interface Props {
-  current: 'dashboard' | 'map' | 'globe';
+  current: 'dashboard' | 'map' | 'globe' | 'countries';
 }
 const { current } = Astro.props;
 
 const links = [
   { key: 'dashboard', href: '/dashboard', label: 'Dashboard' },
-  { key: 'map', href: '/map', label: 'Map' },
   { key: 'globe', href: '/', label: 'Globe' },
+  { key: 'map', href: '/map', label: 'Map' },
+  { key: 'countries', href: '/countries', label: 'Countries' },
 ] as const;
 ---
 

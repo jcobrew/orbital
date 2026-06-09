@@ -1,0 +1,126 @@
+---
+import Base from '../../layouts/Base.astro';
+import ViewNav from '../../components/ViewNav.astro';
+import { COUNTRIES, getCountry } from '../../data/countries';
+
+// One static page per country profile. As the dataset grows (or moves to a
+// cloud DB), this list grows automatically — no per-page wiring needed.
+export function getStaticPaths() {
+  return COUNTRIES.map((c) => ({ params: { slug: c.slug } }));
+}
+
+const { slug } = Astro.params;
+const country = getCountry(slug!);
+if (!country) return Astro.redirect('/countries');
+
+const dashboardHref = `/dashboard?country=${encodeURIComponent(country.name)}`;
+
+// schema.org Country so agents/crawlers get a structured record.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Country',
+  name: country.name,
+  description: country.summary,
+};
+---
+
+<Base
+  title={`Founder Atlas — ${country.name} startup ecosystem`}
+  description={country.summary}
+>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} slot="head" />
+
+  <header class="mx-auto max-w-[900px] px-7 pt-6">
+    <div class="mb-2 font-display text-[10.5px] font-semibold uppercase tracking-[.22em] text-a2">
+      Founder Atlas · Country · 2026
+    </div>
+    <div class="mb-3.5 max-w-[420px]">
+      <ViewNav current="countries" />
+    </div>
+    <a href="/countries" class="text-[12px] text-muted hover:text-text">← All countries</a>
+    <h1
+      class="m-0 mb-2 mt-1 font-display text-[30px] font-bold leading-[1.12]"
+      style="background:linear-gradient(100deg,#fff 10%,#c9c2ff 55%,#9be9ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent"
+    >
+      {country.name}
+    </h1>
+    <div class="mb-3 flex flex-wrap items-center gap-2 text-[12px] text-muted">
+      <span class="rounded-full border border-line2 px-2.5 py-1">{country.region}</span>
+      <a href={dashboardHref} class="rounded-full border border-line2 px-2.5 py-1 font-semibold text-text hover:border-a1">
+        {country.programCount} program{country.programCount === 1 ? '' : 's'} on the map →
+      </a>
+    </div>
+    <p class="mb-1.5 max-w-[680px] text-[14px] leading-relaxed text-text">{country.summary}</p>
+  </header>
+
+  <main class="mx-auto max-w-[900px] px-7 pb-16 pt-4 flex flex-col gap-7">
+    {country.highlights.length > 0 && (
+      <section>
+        <h2 class="mb-2 font-display text-[15px] font-semibold text-text">Why founders build here</h2>
+        <ul class="flex flex-col gap-1.5 pl-0">
+          {country.highlights.map((h) => (
+            <li class="flex gap-2 text-[13px] leading-relaxed text-muted">
+              <span class="text-a2">›</span><span>{h}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {country.visas.length > 0 && (
+      <section>
+        <h2 class="mb-2.5 font-display text-[15px] font-semibold text-text">Visa & residency routes</h2>
+        <div class="grid gap-3 sm:grid-cols-2">
+          {country.visas.map((v) => (
+            <a
+              href={v.url}
+              target="_blank"
+              rel="noopener"
+              class="rounded-2xl border border-line2 bg-[rgba(8,10,22,.5)] p-4 transition hover:border-a1"
+            >
+              <div class="mb-1 text-[13.5px] font-semibold text-text">{v.name} ↗</div>
+              <div class="text-[12.5px] leading-relaxed text-muted">{v.description}</div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {country.organizations.length > 0 && (
+      <section>
+        <h2 class="mb-2.5 font-display text-[15px] font-semibold text-text">Key organizations</h2>
+        <div class="grid gap-3 sm:grid-cols-2">
+          {country.organizations.map((o) => (
+            <a
+              href={o.url}
+              target="_blank"
+              rel="noopener"
+              class="rounded-2xl border border-line2 bg-[rgba(8,10,22,.5)] p-4 transition hover:border-a1"
+            >
+              <div class="mb-0.5 text-[13.5px] font-semibold text-text">{o.name} ↗</div>
+              <div class="mb-1 text-[10.5px] font-semibold uppercase tracking-wide text-a2">{o.type}</div>
+              <div class="text-[12.5px] leading-relaxed text-muted">{o.description}</div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {country.links.length > 0 && (
+      <section>
+        <h2 class="mb-2 font-display text-[15px] font-semibold text-text">More links</h2>
+        <ul class="flex flex-col gap-1.5 pl-0">
+          {country.links.map((l) => (
+            <li class="text-[13px]">
+              <a href={l.url} target="_blank" rel="noopener" class="font-semibold">{l.label} ↗</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <p class="text-[11.5px] text-muted">
+      Last verified {country.updatedAt}. Visa rules and links change often — always confirm on the official source.
+    </p>
+  </main>
+</Base>

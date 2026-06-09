@@ -13,7 +13,7 @@ import Logo from '../components/Logo';
 import StatusBadge from '../components/StatusBadge';
 
 const TITLES: Record<string, { t: string; s: string }> = {
-  all: { t: 'Founder programs worldwide', s: 'Spin the globe or pick a program to fly there. Dense cities are mapped below. Status as of June 2026 — verify on each site.' },
+  all: { t: 'Where founders build, worldwide', s: 'Spin the globe or pick a program to fly there; dense cities are mapped below. Status as of June 2026 — verify on each site.' },
   residential: { t: 'Residencies, Hacker Houses & Startup Campuses', s: 'Programs that house or relocate founders. Spin or pick a program to fly there; dense cities are mapped below.' },
   traditional: { t: 'Traditional Accelerators & Incubators', s: 'Accelerators, incubators & talent investors — no live-in component. Dense cities are mapped below.' },
 };
@@ -275,13 +275,14 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       <aside className="relative z-[5] flex w-[360px] min-w-[360px] flex-col border-r border-line bg-panel backdrop-blur-[18px] max-[760px]:hidden">
         <div className="border-b border-line px-5 pb-3 pt-[18px]">
           <div className="mb-2 font-display text-[10.5px] font-semibold uppercase tracking-[.22em] text-a2">
-            Founder LAB MAP · 3D · 2026
+            Founder Atlas · 3D · 2026
           </div>
           <div className="mb-2.5">
             <nav className="viewnav" aria-label="Views">
               <a href="/dashboard">Dashboard</a>
-              <a href="/map">Map</a>
               <a href="/" className="active" aria-current="page">Globe</a>
+              <a href="/map">Map</a>
+              <a href="/countries">Countries</a>
             </nav>
           </div>
           <h1

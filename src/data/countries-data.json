@@ -1,0 +1,175 @@
+{
+  "meta": {
+    "title": "Founder Atlas — country startup-ecosystem profiles",
+    "compiled": "2026-06-09",
+    "note": "Human-curated profiles of national startup ecosystems for founders considering relocation. Each entry is a stand-alone record keyed by `slug` so it can later be served from a cloud database without code changes (see src/data/countries.ts for the swap point). Links and visa details change frequently — always confirm on the official source.",
+    "schema": {
+      "slug": "URL-safe id, also the /country/<slug> route",
+      "name": "Display name; MUST match the `country` value used in the program datasets so program counts join",
+      "region": "Coarse world region",
+      "lat": "Approximate centroid latitude (for map centering)",
+      "lng": "Approximate centroid longitude",
+      "summary": "1-2 sentence ecosystem overview for a relocating founder",
+      "highlights": "Short bullet facts (strengths, hubs, notable wins)",
+      "visas": "Founder/startup-relevant visa or residency routes: { name, description, url }",
+      "organizations": "Key ecosystem orgs to know: { name, type, description, url }",
+      "links": "Other useful official/portal links: { label, url }",
+      "updatedAt": "ISO date this record was last verified",
+      "source": "Where the record was curated from (free text)"
+    }
+  },
+  "countries": [
+    {
+      "slug": "usa",
+      "name": "USA",
+      "region": "North America",
+      "lat": 39.5,
+      "lng": -98.35,
+      "summary": "The deepest pool of startup capital, talent and programs on earth, anchored by the SF Bay Area and New York. Unmatched for raising venture funding, but immigration is the main friction for foreign founders.",
+      "highlights": [
+        "Largest venture capital market globally; SF Bay Area + NYC dominate.",
+        "Most accelerators and residencies (YC, Techstars, a16z Speedrun, f.inc).",
+        "No dedicated startup visa — founders typically use O-1, H-1B, or the International Entrepreneur Parole route."
+      ],
+      "visas": [
+        { "name": "International Entrepreneur Parole (IEP)", "description": "Up to 5 years for founders of fast-growing startups with qualified investment.", "url": "https://www.uscis.gov/humanitarian/international-entrepreneur-parole" },
+        { "name": "O-1A Visa", "description": "For individuals with extraordinary ability — commonly used by founders.", "url": "https://www.uscis.gov/working-in-the-united-states/temporary-workers/o-1-visa-individuals-with-extraordinary-ability-or-achievement" }
+      ],
+      "organizations": [
+        { "name": "U.S. Small Business Administration (SBA)", "type": "Government", "description": "Federal agency supporting small businesses and startups.", "url": "https://www.sba.gov/" },
+        { "name": "National Venture Capital Association", "type": "Industry body", "description": "Trade association of the US VC industry.", "url": "https://nvca.org/" }
+      ],
+      "links": [
+        { "label": "USCIS — working in the US", "url": "https://www.uscis.gov/working-in-the-united-states" }
+      ],
+      "updatedAt": "2026-06-09",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "uk",
+      "name": "UK",
+      "region": "Europe",
+      "lat": 54.0,
+      "lng": -2.0,
+      "summary": "Europe's largest startup hub centred on London, with strong fintech, AI and deep-tech scenes and a dedicated, well-understood founder visa route.",
+      "highlights": [
+        "London is Europe's leading VC and fintech hub.",
+        "Innovator Founder visa is purpose-built for startup founders.",
+        "Strong university spinout pipeline (Oxford, Cambridge, Imperial)."
+      ],
+      "visas": [
+        { "name": "Innovator Founder visa", "description": "For founders with an innovative, viable and scalable business endorsed by an approved body.", "url": "https://www.gov.uk/innovator-founder-visa" },
+        { "name": "Global Talent visa", "description": "For leaders or potential leaders in tech, research and the arts.", "url": "https://www.gov.uk/global-talent" }
+      ],
+      "organizations": [
+        { "name": "Tech Nation / Innovate UK", "type": "Government / Quango", "description": "National support and endorsement for high-growth tech companies.", "url": "https://www.ukri.org/councils/innovate-uk/" },
+        { "name": "British Business Bank", "type": "Government", "description": "Government-owned development bank improving access to finance for smaller businesses.", "url": "https://www.british-business-bank.co.uk/" }
+      ],
+      "links": [
+        { "label": "GOV.UK — set up a business", "url": "https://www.gov.uk/set-up-business" }
+      ],
+      "updatedAt": "2026-06-09",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "singapore",
+      "name": "Singapore",
+      "region": "Asia",
+      "lat": 1.35,
+      "lng": 103.82,
+      "summary": "The gateway to Southeast Asia: pro-business regulation, deep government grants, and a fast, founder-friendly visa make it the default Asian HQ for many startups.",
+      "highlights": [
+        "Strong government co-investment and grant ecosystem (Startup SG).",
+        "Hub for Southeast Asian expansion and fintech.",
+        "Fast company incorporation and clear tax regime."
+      ],
+      "visas": [
+        { "name": "EntrePass", "description": "For eligible foreign entrepreneurs starting and operating a venture-backed or innovative business.", "url": "https://www.mom.gov.sg/passes-and-permits/entrepass" }
+      ],
+      "organizations": [
+        { "name": "Enterprise Singapore", "type": "Government", "description": "Government agency championing enterprise development, including Startup SG.", "url": "https://www.enterprisesg.gov.sg/" },
+        { "name": "Startup SG", "type": "Government programme", "description": "National umbrella for startup grants, talent and funding schemes.", "url": "https://www.startupsg.gov.sg/" }
+      ],
+      "links": [
+        { "label": "EDB — why Singapore", "url": "https://www.edb.gov.sg/" }
+      ],
+      "updatedAt": "2026-06-09",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "uae",
+      "name": "UAE",
+      "region": "Middle East",
+      "lat": 24.0,
+      "lng": 54.0,
+      "summary": "Dubai and Abu Dhabi have built fast-growing, capital-rich ecosystems with zero personal income tax, long-term 'Golden' residency, and aggressive sovereign-backed funding.",
+      "highlights": [
+        "No personal income tax; multiple free zones for foreign ownership.",
+        "Sovereign and government-backed funds actively deploying capital.",
+        "Long-term residency via the Golden Visa for entrepreneurs and talent."
+      ],
+      "visas": [
+        { "name": "Golden Visa (Entrepreneurs)", "description": "Long-term (up to 10-year) residency for entrepreneurs and investors.", "url": "https://u.ae/en/information-and-services/visa-and-emirates-id/residence-visas/golden-visa" }
+      ],
+      "organizations": [
+        { "name": "Hub71 (Abu Dhabi)", "type": "Ecosystem / Government-backed", "description": "Global tech ecosystem offering incentives, capital and market access.", "url": "https://hub71.com/" },
+        { "name": "Dubai SME", "type": "Government", "description": "Agency of the Dubai Economy supporting entrepreneurship and SMEs.", "url": "https://sme.ae/" }
+      ],
+      "links": [
+        { "label": "u.ae — starting a business", "url": "https://u.ae/en/information-and-services/business" }
+      ],
+      "updatedAt": "2026-06-09",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "estonia",
+      "name": "Estonia",
+      "region": "Europe",
+      "lat": 58.6,
+      "lng": 25.0,
+      "summary": "A small but outsized digital-first ecosystem: e-Residency lets founders run an EU company fully online, and a dedicated Startup Visa welcomes non-EU founders.",
+      "highlights": [
+        "e-Residency: run an EU-based company entirely online.",
+        "Highest number of unicorns per capita in Europe (Wise, Bolt, Skype heritage).",
+        "Dedicated Startup Visa and Startup Estonia programme."
+      ],
+      "visas": [
+        { "name": "Estonian Startup Visa", "description": "For non-EU founders to relocate and build, or to hire from abroad.", "url": "https://startupestonia.ee/visa" },
+        { "name": "e-Residency", "description": "Digital identity to register and run an EU company remotely (not a residence permit).", "url": "https://www.e-resident.gov.ee/" }
+      ],
+      "organizations": [
+        { "name": "Startup Estonia", "type": "Government programme", "description": "Government initiative to supercharge the local startup ecosystem.", "url": "https://startupestonia.ee/" }
+      ],
+      "links": [
+        { "label": "Invest in Estonia", "url": "https://investinestonia.com/" }
+      ],
+      "updatedAt": "2026-06-09",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "france",
+      "name": "France",
+      "region": "Europe",
+      "lat": 46.6,
+      "lng": 2.2,
+      "summary": "A heavily state-supported ecosystem centred on Paris and Station F, with the well-known French Tech Visa and generous public co-funding via Bpifrance.",
+      "highlights": [
+        "Station F (Paris) is one of the world's largest startup campuses.",
+        "Strong public funding and R&D tax credits via Bpifrance.",
+        "French Tech Visa is a fast track for founders, employees and investors."
+      ],
+      "visas": [
+        { "name": "French Tech Visa for Founders", "description": "4-year renewable residence permit for founders selected by a partner incubator/accelerator.", "url": "https://lafrenchtech.gouv.fr/en/how-france-helps-startups/french-tech-visa/" }
+      ],
+      "organizations": [
+        { "name": "La French Tech", "type": "Government initiative", "description": "National movement and support network for French startups.", "url": "https://lafrenchtech.gouv.fr/en/" },
+        { "name": "Bpifrance", "type": "Government", "description": "Public investment bank financing and supporting French companies.", "url": "https://www.bpifrance.fr/" }
+      ],
+      "links": [
+        { "label": "Welcome to France — talent", "url": "https://www.welcometofrance.com/en" }
+      ],
+      "updatedAt": "2026-06-09",
+      "source": "Initial scaffold — needs verification pass"
+    }
+  ]
+}
