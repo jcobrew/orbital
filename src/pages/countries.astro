@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import ViewNav from '../components/ViewNav.astro';
+import { COUNTRIES } from '../data/countries';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Founder Atlas — country startup-ecosystem profiles',
+  numberOfItems: COUNTRIES.length,
+  itemListElement: COUNTRIES.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: { '@type': 'Country', name: c.name, description: c.summary },
+  })),
+};
+---
+
+<Base
+  title="Founder Atlas — country startup ecosystems"
+  description="Profiles of national startup ecosystems for founders considering relocation: visas, key organizations and links, plus the programs available in each country."
+>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} slot="head" />
+
+  <header class="mx-auto max-w-[1100px] px-7 pt-6">
+    <div class="mb-2 font-display text-[10.5px] font-semibold uppercase tracking-[.22em] text-a2">
+      Founder Atlas · Countries · 2026
+    </div>
+    <div class="mb-3.5 max-w-[420px]">
+      <ViewNav current="countries" />
+    </div>
+    <h1
+      class="m-0 mb-2 font-display text-[26px] font-bold leading-[1.15]"
+      style="background:linear-gradient(100deg,#fff 10%,#c9c2ff 55%,#9be9ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent"
+    >
+      Where in the world to build
+    </h1>
+    <p class="mb-1.5 max-w-[680px] text-[13px] leading-normal text-muted">
+      Go one level up from individual programs: each country profile covers the startup ecosystem, visa
+      and residency routes, and the key organizations to know. More countries are being added —
+      eventually you'll open these straight from the map.
+    </p>
+  </header>
+
+  <main class="mx-auto max-w-[1100px] px-7 pb-16 pt-4">
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {COUNTRIES.map((c) => (
+        <a
+          href={`/country/${c.slug}`}
+          class="flex flex-col rounded-2xl border border-line2 bg-[rgba(8,10,22,.5)] p-5 transition hover:border-a1"
+        >
+          <div class="mb-1 flex items-baseline justify-between gap-2">
+            <span class="font-display text-[17px] font-bold text-text">{c.name}</span>
+            <span class="text-[11px] text-muted">{c.region}</span>
+          </div>
+          <p class="mb-3 flex-1 text-[12.5px] leading-relaxed text-muted">{c.summary}</p>
+          <div class="flex flex-wrap gap-1.5 text-[11px] text-muted">
+            <span class="rounded-full border border-line2 px-2 py-0.5 font-semibold text-text">{c.programCount} programs</span>
+            {c.visas.length > 0 && <span class="rounded-full border border-line2 px-2 py-0.5">{c.visas.length} visa routes</span>}
+            {c.organizations.length > 0 && <span class="rounded-full border border-line2 px-2 py-0.5">{c.organizations.length} orgs</span>}
+          </div>
+        </a>
+      ))}
+    </div>
+  </main>
+</Base>

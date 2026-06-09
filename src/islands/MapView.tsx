@@ -12,8 +12,8 @@ import Logo from '../components/Logo';
 
 const TITLES: Record<string, { t: string; s: string }> = {
   all: {
-    t: 'Founder programs worldwide',
-    s: 'Every living & building support program on one map — click a pin or list item for details. Status as of June 2026 — verify on each site.',
+    t: 'Where founders build, worldwide',
+    s: 'Find the best places to relocate and the startup support waiting there — click a pin or list item for details. Status as of June 2026 — verify on each site.',
   },
   residential: {
     t: 'Residencies, Hacker Houses & Startup Campuses',
@@ -319,13 +319,14 @@ export default function MapView({ programs }: { programs: Program[] }) {
       <aside className="relative z-[5] flex w-[360px] min-w-[360px] flex-col border-r border-line bg-panel backdrop-blur-[18px] max-[760px]:hidden">
         <div className="border-b border-line px-5 pb-3 pt-[18px]">
           <div className="mb-2 font-display text-[10.5px] font-semibold uppercase tracking-[.22em] text-a2">
-            Founder LAB MAP · 2026
+            Founder Atlas · 2026
           </div>
           <div className="mb-2.5">
             <nav className="viewnav" aria-label="Views">
               <a href="/dashboard">Dashboard</a>
               <a href="/" className="active" aria-current="page">Map</a>
               <a href="/startup-programs-globe">Globe</a>
+              <a href="/countries">Countries</a>
             </nav>
           </div>
           <h1

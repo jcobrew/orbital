@@ -11,8 +11,8 @@ import {
 export const GET: APIRoute = () => {
   const body = {
     meta: {
-      title: 'Founder LAB MAP — unified program API',
-      tagline: 'Where founders find all kinds of living and building support programs.',
+      title: 'Founder Atlas — unified program API',
+      tagline: 'The best places for founders to relocate and build, and the startup support waiting there.',
       compiled: new Date().toISOString().slice(0, 10),
       note:
         'Generated from the source datasets at build time. Recruiting status reflects ' +
