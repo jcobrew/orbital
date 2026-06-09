@@ -13,8 +13,8 @@
   --color-a1: #8b93b8;
   --color-a2: #c2c9e6;
 
-  /* mono for headings/labels/data, sans for body */
-  --font-display: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  /* display face for headings/labels, sans for body */
+  --font-display: 'Space Grotesk', sans-serif;
   --font-sans: 'Inter', system-ui, sans-serif;
 
   /* Crisp corners everywhere (circles via rounded-full / 50% are unaffected). */
