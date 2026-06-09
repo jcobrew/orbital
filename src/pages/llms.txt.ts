@@ -42,8 +42,8 @@ Any filter state is reflected back into the URL, so a dashboard URL is a shareab
 
 ## Human views
 
-- [Map](/): 2D interactive Leaflet map (landing page).
-- [Globe](/startup-programs-globe): 3D globe of the same data.
+- [Globe](/): 3D globe of the data (landing page).
+- [Map](/map): 2D interactive Leaflet map of the same data.
 `;
 
 export const GET: APIRoute = () =>

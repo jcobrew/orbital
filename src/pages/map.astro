@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import MapView from '../islands/MapView.tsx';
+import { PROGRAMS } from '../data/programs';
+---
+
+<Base
+  title="Founder LAB MAP — Map (Residential & Traditional)"
+  description="Interactive map of founder living & building support programs worldwide — residencies, hacker houses, startup campuses, accelerators & incubators."
+  fullscreen
+>
+  <!-- Leaflet needs the DOM; render this island client-only. -->
+  <MapView programs={PROGRAMS} client:only="react" />
+  <div slot="head"></div>
+</Base>

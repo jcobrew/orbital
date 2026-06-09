@@ -64,7 +64,7 @@ function popupHTML(p: Program): string {
       ${r('🎯', 'Focus: ', p.focus)}
       ${r('🧭', 'Run by: ', p.operator || 'Not publicly listed')}
       ${r('🌱', 'Stage: ', p.stage)}
-      ${r('📨', 'Recruiting: ', p.status_detail)}
+      ${p.status_detail ? r('📋', 'Details: ', p.status_detail) : ''}
     </div>
     ${p.highlight ? `<div class="hl">${p.highlight}</div>` : ''}
     <a class="pop-link" href="${p.url}" target="_blank" rel="noopener">Visit program →</a>
@@ -324,8 +324,8 @@ export default function MapView({ programs }: { programs: Program[] }) {
           <div className="mb-2.5">
             <nav className="viewnav" aria-label="Views">
               <a href="/dashboard">Dashboard</a>
-              <a href="/" className="active" aria-current="page">Map</a>
-              <a href="/startup-programs-globe">Globe</a>
+              <a href="/map" className="active" aria-current="page">Map</a>
+              <a href="/">Globe</a>
             </nav>
           </div>
           <h1
