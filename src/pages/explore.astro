@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import SiteNav from '../components/SiteNav.tsx';
 import FilterSidebar from '../components/FilterSidebar.tsx';
+import FounderTriggers from '../components/FounderTriggers.tsx';
 import ExploreResults from '../components/ExploreResults.tsx';
 import { PROGRAMS } from '../data/programs';
 
@@ -28,6 +29,9 @@ const submitting = Astro.url.searchParams.get('intent') === 'submit';
   }
 
   <main class="mx-auto max-w-[1400px] px-7 pb-16 pt-5">
+    <div class="mb-5">
+      <FounderTriggers mode="apply" client:load />
+    </div>
     <div class="mb-4">
       <FilterSidebar programs={PROGRAMS} variant="dashboard" client:load />
     </div>

@@ -63,3 +63,8 @@ export function setFilters(patch: Partial<Filters>): void {
   const qs = filtersToQuery(next);
   history.replaceState(null, '', qs ? location.pathname + '?' + qs : location.pathname);
 }
+
+/** Replace all filters with a clean preset (used by the founder triggers). */
+export function applyPreset(preset: Partial<Filters>): void {
+  setFilters({ ...EMPTY_FILTERS, ...preset });
+}
