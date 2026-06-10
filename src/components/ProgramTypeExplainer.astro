@@ -1,39 +1,8 @@
 ---
-// Static explainer cards (handoff §8.1) — help a first-time founder pick the
-// right kind of program. Each CTA deep-links into /explore with a free-text
-// query, which the existing search matches against type/focus.
-const CARDS = [
-  {
-    name: 'Accelerator',
-    best: 'Best when you have a product, early traction, or a fundraise coming up.',
-    helps: ['Mentorship', 'Investor access', 'Pitch & demo day', 'Funding', 'Go-to-market pressure'],
-    q: 'accelerator',
-  },
-  {
-    name: 'Incubator',
-    best: 'Best when you are still turning an idea into a company.',
-    helps: ['MVP development', 'Workspace', 'Early mentorship', 'Business model', 'Lab/community resources'],
-    q: 'incubator',
-  },
-  {
-    name: 'Residency',
-    best: 'Best when you need focus and a temporary environment built around building.',
-    helps: ['Housing', 'Coworking', 'Peer accountability', 'Coaching', 'Going full-time'],
-    q: 'residency',
-  },
-  {
-    name: 'Hacker house',
-    best: 'Best when you want proximity to other builders and fast daily momentum.',
-    helps: ['Builder density', 'Serendipity', 'Cofounder discovery', 'Hackathons', 'Community'],
-    q: 'hacker house',
-  },
-  {
-    name: 'Fellowship',
-    best: 'Best when you are high-potential but early — often pre-idea or pre-product.',
-    helps: ['Founder-market fit', 'Exploration', 'Mentorship', 'Grants or investment', 'Long-term network'],
-    q: 'fellowship',
-  },
-];
+// Explainer cards (handoff §8.1) — help a founder pick the right kind of program.
+// Content lives in src/data/programTypes.ts so the intro overlay reuses it. Each
+// CTA deep-links into /explore with a free-text query matched against type/focus.
+import { PROGRAM_TYPES as CARDS } from '../data/programTypes';
 ---
 
 <section class="mx-auto max-w-[1200px] px-7 py-10">

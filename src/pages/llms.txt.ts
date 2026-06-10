@@ -61,10 +61,12 @@ cloud database without changing the API shape.
 
 ## Human views
 
-- [Home](/): founder-first landing — positioning, program-type explainer, and search.
-- [Explore](/explore): searchable, filterable card list with a program detail drawer (List/Map/Globe toggle).
+Every page shares one header: brand · a Globe / Map / List view toggle · Countries · About.
+
+- [Globe](/): 3D globe — the desktop entry point (small screens redirect to the list).
+- [List](/explore): searchable, filterable card list with a program detail drawer.
 - [Map](/map): 2D interactive Leaflet map of the same data.
-- [Globe](/globe): 3D globe of the data (premium exploration mode).
+- [About](/about): what Founder Atlas is + a guide to the program types.
 
 The /explore page accepts the same query params as the dashboard (\`q\`, \`type\`, \`country\`, \`status\`,
 \`focus\`, plus \`format\`, \`stage\`, \`sector\`, \`housing\`), e.g. \`/explore?q=residency&country=USA\`.

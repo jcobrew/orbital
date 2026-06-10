@@ -1,122 +1,21 @@
 ---
 import Base from '../layouts/Base.astro';
-import ViewNav from '../components/ViewNav.astro';
-import ProgramTypeExplainer from '../components/ProgramTypeExplainer.astro';
-import { PROGRAMS, FACETS } from '../data/programs';
-
-const countryCount = Object.keys(FACETS.country).length;
+import GlobeView from '../islands/GlobeView.tsx';
+import { PROGRAMS } from '../data/programs';
 ---
 
 <Base
   title="Founder Atlas — Find Startup Accelerators, Incubators, Residencies & Hacker Houses"
-  description="Explore a live global map of startup accelerators, incubators, founder residencies, hacker houses, fellowships, and startup support programs. Filter by stage, sector, funding, housing, location, and application status."
+  description="A live global map of startup accelerators, incubators, founder residencies, hacker houses and fellowships. Explore on a 3D globe, a 2D map, or a filterable list — by stage, sector, funding, housing, location and application status."
+  fullscreen
 >
-  <header class="mx-auto max-w-[1200px] px-7 pt-6">
-    <div class="mb-2 font-display text-[10.5px] font-semibold uppercase tracking-[.22em] text-a2">
-      Founder Atlas · 2026
-    </div>
-    <div class="max-w-[520px]">
-      <ViewNav current="home" />
-    </div>
-  </header>
-
-  <!-- Hero (handoff §7) -->
-  <section class="mx-auto max-w-[1200px] px-7 pb-6 pt-12">
-    <h1 class="m-0 mb-4 max-w-[760px] font-display text-[34px] font-bold leading-[1.08] text-text sm:text-[44px]">
-      Find the right startup program for your next move.
-    </h1>
-    <p class="m-0 mb-6 max-w-[680px] text-[15px] leading-relaxed text-muted">
-      A live map of accelerators, incubators, founder residencies, hacker houses, fellowships, and
-      startup support programs around the world. Filter by stage, sector, funding, location, housing,
-      equity, and application status — so you can find the environment that fits what you need now.
-    </p>
-
-    <!-- No-JS search: a plain GET form to /explore -->
-    <form action="/explore" method="get" role="search" class="mb-5 flex max-w-[620px] flex-wrap gap-2.5">
-      <input
-        type="text"
-        name="q"
-        aria-label="Search programs, cities, or sectors"
-        placeholder="Search a program, city, sector, or “hacker house”…"
-        class="min-w-[220px] flex-1 rounded-md border border-line2 bg-[rgba(8,10,22,.6)] px-3.5 py-3 text-[14px] text-text outline-none transition focus:border-a1"
-      />
-      <button
-        type="submit"
-        class="rounded-md border border-transparent px-5 py-3 font-display text-[13.5px] font-bold text-[#08101f]"
-        style="background:var(--grad)"
-      >
-        Explore programs
-      </button>
-    </form>
-
-    <div class="flex flex-wrap items-center gap-3 text-[13px]">
-      <a
-        href="/explore"
-        class="rounded-md border border-line2 px-4 py-2.5 font-display text-[13px] font-semibold text-text no-underline transition hover:border-a1"
-      >
-        Browse all {PROGRAMS.length} programs →
-      </a>
-      <a
-        href="/explore?intent=submit"
-        class="text-[13px] font-semibold text-a2 no-underline hover:underline"
-      >
-        Add or update a program
-      </a>
-    </div>
-
-    <p class="mt-5 text-[12px] text-muted">
-      Built for founders looking for momentum, network, capital, and a place to build —
-      {PROGRAMS.length} programs across {countryCount} countries.
-    </p>
-  </section>
-
-  <ProgramTypeExplainer />
-
-  <!-- Explore section (handoff §8.3) -->
-  <section class="mx-auto max-w-[1200px] px-7 py-10">
-    <h2 class="m-0 mb-1.5 font-display text-[20px] font-bold text-text">Explore startup support around the world</h2>
-    <p class="mb-6 max-w-[640px] text-[13px] leading-normal text-muted">
-      Browse as a searchable list, on a 2D map, or spin the 3D globe. Your filters carry across all three.
-    </p>
-    <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-      <a href="/explore" class="rounded-md border border-line bg-[rgba(10,13,28,.55)] p-5 no-underline transition hover:border-a1">
-        <h3 class="m-0 mb-1.5 font-display text-[15px] font-bold text-text">List</h3>
-        <p class="m-0 text-[12px] leading-normal text-muted">Filter, compare, and open program details. Best on mobile and for fast scanning.</p>
-      </a>
-      <a href="/map" class="rounded-md border border-line bg-[rgba(10,13,28,.55)] p-5 no-underline transition hover:border-a1">
-        <h3 class="m-0 mb-1.5 font-display text-[15px] font-bold text-text">Map</h3>
-        <p class="m-0 text-[12px] leading-normal text-muted">See programs by location on a 2D world map with dense-city callouts.</p>
-      </a>
-      <a href="/globe" class="rounded-md border border-line bg-[rgba(10,13,28,.55)] p-5 no-underline transition hover:border-a1">
-        <h3 class="m-0 mb-1.5 font-display text-[15px] font-bold text-text">Globe <span class="text-[10px] uppercase tracking-wide text-a2">3D</span></h3>
-        <p class="m-0 text-[12px] leading-normal text-muted">The premium exploration mode. Spin the planet and fly to any program.</p>
-      </a>
-    </div>
-  </section>
-
-  <!-- Contribute (handoff §8.4) -->
-  <section class="mx-auto max-w-[1200px] px-7 pb-16">
-    <div class="rounded-md border border-line bg-[rgba(10,13,28,.55)] p-6">
-      <h2 class="m-0 mb-1.5 font-display text-[18px] font-bold text-text">Know a program we missed?</h2>
-      <p class="m-0 mb-4 max-w-[620px] text-[13px] leading-normal text-muted">
-        Founder Atlas is only useful if it stays current. Submit a program, update an application
-        deadline, or correct outdated terms.
-      </p>
-      <a
-        href="/explore?intent=submit"
-        class="inline-block rounded-md border border-line2 px-4 py-2.5 font-display text-[13px] font-semibold text-text no-underline transition hover:border-a1"
-      >
-        Submit an update
-      </a>
-    </div>
-  </section>
-
-  <footer class="mx-auto max-w-[1200px] px-7 pb-12 text-[12px] leading-relaxed text-muted">
-    <p>
-      Status reflects best-available public info as of June 2026 and changes often — always confirm on
-      the official site before applying. Building agents? The data is at
-      <a href="/api/programs.json" class="font-semibold">/api/programs.json</a> and
-      <a href="/llms.txt" class="font-semibold">/llms.txt</a>.
-    </p>
-  </footer>
+  <!-- Small screens go straight to the list; the globe is the desktop entry. -->
+  <script slot="head" is:inline>
+    if (window.matchMedia('(max-width: 760px)').matches) {
+      window.location.replace('/explore' + window.location.search + window.location.hash);
+    }
+  </script>
+  <!-- Globe.gl (Three.js) needs the DOM; render this island client-only. -->
+  <GlobeView programs={PROGRAMS} client:only="react" />
+  <div slot="head"></div>
 </Base>

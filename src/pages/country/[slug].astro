@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import ViewNav from '../../components/ViewNav.astro';
+import SiteNav from '../../components/SiteNav.tsx';
 import { COUNTRIES, getCountry } from '../../data/countries';
 
 // One static page per country profile. As the dataset grows (or moves to a
@@ -31,13 +31,8 @@ const jsonLd = {
   <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} slot="head" />
 
   <header class="mx-auto max-w-[900px] px-7 pt-6">
-    <div class="mb-2 font-display text-[10.5px] font-semibold uppercase tracking-[.22em] text-a2">
-      Founder Atlas · Country · 2026
-    </div>
-    <div class="mb-3.5 max-w-[420px]">
-      <ViewNav current="countries" />
-    </div>
-    <a href="/countries" class="text-[12px] text-muted hover:text-text">← All countries</a>
+    <SiteNav current="countries" client:load />
+    <a href="/countries" class="mt-5 inline-block text-[12px] text-muted hover:text-text">← All countries</a>
     <h1
       class="m-0 mb-2 mt-1 font-display text-[30px] font-bold leading-[1.12]"
       style="color:var(--text)"
