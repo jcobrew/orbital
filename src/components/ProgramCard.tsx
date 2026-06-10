@@ -1,6 +1,7 @@
 import type { Program } from '../data/programs';
 import Logo from './Logo';
 import StatusBadge from './StatusBadge';
+import LivingModelBadge from './LivingModelBadge';
 
 /** Apply link prefers an explicit applyUrl, else the program's site. */
 export function applyHref(p: Program): string {
@@ -39,9 +40,9 @@ export default function ProgramCard({ program: p, onSelect }: { program: Program
 
       {p.highlight && <p className="m-0 mb-3 line-clamp-2 text-[12px] leading-normal text-muted">{p.highlight}</p>}
 
-      <div className="mb-3 flex flex-wrap gap-1.5">
+      <div className="mb-3 flex flex-wrap items-center gap-1.5">
+        <LivingModelBadge format={p.format} />
         {p.stage && <Badge>{p.stage}</Badge>}
-        {p.format && p.format !== 'unknown' && <Badge>{p.format}</Badge>}
         {p.providesHousing === true && <Badge>Housing</Badge>}
         {p.fundingAmount && <Badge>{p.fundingAmount}</Badge>}
         {p.equityTaken && <Badge>{p.equityTaken} equity</Badge>}

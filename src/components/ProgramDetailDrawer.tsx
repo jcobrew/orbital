@@ -3,6 +3,7 @@ import type { Program } from '../data/programs';
 import Logo from './Logo';
 import StatusBadge from './StatusBadge';
 import { applyHref } from './ProgramCard';
+import { livingModelLabel } from '../lib/living';
 
 const UNKNOWN = 'Unknown';
 
@@ -122,7 +123,7 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
           <dl className="mb-5 grid grid-cols-2 gap-x-4 gap-y-3">
             <Fact label="Stage fit" value={(p.stageFit && p.stageFit.join(', ')) || val(p.stage)} />
             <Fact label="Sector" value={(p.sectorFocus && p.sectorFocus.join(', ')) || val(p.focus)} />
-            <Fact label="Format" value={val(p.format)} />
+            <Fact label="Living model" value={livingModelLabel(p.format) ?? UNKNOWN} />
             <Fact label="Duration" value={duration(p)} />
             <Fact label="Housing" value={boolVal(p.providesHousing)} />
             <Fact label="Workspace" value={boolVal(p.providesWorkspace)} />
