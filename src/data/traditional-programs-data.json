@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Traditional Startup Support Programs — Active Global Database",
-    "compiled": "2026-06-08",
+    "compiled": "2026-06-10",
     "note": "Active accelerators, incubators, talent investors and startup campuses worldwide (no residential/co-living requirement). Recruiting status is best-available public info as of June 2026 and changes frequently — always confirm on each program's site. Companion to the residential database (startup-programs-data.json).",
     "status_legend": {
       "rolling": "Accepts applications on a rolling/always-open basis",
@@ -27,7 +27,27 @@
       "status_detail": "Now funds ~1,000 companies/yr across multiple batches. $500K total ($125K for 7% + $375K MFN SAFE), 3 months in SF.",
       "domain": "ycombinator.com",
       "url": "https://www.ycombinator.com/apply",
-      "highlight": "5,000+ alumni companies; the reference point for the whole category."
+      "highlight": "5,000+ alumni companies; the reference point for the whole category.",
+      "format": "in-person",
+      "durationWeeksMin": 11,
+      "durationWeeksMax": 12,
+      "stageFit": [
+        "idea",
+        "pre-seed",
+        "seed"
+      ],
+      "fundingAmount": "$500K ($125K for 7% + $375K uncapped MFN SAFE)",
+      "equityTaken": "7%",
+      "providesFunding": true,
+      "providesMentorship": true,
+      "providesInvestorAccess": true,
+      "providesDemoDay": true,
+      "applyUrl": "https://www.ycombinator.com/apply",
+      "sourceUrls": [
+        "https://www.ycombinator.com/deal"
+      ],
+      "lastVerified": "2026-06-10",
+      "verificationStatus": "verified"
     },
     {
       "name": "Techstars",
@@ -251,7 +271,28 @@
       "status_detail": "Builds teams from individuals; also Paris, Bangalore, NYC & SF. ~$80–100K for 8–10%.",
       "domain": "joinef.com",
       "url": "https://www.joinef.com/",
-      "highlight": "Pioneered 'talent investing' — backing people before they have a company."
+      "highlight": "Pioneered 'talent investing' — backing people before they have a company.",
+      "format": "in-person",
+      "stageFit": [
+        "pre-idea",
+        "pre-seed"
+      ],
+      "founderFit": [
+        "solo-founder",
+        "technical-builder",
+        "domain-expert"
+      ],
+      "fundingAmount": "Up to $250K ($125K for 8% + optional $125K MFN); explore stage: $10K equity-free grant",
+      "equityTaken": "8%",
+      "providesFunding": true,
+      "providesMentorship": true,
+      "notes": "Backs individuals pre-team with cofounder matching. US program includes an SF residency for the first ~3 months.",
+      "sourceUrls": [
+        "https://www.joinef.com/faqs/us/",
+        "https://www.joinef.com/"
+      ],
+      "lastVerified": "2026-06-10",
+      "verificationStatus": "verified"
     },
     {
       "name": "Antler",

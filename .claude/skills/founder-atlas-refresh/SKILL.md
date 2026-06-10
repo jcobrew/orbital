@@ -21,16 +21,34 @@ and any new rules learned there should be folded back into this file.
 
 ## The two datasets
 
-- `startup-programs-data.json` — **residential** programs only: residencies, hacker
+The datasets live in **`src/data/`** (they moved there in the Astro migration — older
+references to the repo root are stale):
+
+- `src/data/startup-programs-data.json` — **residential** programs: residencies, hacker
   houses, co-living, startup campuses, programs with a genuine **live-in or
   relocation** component.
-- `traditional-programs-data.json` — traditional accelerators, incubators, talent
-  investors **without** a live-in/relocation element.
+- `src/data/traditional-programs-data.json` — traditional accelerators, incubators,
+  talent investors **without** a live-in/relocation element.
 
 The dividing line is real and load-bearing. Antler, EF, YC, a16z Speedrun, Sequoia
 Arc, Techstars, Betaworks, On Deck, Z Fellows, HAX, etc. are **traditional** — never
 put them in the residential file. When unsure which file an entry belongs in, flag it
 in the PR rather than guessing.
+
+### Hybrid / relocation-cohort programs (emerging — flag, don't reclassify)
+
+Some programs don't fit the binary: a **traditional accelerator that includes a
+relocation or live-in phase** — e.g. EF's "The Bridge" (traditional + relocation for
+part of the program), or cohort-based accelerators that temporarily relocate founders
+to SF. A **`hybrid` category** is under discussion but **not yet adopted**. For now:
+
+- Keep the entry in the file that matches its *primary* model and **do not invent a
+  third file or a `hybrid` dataset value**.
+- Capture the nuance in fields instead: `format: "hybrid"`, and describe the
+  relocation/phase structure in `notes` (e.g. "12-wk accelerator; weeks 6–12 relocate
+  to SF").
+- **Add a "Needs human review" item** in the PR for any program where the
+  residential/traditional split feels wrong, so the taxonomy decision stays human.
 
 ## Entry schema
 
@@ -123,14 +141,14 @@ Before opening the PR:
 
 ```bash
 # Both files must be valid JSON
-python3 -c "import json; json.load(open('startup-programs-data.json'))"
-python3 -c "import json; json.load(open('traditional-programs-data.json'))"
+python3 -c "import json; json.load(open('src/data/startup-programs-data.json'))"
+python3 -c "import json; json.load(open('src/data/traditional-programs-data.json'))"
 
 # Spot-check: every program has the required keys
 python3 - <<'PY'
 import json
 req = {"name","type","city","country","lat","lng","status","url"}
-for f in ("startup-programs-data.json","traditional-programs-data.json"):
+for f in ("src/data/startup-programs-data.json","src/data/traditional-programs-data.json"):
     progs = json.load(open(f))["programs"]
     bad = [p.get("name","?") for p in progs if not req <= set(p)]
     print(f, len(progs), "programs", "— missing fields:" , bad or "none")
