@@ -68,8 +68,11 @@ Every page shares one header: brand · a Globe / Map / List view toggle · Count
 - [Map](/map): 2D interactive Leaflet map of the same data.
 - [About](/about): what Founder Atlas is + a guide to the program types.
 
+Each program also has a dedicated profile page at \`/programs/<slug>\` (slug = lowercased name,
+non-alphanumerics → hyphens), with schema.org \`EducationalOccupationalProgram\` JSON-LD.
+
 The /explore page accepts the same query params as the dashboard (\`q\`, \`type\`, \`country\`, \`status\`,
-\`focus\`, plus \`format\`, \`stage\`, \`sector\`, \`housing\`), e.g. \`/explore?q=residency&country=USA\`.
+\`focus\`, plus \`format\` (living model), \`stage\`, \`sector\`, \`housing\`), e.g. \`/explore?q=residency&country=USA\`.
 `;
 
 export const GET: APIRoute = () =>

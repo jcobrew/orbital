@@ -1,4 +1,5 @@
 import type { Program } from '../data/programs';
+import { programSlug } from '../data/programs';
 import Logo from './Logo';
 import StatusBadge from './StatusBadge';
 import LivingModelBadge from './LivingModelBadge';
@@ -25,12 +26,12 @@ export default function ProgramCard({ program: p, onSelect }: { program: Program
       <div className="mb-2.5 flex items-start gap-3">
         <Logo name={p.name} domain={p.domain} size={40} />
         <div className="min-w-0 flex-1">
-          <button
-            onClick={() => onSelect(p)}
-            className="block max-w-full truncate text-left text-[14px] font-semibold text-text hover:text-a2"
+          <a
+            href={`/programs/${programSlug(p.name)}`}
+            className="block max-w-full truncate text-[14px] font-semibold text-text no-underline hover:text-a2"
           >
             {p.name}
-          </button>
+          </a>
           <div className="mt-0.5 truncate text-[11.5px] text-muted">
             {p.type} · {p.city}, {p.country}
           </div>
