@@ -13,7 +13,14 @@ function presetQuery(t: Trigger): string {
  * applies its filter preset in place; elsewhere (mode="link") it links to
  * /explore pre-filtered. Active chip is highlighted when its preset matches.
  */
-export default function FounderTriggers({ mode = 'apply' }: { mode?: 'apply' | 'link' }) {
+export default function FounderTriggers({
+  mode = 'apply',
+  onNavigate,
+}: {
+  mode?: 'apply' | 'link';
+  /** Called when a link-mode chip is clicked (e.g. to dismiss the intro overlay). */
+  onNavigate?: () => void;
+}) {
   const filters = useStore($filters);
 
   function isActive(t: Trigger): boolean {
@@ -38,7 +45,7 @@ export default function FounderTriggers({ mode = 'apply' }: { mode?: 'apply' | '
               {t.label}
             </button>
           ) : (
-            <a key={t.label} href={presetQuery(t)} className={cls + ' no-underline'} style={style}>
+            <a key={t.label} href={presetQuery(t)} onClick={onNavigate} className={cls + ' no-underline'} style={style}>
               {t.label}
             </a>
           );
