@@ -29,7 +29,7 @@ export default function ExploreResults({ programs }: { programs: Program[] }) {
             Try removing a filter, searching a nearby city, or submitting a program we missed.
           </p>
           <a
-            href="/explore?intent=submit"
+            href="/submit"
             className="inline-block rounded-md border border-line2 px-4 py-2.5 text-[13px] font-semibold text-text no-underline transition hover:border-a1"
           >
             Submit a program

@@ -99,7 +99,7 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
               Open full page ↗
             </a>
             <a
-              href="/explore?intent=submit"
+              href={`/submit?program=${encodeURIComponent(p.name)}&mode=update`}
               className="rounded-md border border-line2 px-4 py-2.5 text-[13px] font-semibold text-muted no-underline transition hover:border-a1 hover:text-text"
             >
               Report update

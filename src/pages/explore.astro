@@ -5,8 +5,6 @@ import FilterSidebar from '../components/FilterSidebar.tsx';
 import FounderTriggers from '../components/FounderTriggers.tsx';
 import ExploreResults from '../components/ExploreResults.tsx';
 import { PROGRAMS } from '../data/programs';
-
-const submitting = Astro.url.searchParams.get('intent') === 'submit';
 ---
 
 <Base
@@ -16,17 +14,6 @@ const submitting = Astro.url.searchParams.get('intent') === 'submit';
   <header class="mx-auto max-w-[1400px] px-7 pt-5">
     <SiteNav current="list" client:load />
   </header>
-
-  {
-    submitting && (
-      <div class="mx-auto mt-4 max-w-[1400px] px-7">
-        <div class="rounded-[3px] border border-line2 bg-[rgba(10,13,28,.7)] p-4 text-[12.5px] text-muted">
-          <strong class="text-text">Submissions are coming soon.</strong> A structured submit/update form is
-          on the roadmap. In the meantime, browse the directory below — and thanks for helping keep it current.
-        </div>
-      </div>
-    )
-  }
 
   <main class="mx-auto max-w-[1400px] px-7 pb-16 pt-5">
     <div class="mb-5">

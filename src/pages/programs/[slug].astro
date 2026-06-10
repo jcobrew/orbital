@@ -111,7 +111,7 @@ const description = `${p.name}, a ${p.type} in ${p.city}, ${p.country}. See stag
         </a>
       )}
       <a
-        href="/explore?intent=submit"
+        href={`/submit?program=${encodeURIComponent(p.name)}&mode=update`}
         class="rounded-[3px] border border-line2 px-5 py-2.5 text-[13px] font-semibold text-muted no-underline transition hover:border-a1 hover:text-text"
       >
         Report update
