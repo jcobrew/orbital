@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteNav from '../components/SiteNav.tsx';
+import SubmitForm from '../components/SubmitForm.tsx';
+---
+
+<Base
+  title="Submit or update a program — Founder Atlas"
+  description="Know a startup accelerator, incubator, residency, hacker house or fellowship we're missing — or an out-of-date deadline? Submit it to Founder Atlas."
+>
+  <header class="mx-auto max-w-[920px] px-7 pt-5">
+    <SiteNav current="about" client:load />
+  </header>
+
+  <main class="mx-auto max-w-[920px] px-7 pb-16 pt-8">
+    <h1 class="m-0 mb-2 font-display text-[26px] font-bold leading-[1.12] text-text">Submit or update a program</h1>
+    <p class="m-0 mb-6 max-w-[640px] text-[13.5px] leading-relaxed text-muted">
+      Founder Atlas is only useful if it stays current. Add a program we missed, or correct a deadline or
+      terms. Submitting opens a <strong>prefilled GitHub issue</strong> (you'll need a GitHub account) that
+      we verify against primary sources before it goes live — we never publish unverified data. Only fill
+      what you know; leave the rest blank.
+    </p>
+
+    <SubmitForm client:load />
+  </main>
+</Base>
