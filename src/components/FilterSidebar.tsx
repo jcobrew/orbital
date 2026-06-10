@@ -3,6 +3,8 @@ import { useStore } from '@nanostores/react';
 import type { Program } from '../data/programs';
 import { STATUS_ORDER, statusMeta, shortStatusLabel } from '../lib/status';
 import { $filters, setFilters, initFiltersFromURL } from '../stores/filters';
+import { livingModelLabel } from '../lib/living';
+import type { ProgramFormat } from '../data/programs';
 
 type Variant = 'dashboard' | 'sidebar';
 
@@ -157,15 +159,15 @@ export default function FilterSidebar({
         )}
         {formats.length > 0 && (
           <select
-            aria-label="Filter by format"
+            aria-label="Filter by living model"
             value={filters.format}
             onChange={(e) => setFilters({ format: e.target.value })}
             className={selectCls + (variant === 'sidebar' ? ' w-full' : '')}
           >
-            <option value="">All formats</option>
+            <option value="">All living models</option>
             {formats.map((f) => (
               <option key={f} value={f}>
-                {f}
+                {livingModelLabel(f as ProgramFormat) ?? f}
               </option>
             ))}
           </select>
