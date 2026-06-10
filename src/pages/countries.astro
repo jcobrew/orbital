@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import ViewNav from '../components/ViewNav.astro';
+import SiteNav from '../components/SiteNav.tsx';
 import { COUNTRIES } from '../data/countries';
 
 const jsonLd = {
@@ -23,12 +23,8 @@ const jsonLd = {
   <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} slot="head" />
 
   <header class="mx-auto max-w-[1100px] px-7 pt-6">
-    <div class="mb-2 font-display text-[10.5px] font-semibold uppercase tracking-[.22em] text-a2">
-      Founder Atlas · Countries · 2026
-    </div>
-    <div class="mb-3.5 max-w-[420px]">
-      <ViewNav current="countries" />
-    </div>
+    <SiteNav current="countries" client:load />
+    <div class="mt-5"></div>
     <h1
       class="m-0 mb-2 font-display text-[26px] font-bold leading-[1.15]"
       style="color:var(--text)"

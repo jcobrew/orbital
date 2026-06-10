@@ -11,16 +11,26 @@ site and deployed on Vercel.
 
 ## Views
 
-- **Map** (`/`) — the landing page. A 2D Leaflet map. Dense regions (SF Bay Area, NYC, London,
-  Bangalore) get a zoomed-in "off-coast" callout so they stay legible at world zoom; the callout's
-  pins are hidden on the main map until you zoom in.
-- **Globe** (`/startup-programs-globe`) — a 3D globe view of the same data.
-- **Dashboard** (`/dashboard`) — an agent-friendly, fully URL-navigable directory: a semantic,
-  server-rendered sortable table of every program with schema.org JSON-LD. Drive every filter by
-  query param and share the resulting URL as a deep link (see below).
+Every page shares one header (`SiteNav`): **brand · a Globe / Map / List view toggle · Countries ·
+About**. The toggle carries the active filter state across views; **About** opens the intro overlay
+(also a full page at `/about`). A first-time visitor sees a dismissible intro overlay; returning
+visitors go straight to the data.
+
+- **Globe** (`/`) — the desktop entry point: a 3D globe of every program. Falls back to a
+  "browse in list view" prompt where WebGL is unavailable, and honors `prefers-reduced-motion`.
+  **Small screens redirect to the List**, so mobile never blocks on WebGL.
+- **List** (`/explore`) — the main discovery surface: search + filters, a card list, and a program
+  detail drawer with the practical trade-offs (funding, equity, housing, format, deadlines — shown as
+  **Unknown** when not yet verified).
+- **Map** (`/map`) — a 2D Leaflet map. Dense regions (SF Bay Area, NYC, London, Bangalore) get a
+  zoomed-in "off-coast" callout so they stay legible at world zoom.
+- **About** (`/about`) — what Founder Atlas is + a guide to the program types (accelerator vs
+  incubator vs residency vs hacker house vs fellowship). Same content as the intro overlay.
 - **Countries** (`/countries`, `/country/<slug>`) — profiles of national startup ecosystems for
-  founders considering relocation: summary, visa/residency routes, key organizations and links,
-  plus the programs available in each country. Intentionally small for now and growing (see below).
+  founders considering relocation.
+- **Dashboard** (`/dashboard`) — the agent/power-user surface (kept out of the human nav): a
+  server-rendered, URL-navigable sortable table of every program with schema.org JSON-LD. Linked from
+  About and `/llms.txt`.
 
 ## For agents (machine-readable surface)
 

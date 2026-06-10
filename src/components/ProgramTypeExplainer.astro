@@ -1,0 +1,35 @@
+---
+// Explainer cards (handoff §8.1) — help a founder pick the right kind of program.
+// Content lives in src/data/programTypes.ts so the intro overlay reuses it. Each
+// CTA deep-links into /explore with a free-text query matched against type/focus.
+import { PROGRAM_TYPES as CARDS } from '../data/programTypes';
+---
+
+<section class="mx-auto max-w-[1200px] px-7 py-10">
+  <h2 class="m-0 mb-1.5 font-display text-[20px] font-bold text-text">What kind of support do you need?</h2>
+  <p class="mb-6 max-w-[640px] text-[13px] leading-normal text-muted">
+    Not sure where to start? Each type of program solves a different bottleneck. Pick the one that
+    matches where you are.
+  </p>
+  <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      CARDS.map((c) => (
+        <a
+          href={`/explore?q=${encodeURIComponent(c.q)}`}
+          class="group flex flex-col rounded-md border border-line bg-[rgba(10,13,28,.55)] p-5 no-underline transition hover:border-a1"
+        >
+          <h3 class="m-0 mb-1.5 font-display text-[15px] font-bold text-text">{c.name}</h3>
+          <p class="m-0 mb-3 text-[12px] leading-normal text-muted">{c.best}</p>
+          <ul class="m-0 mb-4 flex flex-wrap gap-1.5 p-0">
+            {c.helps.map((h) => (
+              <li class="list-none rounded-sm border border-line2 px-2 py-0.5 text-[10.5px] text-muted">{h}</li>
+            ))}
+          </ul>
+          <span class="mt-auto text-[12px] font-semibold text-a2 group-hover:underline">
+            Find {c.name.toLowerCase()}s →
+          </span>
+        </a>
+      ))
+    }
+  </div>
+</section>

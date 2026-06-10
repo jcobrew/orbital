@@ -5,10 +5,16 @@ import { PROGRAMS } from '../data/programs';
 ---
 
 <Base
-  title="Founder Atlas — 3D Globe of the best places to build"
-  description="A 3D globe of the best places for founders to build — relocation programs and startup support worldwide. Spin the globe or pick a program to fly there; dense cities have their own minimaps below."
+  title="Founder Atlas — Find Startup Accelerators, Incubators, Residencies & Hacker Houses"
+  description="A live global map of startup accelerators, incubators, founder residencies, hacker houses and fellowships. Explore on a 3D globe, a 2D map, or a filterable list — by stage, sector, funding, housing, location and application status."
   fullscreen
 >
+  <!-- Small screens go straight to the list; the globe is the desktop entry. -->
+  <script slot="head" is:inline>
+    if (window.matchMedia('(max-width: 760px)').matches) {
+      window.location.replace('/explore' + window.location.search + window.location.hash);
+    }
+  </script>
   <!-- Globe.gl (Three.js) needs the DOM; render this island client-only. -->
   <GlobeView programs={PROGRAMS} client:only="react" />
   <div slot="head"></div>

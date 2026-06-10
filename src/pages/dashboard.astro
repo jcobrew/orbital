@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import ViewNav from '../components/ViewNav.astro';
+import SiteNav from '../components/SiteNav.tsx';
 import FilterSidebar from '../components/FilterSidebar.tsx';
 import ProgramsTable from '../components/ProgramsTable.tsx';
 import { PROGRAMS } from '../data/programs';
@@ -24,6 +24,7 @@ const jsonLd = {
       areaServed: [p.city, p.country].filter(Boolean).join(', '),
       occupationalCategory: p.focus,
       description: p.status_detail || p.highlight || undefined,
+      dateModified: p.lastVerified || undefined,
     },
   })),
 };
@@ -35,23 +36,17 @@ const jsonLd = {
 >
   <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} slot="head" />
 
-  <header class="mx-auto max-w-[1400px] px-7 pt-6">
-    <div class="mb-2 font-display text-[10.5px] font-semibold uppercase tracking-[.22em] text-a2">
-      Founder Atlas · Dashboard · 2026
-    </div>
-    <div class="mb-3.5 max-w-[420px]">
-      <ViewNav current="dashboard" />
-    </div>
+  <header class="mx-auto max-w-[1400px] px-7 pt-5">
+    <SiteNav current="dashboard" client:load />
     <h1
-      class="m-0 mb-2 font-display text-[26px] font-bold leading-[1.15]"
+      class="m-0 mb-2 mt-5 font-display text-[24px] font-bold leading-[1.15]"
       style="color:var(--text)"
     >
-      Find where to build
+      Data dashboard
     </h1>
     <p class="mb-1.5 max-w-[680px] text-[13px] leading-normal text-muted">
-      <strong>Founder Atlas</strong> is a relocation &amp; support portal for founders — the way university portals help
-      academics choose where to go. Search the best places in the world to build and the <strong>startup support</strong>
-      waiting there. Built for agentic navigation too: drive every filter by URL, share deep links, or pull the data straight
+      The full directory as one sortable, URL-navigable table — built for agents and power users.
+      Drive every filter by URL, share deep links, or pull the data straight
       from the <a href="/api/programs.json" class="font-semibold">JSON API</a> and
       <a href="/llms.txt" class="font-semibold">llms.txt</a>. Status as of June 2026 — verify on each site.
     </p>

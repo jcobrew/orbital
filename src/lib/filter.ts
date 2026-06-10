@@ -11,6 +11,12 @@ export interface Filters {
   country: string;
   status: string;
   focus: string;
+  // Founder dimensions (handoff §15). Empty = no constraint; these no-op while
+  // the underlying data is unknown, and the UI hides controls that have no data.
+  format: string;
+  stage: string;
+  sector: string;
+  housing: string; // '', 'yes', 'no'
 }
 
 export const EMPTY_FILTERS: Filters = {
@@ -20,9 +26,13 @@ export const EMPTY_FILTERS: Filters = {
   country: '',
   status: '',
   focus: '',
+  format: '',
+  stage: '',
+  sector: '',
+  housing: '',
 };
 
-/** Mirrors the original index.html passes() predicate, plus a focus filter. */
+/** Mirrors the original index.html passes() predicate, plus founder filters. */
 export function passes(p: Program, f: Filters): boolean {
   const q = f.q.trim().toLowerCase();
   const hay = (p.name + p.city + p.country + p.focus + p.operator + p.type).toLowerCase();
@@ -32,7 +42,13 @@ export function passes(p: Program, f: Filters): boolean {
     (!f.type || p.type === f.type) &&
     (!f.country || p.country === f.country) &&
     (!f.status || p.status === f.status) &&
-    (!f.focus || (p.focus || '').toLowerCase().includes(f.focus.trim().toLowerCase()))
+    (!f.focus || (p.focus || '').toLowerCase().includes(f.focus.trim().toLowerCase())) &&
+    (!f.format || p.format === f.format) &&
+    (!f.stage || (p.stageFit ?? []).includes(f.stage as never)) &&
+    (!f.sector || (p.sectorFocus ?? []).map((s) => s.toLowerCase()).includes(f.sector.toLowerCase())) &&
+    (!f.housing ||
+      (f.housing === 'yes' && p.providesHousing === true) ||
+      (f.housing === 'no' && p.providesHousing === false))
   );
 }
 

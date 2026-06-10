@@ -38,6 +38,15 @@ export default function FilterSidebar({
   );
   const types = useMemo(() => [...new Set(slice.map((p) => p.type))].sort(), [slice]);
   const countries = useMemo(() => [...new Set(slice.map((p) => p.country))].sort(), [slice]);
+  // Founder dimensions — these light up only once the data is filled (handoff: no
+  // dead controls while values are unknown).
+  const stages = useMemo(() => [...new Set(slice.flatMap((p) => p.stageFit ?? []))].sort(), [slice]);
+  const formats = useMemo(
+    () => [...new Set(slice.map((p) => p.format).filter((f): f is NonNullable<typeof f> => !!f && f !== 'unknown'))].sort(),
+    [slice],
+  );
+  const sectors = useMemo(() => [...new Set(slice.flatMap((p) => p.sectorFocus ?? []))].sort(), [slice]);
+  const hasHousing = useMemo(() => slice.some((p) => p.providesHousing === true || p.providesHousing === false), [slice]);
 
   async function copyLink() {
     try {
@@ -131,6 +140,63 @@ export default function FilterSidebar({
             </option>
           ))}
         </select>
+        {stages.length > 0 && (
+          <select
+            aria-label="Filter by stage"
+            value={filters.stage}
+            onChange={(e) => setFilters({ stage: e.target.value })}
+            className={selectCls + (variant === 'sidebar' ? ' w-full' : '')}
+          >
+            <option value="">All stages</option>
+            {stages.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        )}
+        {formats.length > 0 && (
+          <select
+            aria-label="Filter by format"
+            value={filters.format}
+            onChange={(e) => setFilters({ format: e.target.value })}
+            className={selectCls + (variant === 'sidebar' ? ' w-full' : '')}
+          >
+            <option value="">All formats</option>
+            {formats.map((f) => (
+              <option key={f} value={f}>
+                {f}
+              </option>
+            ))}
+          </select>
+        )}
+        {sectors.length > 0 && (
+          <select
+            aria-label="Filter by sector"
+            value={filters.sector}
+            onChange={(e) => setFilters({ sector: e.target.value })}
+            className={selectCls + (variant === 'sidebar' ? ' w-full' : '')}
+          >
+            <option value="">All sectors</option>
+            {sectors.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        )}
+        {hasHousing && (
+          <select
+            aria-label="Filter by housing"
+            value={filters.housing}
+            onChange={(e) => setFilters({ housing: e.target.value })}
+            className={selectCls + (variant === 'sidebar' ? ' w-full' : '')}
+          >
+            <option value="">Housing: any</option>
+            <option value="yes">Housing provided</option>
+            <option value="no">No housing</option>
+          </select>
+        )}
         {variant === 'dashboard' && (
           <>
             <button
