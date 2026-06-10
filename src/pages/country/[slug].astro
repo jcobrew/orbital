@@ -2,6 +2,11 @@
 import Base from '../../layouts/Base.astro';
 import SiteNav from '../../components/SiteNav.tsx';
 import { COUNTRIES, getCountry } from '../../data/countries';
+import { PROGRAMS, programSlug } from '../../data/programs';
+import { citiesInCountry, citySlug } from '../../data/cities';
+import { statusMeta } from '../../lib/status';
+import { livingModelLabel } from '../../lib/living';
+import { defaultSort } from '../../lib/filter';
 
 // One static page per country profile. As the dataset grows (or moves to a
 // cloud DB), this list grows automatically — no per-page wiring needed.
@@ -14,6 +19,8 @@ const country = getCountry(slug!);
 if (!country) return Astro.redirect('/countries');
 
 const dashboardHref = `/dashboard?country=${encodeURIComponent(country.name)}`;
+const programs = defaultSort(PROGRAMS.filter((p) => p.country === country.name));
+const cities = citiesInCountry(country.name);
 
 // schema.org Country so agents/crawlers get a structured record.
 const jsonLd = {
@@ -49,6 +56,43 @@ const jsonLd = {
   </header>
 
   <main class="mx-auto max-w-[900px] px-7 pb-16 pt-4 flex flex-col gap-7">
+    {programs.length > 0 && (
+      <section>
+        <h2 class="mb-2.5 font-display text-[15px] font-semibold text-text">Programs in {country.name}</h2>
+        {cities.length > 1 && (
+          <div class="mb-3 flex flex-wrap gap-1.5">
+            {cities.map((c) => (
+              <a
+                href={`/cities/${c.slug}`}
+                class="rounded-[3px] border border-line2 px-2.5 py-1 text-[11.5px] font-semibold text-muted no-underline transition hover:border-a1 hover:text-text"
+              >
+                {c.city} <span class="opacity-60">{c.count}</span>
+              </a>
+            ))}
+          </div>
+        )}
+        <div class="overflow-hidden rounded-[3px] border border-line">
+          {programs.map((p) => {
+            const s = statusMeta(p.status);
+            const living = livingModelLabel(p.format);
+            return (
+              <a
+                href={`/programs/${programSlug(p.name)}`}
+                class="flex items-center gap-3 border-b border-line px-4 py-2.5 no-underline transition last:border-b-0 hover:bg-[rgba(124,92,255,.06)]"
+              >
+                <span class="h-2 w-2 flex-none rounded-full" style={`background:${s.color}`} title={s.label} />
+                <span class="min-w-0 flex-1">
+                  <span class="block truncate text-[13px] font-semibold text-text">{p.name}</span>
+                  <span class="block truncate text-[11px] text-muted">{p.type} · {p.city}</span>
+                </span>
+                {living && <span class="flex-none text-[10.5px] font-semibold uppercase tracking-wide text-muted">{living}</span>}
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )}
+
     {country.highlights.length > 0 && (
       <section>
         <h2 class="mb-2 font-display text-[15px] font-semibold text-text">Why founders build here</h2>
