@@ -18,8 +18,14 @@ over scraping the HTML views.
 
 ## Program schema
 
-Each program object: \`name\`, \`type\`, \`dataset\`, \`city\`, \`country\`, \`lat\`, \`lng\`, \`focus\`,
+Core fields (always present): \`name\`, \`type\`, \`dataset\`, \`city\`, \`country\`, \`lat\`, \`lng\`, \`focus\`,
 \`operator\`, \`stage\`, \`status\`, \`status_detail\`, \`domain\`, \`url\`, \`highlight\`.
+
+Founder fields (optional; absent/"unknown" until verified & filled): \`format\`, \`stageFit[]\`,
+\`founderFit[]\`, \`sectorFocus[]\`, \`applicationDeadline\`, \`nextCohortStart\`, \`durationWeeksMin/Max\`,
+\`cohortSize\`, \`fundingAmount\`, \`equityTaken\`, \`cost\`, \`provides*\` booleans (Housing/Workspace/
+Funding/Mentorship/InvestorAccess/DemoDay/VisaSupport), \`applyUrl\`, \`sourceUrls[]\`, \`lastVerified\`,
+\`verificationStatus\`, \`tags[]\`, \`notes\`. See \`schema\` in the API for descriptions.
 
 \`status\` enum: \`rolling\` (always open) | \`open\` (cohort window open) | \`closing-soon\` |
 \`opening-soon\` | \`running\` (cohort in session) | \`closed\` (check next cycle).
@@ -55,8 +61,13 @@ cloud database without changing the API shape.
 
 ## Human views
 
-- [Globe](/): 3D globe of the data (landing page).
+- [Home](/): founder-first landing — positioning, program-type explainer, and search.
+- [Explore](/explore): searchable, filterable card list with a program detail drawer (List/Map/Globe toggle).
 - [Map](/map): 2D interactive Leaflet map of the same data.
+- [Globe](/globe): 3D globe of the data (premium exploration mode).
+
+The /explore page accepts the same query params as the dashboard (\`q\`, \`type\`, \`country\`, \`status\`,
+\`focus\`, plus \`format\`, \`stage\`, \`sector\`, \`housing\`), e.g. \`/explore?q=residency&country=USA\`.
 `;
 
 export const GET: APIRoute = () =>

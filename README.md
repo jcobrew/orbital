@@ -11,10 +11,15 @@ site and deployed on Vercel.
 
 ## Views
 
-- **Map** (`/`) — the landing page. A 2D Leaflet map. Dense regions (SF Bay Area, NYC, London,
-  Bangalore) get a zoomed-in "off-coast" callout so they stay legible at world zoom; the callout's
-  pins are hidden on the main map until you zoom in.
-- **Globe** (`/startup-programs-globe`) — a 3D globe view of the same data.
+- **Home** (`/`) — founder-first landing: positioning, a program-type explainer (accelerator vs
+  incubator vs residency vs hacker house vs fellowship), and a search box that routes to Explore.
+- **Explore** (`/explore`) — the main discovery surface: search + filters, a polished card list, and
+  a program detail drawer with the practical trade-offs (funding, equity, housing, format, deadlines —
+  shown as **Unknown** when not yet verified). A List/Map/Globe toggle carries filters across views.
+- **Map** (`/map`) — a 2D Leaflet map. Dense regions (SF Bay Area, NYC, London, Bangalore) get a
+  zoomed-in "off-coast" callout so they stay legible at world zoom.
+- **Globe** (`/globe`) — a 3D globe view of the same data (premium exploration mode). Falls back to a
+  "browse in list view" prompt where WebGL is unavailable, and honors `prefers-reduced-motion`.
 - **Dashboard** (`/dashboard`) — an agent-friendly, fully URL-navigable directory: a semantic,
   server-rendered sortable table of every program with schema.org JSON-LD. Drive every filter by
   query param and share the resulting URL as a deep link (see below).

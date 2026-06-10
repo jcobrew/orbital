@@ -324,6 +324,9 @@ export default function MapView({ programs }: { programs: Program[] }) {
           <div className="mb-2.5">
             <nav className="viewnav" aria-label="Views">
               <a href="/">Home</a>
+              <a href="/explore">Explore</a>
+              <a href="/map" className="active" aria-current="page">Map</a>
+              <a href="/globe">Globe</a>
               <a href="/dashboard">Dashboard</a>
             </nav>
           </div>

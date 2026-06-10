@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import ViewNav from '../components/ViewNav.astro';
 import FilterSidebar from '../components/FilterSidebar.tsx';
 import ProgramsTable from '../components/ProgramsTable.tsx';
+import ViewToggle from '../components/ViewToggle.tsx';
 import { PROGRAMS } from '../data/programs';
 
 // Server-rendered schema.org JSON-LD for the full catalog — ships in the HTML
@@ -24,6 +25,7 @@ const jsonLd = {
       areaServed: [p.city, p.country].filter(Boolean).join(', '),
       occupationalCategory: p.focus,
       description: p.status_detail || p.highlight || undefined,
+      dateModified: p.lastVerified || undefined,
     },
   })),
 };
@@ -39,8 +41,11 @@ const jsonLd = {
     <div class="mb-2 font-display text-[10.5px] font-semibold uppercase tracking-[.22em] text-a2">
       Founder Atlas · Dashboard · 2026
     </div>
-    <div class="mb-3.5 max-w-[420px]">
-      <ViewNav current="dashboard" />
+    <div class="mb-3.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="max-w-[420px] flex-1">
+        <ViewNav current="dashboard" />
+      </div>
+      <ViewToggle current="list" client:load />
     </div>
     <h1
       class="m-0 mb-2 font-display text-[26px] font-bold leading-[1.15]"

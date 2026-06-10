@@ -46,6 +46,19 @@ function jitter(arr: Program[]) {
 
 const keyOf = (p: Program) => p.dataset + '|' + p.name;
 
+/** Best-effort WebGL capability check for the no-WebGL fallback (handoff §19/§28). */
+function hasWebGL(): boolean {
+  try {
+    const c = document.createElement('canvas');
+    return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')));
+  } catch {
+    return false;
+  }
+}
+function prefersReducedMotion(): boolean {
+  return typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobeInstance = any;
 type MiniRec = { map: L.Map; layer: L.LayerGroup; fitted: boolean };
@@ -58,6 +71,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   const [selected, setSelected] = useState<Program | null>(null);
   const [spinning, setSpinning] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [webgl, setWebgl] = useState(true);
   const [activeCity, setActiveCity] = useState<string>(DEFAULT_CITY);
 
   // city dock (Leaflet minimaps, managed imperatively)
@@ -104,6 +118,14 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     installLogoFallback();
     if (!globeEl.current || !globeWrapEl.current || worldRef.current) return;
 
+    // No-WebGL fallback: skip globe init and show the list-view escape hatch.
+    if (!hasWebGL()) {
+      setWebgl(false);
+      setLoading(false);
+      return;
+    }
+    const reduceMotion = prefersReducedMotion();
+
     // globe.gl's factory call signature isn't well typed; cast to call it.
     const world: GlobeInstance = (Globe as unknown as () => (el: HTMLElement) => GlobeInstance)()(globeEl.current)
       .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-dark.jpg')
@@ -135,7 +157,8 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     world.htmlElementsData(shown);
     world.pointOfView({ lat: 22, lng: 8, altitude: 2.4 }, 0);
     const controls = world.controls();
-    controls.autoRotate = true;
+    controls.autoRotate = !reduceMotion;
+    if (reduceMotion) setSpinning(false);
     controls.autoRotateSpeed = 0.45;
     controls.enableDamping = true;
     controls.dampingFactor = 0.12;
@@ -279,7 +302,10 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
           </div>
           <div className="mb-2.5">
             <nav className="viewnav" aria-label="Views">
-              <a href="/" className="active" aria-current="page">Home</a>
+              <a href="/">Home</a>
+              <a href="/explore">Explore</a>
+              <a href="/map">Map</a>
+              <a href="/globe" className="active" aria-current="page">Globe</a>
               <a href="/dashboard">Dashboard</a>
             </nav>
           </div>
@@ -325,8 +351,23 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         <div ref={globeWrapEl} className="relative min-h-0 flex-1 overflow-hidden">
           {/* z-[1] gives the globe its own stacking context so pin z-indexes stay below the overlay UI */}
           <div ref={globeEl} className="absolute inset-0 z-[1]" />
-          {loading && (
+          {loading && webgl && (
             <div className="absolute inset-0 z-40 flex items-center justify-center text-[13px] text-muted">Loading globe…</div>
+          )}
+          {!webgl && (
+            <div className="absolute inset-0 z-40 flex flex-col items-center justify-center gap-3 p-6 text-center">
+              <div className="font-display text-[16px] font-bold text-text">3D globe unavailable</div>
+              <p className="m-0 max-w-[360px] text-[13px] text-muted">
+                Your browser or device can't render the 3D globe. You can still browse every program in list view.
+              </p>
+              <a
+                href={`/explore${typeof window !== 'undefined' ? window.location.search : ''}`}
+                className="rounded-md border border-transparent px-4 py-2.5 font-display text-[13px] font-bold text-[#08101f] no-underline"
+                style={{ background: 'var(--grad)' }}
+              >
+                Browse in list view →
+              </a>
+            </div>
           )}
           <div className="absolute right-4 top-4 z-20 flex flex-col gap-2">
             <button className={`${btn} ${spinning ? '' : 'opacity-70'}`} onClick={toggleSpin}>

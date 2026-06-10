@@ -59,6 +59,27 @@ as a template. Required fields:
 `status` must be one of (see `meta.status_legend` in the JSON):
 `rolling`, `open`, `closing-soon`, `opening-soon`, `running`, `closed`.
 
+### Optional founder fields (fill when verifiable — never guess)
+
+The UI and API also support these optional fields (added in the founder-first refactor). They show
+as **"Unknown"** in the product until populated, so only add a field when a **primary source**
+states it. Add `sourceUrls` + `lastVerified` whenever you fill any of them.
+
+- `format`: one of `in-person` | `remote` | `hybrid` | `live-in`
+- `stageFit`: array from `pre-idea, idea, pre-product, mvp, pre-seed, seed, series-a-plus, repeat-founder, student, researcher`
+- `founderFit`: array from `first-time-founder, solo-founder, technical-builder, domain-expert, repeat-founder, student-founder, researcher, international-founder, relocating-founder, fundraising-soon, needs-focus, needs-community, needs-customers, needs-capital`
+- `sectorFocus`: array of sector tags (e.g. `["AI","climate"]`)
+- `applicationDeadline`, `nextCohortStart`: ISO dates
+- `durationWeeksMin`, `durationWeeksMax`: numbers; `cohortSize`: free text
+- `fundingAmount`, `equityTaken`, `cost`: free text (e.g. `"$250K"`, `"7%"`)
+- `providesHousing` / `providesWorkspace` / `providesFunding` / `providesMentorship` /
+  `providesInvestorAccess` / `providesDemoDay` / `providesVisaSupport`: `true` | `false` | `null` (unknown)
+- `applyUrl`: direct application URL (distinct from `url`)
+- `sourceUrls`: array of URLs used to verify this entry
+- `lastVerified`: ISO date you confirmed the entry
+- `verificationStatus`: `verified` | `needs-review` | `unverified`
+- `tags`, `notes`: optional free-form
+
 Coordinates: `lat`/`lng` are decimal degrees for the program's city/building. Use a
 known landmark or the operator's stated location; do not invent precise rooftop
 coordinates. A city-center coordinate is fine — the UI jitters overlapping pins.
