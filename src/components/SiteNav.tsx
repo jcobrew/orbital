@@ -48,7 +48,7 @@ export default function SiteNav({ current }: { current?: NavCurrent }) {
               aria-selected={active}
               aria-current={active ? 'page' : undefined}
               className={`rounded-[2px] px-3 py-1 font-display text-[12px] font-semibold no-underline transition ${
-                active ? 'text-[#08101f]' : 'text-muted hover:text-text'
+                active ? 'text-[#0a0a0a]' : 'text-muted hover:text-text'
               }`}
               style={active ? { background: 'var(--grad)' } : undefined}
             >

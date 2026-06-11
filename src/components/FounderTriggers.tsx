@@ -37,7 +37,7 @@ export default function FounderTriggers({
         {TRIGGERS.map((t) => {
           const active = mode === 'apply' && isActive(t);
           const cls = `select-none rounded-full border px-3 py-[5px] text-[12px] font-semibold transition ${
-            active ? 'border-transparent text-[#08101f]' : 'border-line2 text-muted hover:text-text hover:border-a1'
+            active ? 'border-transparent text-[#0a0a0a]' : 'border-line2 text-muted hover:text-text hover:border-a1'
           }`;
           const style = active ? { background: 'var(--grad)' } : undefined;
           return mode === 'apply' ? (

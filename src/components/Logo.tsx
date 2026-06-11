@@ -26,7 +26,7 @@ export default function Logo({ name, domain, size = 38, className = '' }: Props)
     flex: `0 0 ${size}px`,
     borderRadius: 3,
     overflow: 'hidden',
-    background: '#0a0e1e',
+    background: '#0a0a0a',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

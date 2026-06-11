@@ -77,7 +77,7 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
               href={applyHref(p)}
               target="_blank"
               rel="noopener"
-              className="rounded-md border border-transparent px-4 py-2.5 font-display text-[13px] font-bold text-[#08101f] no-underline"
+              className="rounded-md border border-transparent px-4 py-2.5 font-display text-[13px] font-bold text-[#0a0a0a] no-underline"
               style={{ background: 'var(--grad)' }}
             >
               {p.applyUrl ? 'Apply' : 'Visit site'} →

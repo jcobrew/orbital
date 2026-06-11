@@ -80,7 +80,7 @@ export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean 
         <div className="flex flex-wrap items-center gap-2.5">
           <button
             onClick={closeIntro}
-            className="rounded-[3px] border border-transparent px-4 py-2.5 font-display text-[13px] font-bold text-[#08101f]"
+            className="rounded-[3px] border border-transparent px-4 py-2.5 font-display text-[13px] font-bold text-[#0a0a0a]"
             style={{ background: 'var(--grad)' }}
           >
             Start exploring

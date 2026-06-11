@@ -70,7 +70,7 @@ export default function SubmitForm() {
             type="button"
             onClick={() => setF((prev) => ({ ...prev, mode: m }))}
             className={`rounded-[2px] px-3.5 py-1.5 font-display text-[12.5px] font-semibold transition ${
-              f.mode === m ? 'text-[#08101f]' : 'text-muted hover:text-text'
+              f.mode === m ? 'text-[#0a0a0a]' : 'text-muted hover:text-text'
             }`}
             style={f.mode === m ? { background: 'var(--grad)' } : undefined}
           >
@@ -119,7 +119,7 @@ export default function SubmitForm() {
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <button
           type="submit"
-          className="rounded-[3px] border border-transparent px-5 py-2.5 font-display text-[13px] font-bold text-[#08101f]"
+          className="rounded-[3px] border border-transparent px-5 py-2.5 font-display text-[13px] font-bold text-[#0a0a0a]"
           style={{ background: 'var(--grad)' }}
         >
           Open prefilled GitHub issue →

@@ -68,7 +68,7 @@ export default function ProgramCard({ program: p, onSelect }: { program: Program
             href={applyHref(p)}
             target="_blank"
             rel="noopener"
-            className="rounded-sm border border-transparent px-2.5 py-1.5 text-[11.5px] font-bold text-[#08101f] no-underline"
+            className="rounded-sm border border-transparent px-2.5 py-1.5 text-[11.5px] font-bold text-[#0a0a0a] no-underline"
             style={{ background: 'var(--grad)' }}
           >
             {p.applyUrl ? 'Apply' : 'Visit'}
