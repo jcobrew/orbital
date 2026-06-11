@@ -5,6 +5,24 @@
 import residentialRaw from './startup-programs-data.json';
 import traditionalRaw from './traditional-programs-data.json';
 import { STATUS } from '../lib/status';
+import type {
+  ProgramTypeId,
+  SupportModeId,
+  IntakeMethodId,
+  IntakeFrequencyId,
+  CostFundingModelId,
+} from './taxonomy';
+
+// Re-export the canonical taxonomy ID unions for convenience, so consumers can
+// import program shape + canonical IDs from one place. (Additive; does not
+// change any existing export.)
+export type {
+  ProgramTypeId,
+  SupportModeId,
+  IntakeMethodId,
+  IntakeFrequencyId,
+  CostFundingModelId,
+} from './taxonomy';
 
 export type Dataset = 'residential' | 'traditional';
 
@@ -67,6 +85,25 @@ export interface Program {
   verificationStatus?: VerificationStatus;
   tags?: string[];
   notes?: string;
+
+  // ---- Stream 2 canonical fields (all optional; derived, not source-of-truth) ----
+  // These are populated by `src/lib/normalizeProgram.ts` (derivation) or later
+  // streams. They never replace the legacy free-text fields above; `type`,
+  // `stage`, and `format` remain the rendered values.
+  /** Canonical program-type ID derived from / aligned to legacy `type`. */
+  canonicalType?: ProgramTypeId;
+  /** Canonical support modes the program provides. */
+  supportModes?: SupportModeId[];
+  /** How founders get in (rolling, cohort-application, invitation, …). */
+  intakeMethod?: IntakeMethodId;
+  /** How often intake happens. */
+  intakeFrequency?: IntakeFrequencyId;
+  /** The equity / money axis. */
+  costFundingModel?: CostFundingModelId;
+  /** True when this is a curated, launch-ready MVP record (set by Stream 3). */
+  mvp?: boolean;
+  /** MVP ecosystem tag, e.g. "finland-nordics", "estonia", "uk" (set by Stream 3). */
+  ecosystem?: string;
 }
 
 /** URL slug for a program (mirrors countrySlug in countries.ts). */
