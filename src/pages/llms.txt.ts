@@ -61,11 +61,12 @@ cloud database without changing the API shape.
 
 ## Human views
 
-Every page shares one header: brand · a Globe / Map / List view toggle · Countries · About.
+Every page shares one header: brand · a Globe / List view toggle · Countries · About.
 
-- [Globe](/): 3D globe — the desktop entry point (small screens redirect to the list).
+- [Globe](/): 3D globe — the desktop entry point (small screens redirect to the list). Programs
+  panel, dense-city minimaps and the status legend are toggleable overlays.
 - [List](/explore): searchable, filterable card list with a program detail drawer.
-- [Map](/map): 2D interactive Leaflet map of the same data.
+- [Map](/map): 2D interactive Leaflet map of the same data (also powers the globe's city minimaps).
 - [About](/about): what Founder Atlas is + a guide to the program types.
 
 Each program also has a dedicated profile page at \`/programs/<slug>\` (slug = lowercased name,
