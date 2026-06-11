@@ -8,7 +8,6 @@ export type NavCurrent = 'globe' | 'map' | 'list' | 'countries' | 'dashboard' | 
 
 const VIEWS: { key: NavCurrent; href: string; label: string }[] = [
   { key: 'globe', href: '/', label: 'Globe' },
-  { key: 'map', href: '/map', label: 'Map' },
   { key: 'list', href: '/explore', label: 'List' },
 ];
 

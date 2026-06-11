@@ -11,19 +11,22 @@ site and deployed on Vercel.
 
 ## Views
 
-Every page shares one header (`SiteNav`): **brand · a Globe / Map / List view toggle · Countries ·
+Every page shares one header (`SiteNav`): **brand · a Globe / List view toggle · Countries ·
 About**. The toggle carries the active filter state across views; **About** opens the intro overlay
 (also a full page at `/about`). A first-time visitor sees a dismissible intro overlay; returning
 visitors go straight to the data.
 
-- **Globe** (`/`) — the desktop entry point: a 3D globe of every program. Falls back to a
-  "browse in list view" prompt where WebGL is unavailable, and honors `prefers-reduced-motion`.
-  **Small screens redirect to the List**, so mobile never blocks on WebGL.
+- **Globe** (`/`) — the desktop entry point, and the homepage proper: a 3D globe of every program
+  that fills the viewport. The programs panel (search + filters + list), the dense-city minimaps and
+  the status legend each start minimized and toggle open from the floating controls, so the globe
+  opens distraction-free. Falls back to a "browse in list view" prompt where WebGL is unavailable, and
+  honors `prefers-reduced-motion`. **Small screens redirect to the List**, so mobile never blocks on WebGL.
 - **List** (`/explore`) — the main discovery surface: search + filters, a card list, and a program
   detail drawer with the practical trade-offs (funding, equity, housing, format, deadlines — shown as
   **Unknown** when not yet verified).
-- **Map** (`/map`) — a 2D Leaflet map. Dense regions (SF Bay Area, NYC, London, Bangalore) get a
-  zoomed-in "off-coast" callout so they stay legible at world zoom.
+- **Map** (`/map`) — a 2D Leaflet map (no longer in the header toggle; it backs the globe's dense-city
+  minimaps). Dense regions (SF Bay Area, NYC, London, Bangalore) get a zoomed-in "off-coast" callout
+  so they stay legible at world zoom.
 - **About** (`/about`) — what Founder Atlas is + a guide to the program types (accelerator vs
   incubator vs residency vs hacker house vs fellowship). Same content as the intro overlay.
 - **Countries** (`/countries`, `/country/<slug>`) — profiles of national startup ecosystems for
