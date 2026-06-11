@@ -1,29 +1,11 @@
 import { useEffect, useRef } from 'react';
 import type { Program } from '../data/programs';
+import { programSlug } from '../data/programs';
 import Logo from './Logo';
 import StatusBadge from './StatusBadge';
 import { applyHref } from './ProgramCard';
 import { livingModelLabel } from '../lib/living';
-
-const UNKNOWN = 'Unknown';
-
-function val(v: string | number | undefined | null): string {
-  if (v === undefined || v === null || v === '') return UNKNOWN;
-  return String(v);
-}
-function boolVal(v: boolean | null | undefined): string {
-  if (v === true) return 'Yes';
-  if (v === false) return 'No';
-  return UNKNOWN;
-}
-function duration(p: Program): string {
-  if (p.durationWeeksMin && p.durationWeeksMax)
-    return p.durationWeeksMin === p.durationWeeksMax
-      ? `${p.durationWeeksMin} weeks`
-      : `${p.durationWeeksMin}–${p.durationWeeksMax} weeks`;
-  if (p.durationWeeksMin) return `${p.durationWeeksMin}+ weeks`;
-  return UNKNOWN;
-}
+import { UNKNOWN, displayVal as val, displayBool as boolVal, displayDuration as duration } from '../lib/display';
 
 function Fact({ label, value }: { label: string; value: string }) {
   const unknown = value === UNKNOWN;
@@ -110,6 +92,12 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
                 Visit site
               </a>
             )}
+            <a
+              href={`/programs/${programSlug(p.name)}`}
+              className="rounded-md border border-line2 px-4 py-2.5 text-[13px] font-semibold text-text no-underline transition hover:border-a1"
+            >
+              Open full page ↗
+            </a>
             <a
               href="/explore?intent=submit"
               className="rounded-md border border-line2 px-4 py-2.5 text-[13px] font-semibold text-muted no-underline transition hover:border-a1 hover:text-text"

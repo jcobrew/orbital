@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useStore } from '@nanostores/react';
 import { $introOpen, autoOpenIntro, closeIntro } from '../stores/ui';
 import { PROGRAM_TYPES } from '../data/programTypes';
+import FounderTriggers from './FounderTriggers';
 
 /**
  * Dismissible intro overlay (mounted once via the layout). Auto-opens on a
@@ -55,6 +56,13 @@ export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean 
           filter by stage, sector, funding, location and application status to find what fits where you are now.
         </p>
 
+        <div className="mb-5">
+          <FounderTriggers mode="link" onNavigate={closeIntro} />
+        </div>
+
+        <div className="mb-2 font-display text-[12px] font-semibold uppercase tracking-wide text-muted">
+          …or by program type
+        </div>
         <div className="mb-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
           {PROGRAM_TYPES.map((t) => (
             <a

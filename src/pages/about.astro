@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import SiteNav from '../components/SiteNav.tsx';
 import ProgramTypeExplainer from '../components/ProgramTypeExplainer.astro';
+import FounderTriggers from '../components/FounderTriggers.tsx';
 import { PROGRAMS, FACETS } from '../data/programs';
 
 const countryCount = Object.keys(FACETS.country).length;
@@ -40,6 +41,10 @@ const countryCount = Object.keys(FACETS.country).length;
         Browse the list
       </a>
     </div>
+  </section>
+
+  <section class="mx-auto max-w-[1100px] px-7 pt-4">
+    <FounderTriggers mode="link" client:load />
   </section>
 
   <ProgramTypeExplainer />
