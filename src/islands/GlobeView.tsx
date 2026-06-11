@@ -11,6 +11,14 @@ import { $filters, initFiltersFromURL } from '../stores/filters';
 import FilterSidebar from '../components/FilterSidebar';
 import Logo from '../components/Logo';
 import StatusBadge from '../components/StatusBadge';
+import BootSequence from '../components/BootSequence';
+import { useTypewriter } from '../lib/useTypewriter';
+import worldGeo from '../data/world-110m.geo.json';
+
+// Land geometry for the dot-matrix continents (Natural Earth 110m, properties
+// stripped). Cast: the bundled JSON isn't a typed GeoJSON module.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const LAND_FEATURES = (worldGeo as any).features as any[];
 
 const TITLES: Record<string, { t: string; s: string }> = {
   all: { t: 'Where founders build, worldwide', s: 'Spin the globe or pick a program to fly there; dense cities are mapped below. Status as of June 2026 — verify on each site.' },
@@ -30,6 +38,13 @@ const DEFAULT_CITY = 'sf';
 function inBounds(p: Program, b: readonly (readonly number[])[]) {
   return p.lat >= b[0][0] && p.lat <= b[1][0] && p.lng >= b[0][1] && p.lng <= b[1][1];
 }
+
+// Beacon rings pulse from the dense hubs (cluster centers) by default; a focused
+// program gets its own ring layered on top.
+const RING_SEEDS = CLUSTERS.map((c) => ({
+  lat: (c.bounds[0][0] + c.bounds[1][0]) / 2,
+  lng: (c.bounds[0][1] + c.bounds[1][1]) / 2,
+}));
 
 function jitter(arr: Program[]) {
   const seen: Record<string, number> = {};
@@ -88,6 +103,14 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     return m;
   }, [cityData]);
 
+  function seedRings(focus: Program | null) {
+    const world = worldRef.current;
+    if (!world) return;
+    const rings: { lat: number; lng: number }[] = RING_SEEDS.map((r) => ({ ...r }));
+    if (focus) rings.push({ lat: focus.lat, lng: focus.lng });
+    world.ringsData(rings);
+  }
+
   function openDetail(p: Program) {
     setSelected(p);
     const world = worldRef.current;
@@ -95,6 +118,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       world.controls().autoRotate = false;
       setSpinning(false);
       world.pointOfView({ lat: p.lat, lng: p.lng, altitude: 1.7 }, 900);
+      seedRings(p);
     }
   }
 
@@ -105,13 +129,26 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     if (!globeEl.current || !globeWrapEl.current || worldRef.current) return;
 
     // globe.gl's factory call signature isn't well typed; cast to call it.
-    const world: GlobeInstance = (Globe as unknown as () => (el: HTMLElement) => GlobeInstance)()(globeEl.current)
-      .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-dark.jpg')
-      .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
-      .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
+    const world: GlobeInstance = (Globe as unknown as (cfg?: object) => (el: HTMLElement) => GlobeInstance)({ animateIn: false })(globeEl.current)
+      // Dot-matrix earth: no photo textures — a near-black sphere with white
+      // hex-dot continents over a transparent (page-black) backdrop.
+      .backgroundColor('rgba(0,0,0,0)')
+      .showGlobe(true)
+      .showGraticules(false)
+      .hexPolygonsData(LAND_FEATURES)
+      .hexPolygonResolution(3)
+      .hexPolygonMargin(0.28)
+      .hexPolygonAltitude(0.008)
+      .hexPolygonUseDots(true)
+      .hexPolygonColor(() => 'rgba(255,255,255,0.82)')
       .showAtmosphere(true)
-      .atmosphereColor('#8a93b5')
-      .atmosphereAltitude(0.16)
+      .atmosphereColor('#ffffff')
+      .atmosphereAltitude(0.13)
+      // Beacon rings = the "support signal" pulsing where founders can land.
+      .ringColor(() => (t: number) => `rgba(255,255,255,${1 - t})`)
+      .ringMaxRadius(3.4)
+      .ringPropagationSpeed(2)
+      .ringRepeatPeriod(1400)
       .htmlLat('lat')
       .htmlLng('lng')
       .htmlAltitude(0.012)
@@ -139,25 +176,29 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     controls.autoRotateSpeed = 0.45;
     controls.enableDamping = true;
     controls.dampingFactor = 0.12;
-    // Clamp zoom so the texture stays sharp — close-up detail lives in the minimaps.
+    // Clamp zoom so the dot grid stays legible — close-up detail lives in the minimaps.
     controls.minDistance = 185;
     controls.maxDistance = 560;
     try {
       const gm = world.globeMaterial();
-      if (gm) {
-        gm.bumpScale = 9;
-        if (gm.shininess != null) gm.shininess = 6;
+      if (gm?.color?.set) {
+        // Near-black sphere so only the white dots and rings read.
+        gm.color.set('#050505');
+        if (gm.emissive?.set) gm.emissive.set('#000000');
+        if (gm.shininess != null) gm.shininess = 0;
       }
     } catch {
       /* material not ready yet — non-fatal */
     }
     worldRef.current = world;
+    seedRings(null);
 
     const fit = () => world.width(globeWrapEl.current!.clientWidth).height(globeWrapEl.current!.clientHeight);
     fit();
     const ro = new ResizeObserver(fit);
     ro.observe(globeWrapEl.current);
-    const t = setTimeout(() => setLoading(false), 1400);
+    // Hold the boot splash long enough for the terminal lines to type out.
+    const t = setTimeout(() => setLoading(false), 2400);
 
     return () => {
       clearTimeout(t);
@@ -264,18 +305,20 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     world.pointOfView({ lat: 22, lng: 8, altitude: 2.4 }, 900);
     world.controls().autoRotate = true;
     setSpinning(true);
+    seedRings(null);
   }
 
   const title = TITLES[filters.dataset] ?? TITLES.all;
+  const tagline = useTypewriter('~/ wherever you land, you can build', { speed: 46, startDelay: 2600, loop: true });
   const btn =
-    'inline-flex items-center gap-1.5 rounded-xl border border-line2 bg-[rgba(14,18,40,.78)] px-3 py-2 text-[12px] font-semibold text-text backdrop-blur transition hover:border-a1';
+    'term inline-flex items-center gap-1.5 rounded-xl border border-line2 bg-[rgba(16,16,16,.78)] px-3 py-2 text-[12px] font-semibold text-text backdrop-blur transition hover:border-a1';
 
   return (
     <div className="flex h-screen">
       <aside className="relative z-[5] flex w-[360px] min-w-[360px] flex-col border-r border-line bg-panel backdrop-blur-[18px] max-[760px]:hidden">
         <div className="border-b border-line px-5 pb-3 pt-[18px]">
-          <div className="mb-2 font-display text-[10.5px] font-semibold uppercase tracking-[.22em] text-a2">
-            Founder Atlas · 3D · 2026
+          <div className="term mb-2 text-[10.5px] font-semibold uppercase tracking-[.22em] text-a2">
+            founder-atlas · 3d · 2026
           </div>
           <div className="mb-2.5">
             <nav className="viewnav" aria-label="Views">
@@ -289,12 +332,16 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
           >
             {title.t}
           </h1>
+          <div className="term mb-1.5 text-[11px] text-a2">
+            {tagline}
+            <span className="term-cursor" />
+          </div>
           <div className="max-w-[300px] text-[11.5px] leading-normal text-muted">{title.s}</div>
         </div>
         <div className="px-5 py-3">
           <FilterSidebar programs={programs} variant="sidebar" />
         </div>
-        <div className="px-5 pb-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted">
+        <div className="term px-5 pb-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted">
           {shown.length} of {data.length} programs
         </div>
         <div className="flex-1 overflow-y-auto pb-3.5">
@@ -304,7 +351,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
               <button
                 key={keyOf(p)}
                 onClick={() => openDetail(p)}
-                className="flex w-full items-center gap-3 border-l-2 border-transparent px-5 py-2.5 text-left transition hover:border-a1 hover:bg-[rgba(124,92,255,.10)]"
+                className="flex w-full items-center gap-3 border-l-2 border-transparent px-5 py-2.5 text-left transition hover:border-a1 hover:bg-[rgba(255,255,255,.06)]"
               >
                 <Logo name={p.name} domain={p.domain} size={38} />
                 <span className="min-w-0 flex-1">
@@ -325,9 +372,11 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         <div ref={globeWrapEl} className="relative min-h-0 flex-1 overflow-hidden">
           {/* z-[1] gives the globe its own stacking context so pin z-indexes stay below the overlay UI */}
           <div ref={globeEl} className="absolute inset-0 z-[1]" />
-          {loading && (
-            <div className="absolute inset-0 z-40 flex items-center justify-center text-[13px] text-muted">Loading globe…</div>
-          )}
+          <div
+            className={`absolute inset-0 z-40 flex items-center justify-center bg-black transition-opacity duration-700 ${loading ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+          >
+            <BootSequence count={data.length} />
+          </div>
           <div className="absolute right-4 top-4 z-20 flex flex-col gap-2">
             <button className={`${btn} ${spinning ? '' : 'opacity-70'}`} onClick={toggleSpin}>
               <span className="h-2 w-2 rounded-full" style={{ background: spinning ? 'var(--a2)' : '#555', boxShadow: spinning ? '0 0 8px var(--a2)' : 'none' }} />
@@ -335,8 +384,8 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
             </button>
             <button className={btn} onClick={reset}>↺ Reset view</button>
           </div>
-          <div className="absolute bottom-4 left-4 z-20 rounded-[3px] border border-line bg-[rgba(14,18,40,.6)] px-2.5 py-1.5 text-[11px] text-muted backdrop-blur">
-            Drag to rotate · scroll to zoom · dense cities are mapped below
+          <div className="term absolute bottom-4 left-4 z-20 rounded-[3px] border border-line bg-[rgba(16,16,16,.6)] px-2.5 py-1.5 text-[11px] text-muted backdrop-blur">
+            drag to rotate · scroll to zoom · dense cities mapped below
           </div>
 
           <div className="legend absolute bottom-4 right-4 z-20">
@@ -353,7 +402,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
           </div>
 
           {selected && (
-            <div className="absolute right-[18px] top-1/2 z-[25] w-[330px] -translate-y-1/2 rounded-[3px] border border-line2 bg-[rgba(12,16,36,.94)] p-[18px] shadow-[0_24px_70px_rgba(0,0,0,.65)] backdrop-blur-[18px]">
+            <div className="absolute right-[18px] top-1/2 z-[25] w-[330px] -translate-y-1/2 rounded-[3px] border border-line2 bg-[rgba(10,10,10,.94)] p-[18px] shadow-[0_24px_70px_rgba(0,0,0,.65)] backdrop-blur-[18px]">
               <button className="absolute right-3.5 top-3 border-none bg-transparent text-[18px] text-muted hover:text-white" onClick={() => setSelected(null)}>
                 ✕
               </button>
@@ -383,7 +432,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
                 href={selected.url}
                 target="_blank"
                 rel="noopener"
-                className="mt-3.5 inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[12px] font-bold text-[#08101f] no-underline"
+                className="mt-3.5 inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[12px] font-bold text-[#0a0a0a] no-underline"
                 style={{ background: 'var(--grad)' }}
               >
                 Visit program →

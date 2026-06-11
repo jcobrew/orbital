@@ -71,7 +71,7 @@ export default function FilterSidebar({
               aria-selected={active}
               onClick={() => setFilters({ dataset: d.k, status: '' })}
               className={`flex-1 rounded-[3px] px-3 py-2 font-display text-[12.5px] font-semibold transition ${
-                active ? 'text-[#08101f]' : 'text-muted hover:text-text'
+                active ? 'text-[#0a0a0a]' : 'text-muted hover:text-text'
               }`}
               style={active ? { background: 'var(--grad)' } : undefined}
             >
@@ -164,7 +164,7 @@ export default function FilterSidebar({
                 key={k}
                 onClick={() => setFilters({ status: active ? '' : k })}
                 className={`inline-flex select-none items-center gap-1.5 rounded-[3px] border px-2.5 py-[5px] text-[11.5px] font-semibold transition ${
-                  active ? 'border-transparent text-[#08101f]' : 'border-line2 text-muted hover:text-text'
+                  active ? 'border-transparent text-[#0a0a0a]' : 'border-line2 text-muted hover:text-text'
                 }`}
                 style={active ? { background: s.color } : { background: 'rgba(8,10,22,.4)' }}
               >
@@ -177,7 +177,7 @@ export default function FilterSidebar({
       )}
 
       {toast && (
-        <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-xl px-4 py-2.5 text-[12.5px] font-bold text-[#08101f]" style={{ background: 'var(--grad)' }}>
+        <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-xl px-4 py-2.5 text-[12.5px] font-bold text-[#0a0a0a]" style={{ background: 'var(--grad)' }}>
           Link copied
         </div>
       )}

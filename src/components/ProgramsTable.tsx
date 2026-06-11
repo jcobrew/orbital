@@ -85,7 +85,7 @@ export default function ProgramsTable({ programs }: { programs: Program[] }) {
                   key={col.key}
                   scope="col"
                   onClick={() => onSort(col)}
-                  className={`sticky top-0 whitespace-nowrap border-b border-line2 bg-[rgba(14,18,40,.96)] px-3.5 py-2.5 text-left font-display text-[11px] font-semibold uppercase tracking-wide text-muted backdrop-blur ${
+                  className={`sticky top-0 whitespace-nowrap border-b border-line2 bg-[rgba(14,14,14,.96)] px-3.5 py-2.5 text-left font-display text-[11px] font-semibold uppercase tracking-wide text-muted backdrop-blur ${
                     col.sortable === false ? '' : 'cursor-pointer hover:text-text'
                   }`}
                 >
@@ -114,7 +114,7 @@ export default function ProgramsTable({ programs }: { programs: Program[] }) {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.15 }}
-                    className="border-b border-line hover:bg-[rgba(124,92,255,.08)]"
+                    className="border-b border-line hover:bg-[rgba(255,255,255,.06)]"
                   >
                     <td className="px-3.5 py-2.5 align-top">
                       <div className="flex items-center gap-2.5">
