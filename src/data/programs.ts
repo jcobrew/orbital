@@ -8,6 +8,20 @@ import { STATUS } from '../lib/status';
 
 export type Dataset = 'residential' | 'traditional';
 
+// Founder-facing enums (handoff §14). Values are optional on Program for now and
+// left empty/"unknown" until the data is filled — see the founder-atlas-refresh
+// skill. The UI shows "Unknown" wherever a value is absent.
+export type ProgramFormat = 'in-person' | 'remote' | 'hybrid' | 'live-in' | 'relocation' | 'unknown';
+export type StageFit =
+  | 'pre-idea' | 'idea' | 'pre-product' | 'mvp' | 'pre-seed' | 'seed'
+  | 'series-a-plus' | 'repeat-founder' | 'student' | 'researcher' | 'unknown';
+export type FounderFit =
+  | 'first-time-founder' | 'solo-founder' | 'technical-builder' | 'domain-expert'
+  | 'repeat-founder' | 'student-founder' | 'researcher' | 'international-founder'
+  | 'relocating-founder' | 'fundraising-soon' | 'needs-focus' | 'needs-community'
+  | 'needs-customers' | 'needs-capital';
+export type VerificationStatus = 'verified' | 'needs-review' | 'unverified';
+
 export interface Program {
   dataset: Dataset;
   name: string;
@@ -24,6 +38,44 @@ export interface Program {
   domain: string;
   url: string;
   highlight?: string;
+
+  // ---- Phase-1 founder schema (all optional; populated later, not inferred) ----
+  subtype?: string;
+  region?: string;
+  format?: ProgramFormat;
+  stageFit?: StageFit[];
+  founderFit?: FounderFit[];
+  sectorFocus?: string[];
+  applicationDeadline?: string;
+  nextCohortStart?: string;
+  durationWeeksMin?: number;
+  durationWeeksMax?: number;
+  cohortSize?: string;
+  fundingAmount?: string;
+  equityTaken?: string;
+  cost?: string;
+  providesHousing?: boolean | null;
+  providesWorkspace?: boolean | null;
+  providesFunding?: boolean | null;
+  providesMentorship?: boolean | null;
+  providesInvestorAccess?: boolean | null;
+  providesDemoDay?: boolean | null;
+  providesVisaSupport?: boolean | null;
+  applyUrl?: string;
+  sourceUrls?: string[];
+  lastVerified?: string;
+  verificationStatus?: VerificationStatus;
+  tags?: string[];
+  notes?: string;
+}
+
+/** URL slug for a program (mirrors countrySlug in countries.ts). */
+export function programSlug(name: string): string {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 interface SourceFile {
@@ -85,4 +137,37 @@ export const API_SCHEMA: Record<string, string> = {
   domain: 'Program website domain',
   url: 'Application / visit URL',
   highlight: 'Optional differentiator / key fact',
+  // Founder schema (optional; "unknown"/absent until verified & filled).
+  format: 'Living model: live-in | relocation | hybrid | in-person | remote | unknown',
+  stageFit: 'Founder stages served (array, e.g. mvp, pre-seed)',
+  founderFit: 'Founder archetypes served (array)',
+  sectorFocus: 'Sector focus tags (array)',
+  applicationDeadline: 'Next application deadline (ISO date) when known',
+  nextCohortStart: 'Next cohort start (ISO date) when known',
+  durationWeeksMin: 'Minimum program length in weeks',
+  durationWeeksMax: 'Maximum program length in weeks',
+  cohortSize: 'Approximate cohort size',
+  fundingAmount: 'Funding offered (free text, e.g. "$250K") when known',
+  equityTaken: 'Equity taken (free text, e.g. "7%") when known',
+  cost: 'Cost / fee to the founder when known',
+  providesHousing: 'true | false | null(unknown) — housing provided',
+  providesWorkspace: 'true | false | null(unknown) — workspace provided',
+  providesFunding: 'true | false | null(unknown) — funding provided',
+  providesMentorship: 'true | false | null(unknown) — mentorship provided',
+  providesInvestorAccess: 'true | false | null(unknown) — investor access',
+  providesDemoDay: 'true | false | null(unknown) — demo day',
+  providesVisaSupport: 'true | false | null(unknown) — visa/relocation support',
+  applyUrl: 'Direct application URL (falls back to url)',
+  sourceUrls: 'Sources used to verify this entry (array)',
+  lastVerified: 'Date this entry was last verified (ISO date)',
+  verificationStatus: 'verified | needs-review | unverified',
+  tags: 'Free-form tags (array)',
+  notes: 'Short editorial note',
 };
+
+/** Fields that are part of the founder schema but optional/unknown for now. */
+export const HAS_DATA = (key: keyof Program): boolean =>
+  PROGRAMS.some((p) => {
+    const v = p[key];
+    return Array.isArray(v) ? v.length > 0 : v !== undefined && v !== null && v !== '';
+  });

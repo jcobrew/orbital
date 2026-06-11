@@ -18,8 +18,14 @@ over scraping the HTML views.
 
 ## Program schema
 
-Each program object: \`name\`, \`type\`, \`dataset\`, \`city\`, \`country\`, \`lat\`, \`lng\`, \`focus\`,
+Core fields (always present): \`name\`, \`type\`, \`dataset\`, \`city\`, \`country\`, \`lat\`, \`lng\`, \`focus\`,
 \`operator\`, \`stage\`, \`status\`, \`status_detail\`, \`domain\`, \`url\`, \`highlight\`.
+
+Founder fields (optional; absent/"unknown" until verified & filled): \`format\`, \`stageFit[]\`,
+\`founderFit[]\`, \`sectorFocus[]\`, \`applicationDeadline\`, \`nextCohortStart\`, \`durationWeeksMin/Max\`,
+\`cohortSize\`, \`fundingAmount\`, \`equityTaken\`, \`cost\`, \`provides*\` booleans (Housing/Workspace/
+Funding/Mentorship/InvestorAccess/DemoDay/VisaSupport), \`applyUrl\`, \`sourceUrls[]\`, \`lastVerified\`,
+\`verificationStatus\`, \`tags[]\`, \`notes\`. See \`schema\` in the API for descriptions.
 
 \`status\` enum: \`rolling\` (always open) | \`open\` (cohort window open) | \`closing-soon\` |
 \`opening-soon\` | \`running\` (cohort in session) | \`closed\` (check next cycle).
@@ -55,8 +61,19 @@ cloud database without changing the API shape.
 
 ## Human views
 
-- [Globe](/): 3D globe of the data (landing page).
-- [Map](/map): 2D interactive Leaflet map of the same data.
+Every page shares one header: brand · a Globe / List view toggle · Countries · About.
+
+- [Globe](/): 3D globe — the desktop entry point (small screens redirect to the list). Programs
+  panel, dense-city minimaps and the status legend are toggleable overlays.
+- [List](/explore): searchable, filterable card list with a program detail drawer.
+- [Map](/map): 2D interactive Leaflet map of the same data (also powers the globe's city minimaps).
+- [About](/about): what Founder Atlas is + a guide to the program types.
+
+Each program also has a dedicated profile page at \`/programs/<slug>\` (slug = lowercased name,
+non-alphanumerics → hyphens), with schema.org \`EducationalOccupationalProgram\` JSON-LD.
+
+The /explore page accepts the same query params as the dashboard (\`q\`, \`type\`, \`country\`, \`status\`,
+\`focus\`, plus \`format\` (living model), \`stage\`, \`sector\`, \`housing\`), e.g. \`/explore?q=residency&country=USA\`.
 `;
 
 export const GET: APIRoute = () =>

@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Founder Residencies, Hacker Houses & Startup Campuses — Global Database",
-    "compiled": "2026-06-08",
+    "compiled": "2026-06-10",
     "note": "Recruiting status reflects best-available public info as of June 2026 and changes frequently. Always confirm on the program's own site. Logos load via a multi-source loader (Clearbit → DuckDuckGo → Google favicon) with an initials fallback.",
     "status_legend": {
       "rolling": "Accepts applications on a rolling/always-open basis",
@@ -28,7 +28,35 @@
       "status_detail": "Rolling applications; time-boxed residencies (4–7 wks). Up to $250K for 4–7%.",
       "domain": "f.inc",
       "url": "https://f.inc/apply",
-      "highlight": "42,000 sq ft campus at Fort Mason with hardware lab, media studio, gym; desks for ~80 founders."
+      "highlight": "42,000 sq ft campus at Fort Mason with hardware lab, media studio, gym; desks for ~80 founders.",
+      "format": "in-person",
+      "stageFit": [
+        "pre-seed",
+        "mvp"
+      ],
+      "founderFit": [
+        "technical-builder"
+      ],
+      "sectorFocus": [
+        "AI",
+        "hardware",
+        "AR/VR",
+        "gaming",
+        "web3",
+        "dev tools",
+        "consumer"
+      ],
+      "fundingAmount": "Up to $250K",
+      "equityTaken": "4–7%",
+      "providesFunding": true,
+      "providesWorkspace": true,
+      "applyUrl": "https://f.inc/apply",
+      "sourceUrls": [
+        "https://f.inc/about",
+        "https://f.inc/apply"
+      ],
+      "lastVerified": "2026-06-10",
+      "verificationStatus": "verified"
     },
     {
       "name": "South Park Commons",
@@ -44,7 +72,27 @@
       "status_detail": "Spring 2026 cohort underway; Fall 2026 apps open summer 2026. Up to $1M ($400K for 7% + $600K next round).",
       "domain": "southparkcommons.com",
       "url": "https://www.southparkcommons.com/founder-fellowship/",
-      "highlight": "Offices in SF, NYC & Bangalore. Built for founders before they have an idea."
+      "highlight": "Offices in SF, NYC & Bangalore. Built for founders before they have an idea.",
+      "format": "in-person",
+      "stageFit": [
+        "pre-idea",
+        "pre-seed"
+      ],
+      "founderFit": [
+        "solo-founder",
+        "repeat-founder",
+        "technical-builder"
+      ],
+      "fundingAmount": "$400K upfront + $600K guaranteed next round (~$1M)",
+      "equityTaken": "7%",
+      "providesFunding": true,
+      "providesWorkspace": true,
+      "providesInvestorAccess": true,
+      "sourceUrls": [
+        "https://www.southparkcommons.com/founder-fellowship/"
+      ],
+      "lastVerified": "2026-06-10",
+      "verificationStatus": "verified"
     },
     {
       "name": "South Park Commons — NYC",
@@ -92,7 +140,28 @@
       "status_detail": "12-week live-in residency, ~10 founders. Up to $1M uncapped SAFE for 5%.",
       "domain": "hf0.com",
       "url": "https://www.hf0.com/",
-      "highlight": "Housed in the historic 22,000 sq ft Archbishop's Mansion by Alamo Square ('the Monastery of Code')."
+      "highlight": "Housed in the historic 22,000 sq ft Archbishop's Mansion by Alamo Square ('the Monastery of Code').",
+      "format": "live-in",
+      "durationWeeksMin": 12,
+      "durationWeeksMax": 12,
+      "cohortSize": "~10 teams per batch",
+      "stageFit": [
+        "pre-seed"
+      ],
+      "founderFit": [
+        "technical-builder",
+        "repeat-founder"
+      ],
+      "providesHousing": true,
+      "providesWorkspace": true,
+      "providesFunding": true,
+      "sourceUrls": [
+        "https://www.hf0.com/",
+        "https://sfstandard.com/2023/01/23/inside-sfs-most-competitive-hacker-house-where-workers-eat-sleep-and-breathe-tech/"
+      ],
+      "lastVerified": "2026-06-10",
+      "verificationStatus": "needs-review",
+      "notes": "Live-in 12-week residency. Funding/equity reported inconsistently across sources ($125K/7% up to $1M uncapped/5%) — confirm current cohort terms on hf0.com before relying on a figure."
     },
     {
       "name": "AGI House SF",
@@ -140,7 +209,27 @@
       "status_detail": "3-month cohorts: housing + co-working + community. 'College meets accelerator.'",
       "domain": "livetheresidency.com",
       "url": "https://www.livetheresidency.com/residencies",
-      "highlight": "Flagship Presidio house; part of a global network of homes."
+      "highlight": "Flagship Presidio house; part of a global network of homes.",
+      "format": "live-in",
+      "durationWeeksMin": 12,
+      "durationWeeksMax": 26,
+      "stageFit": [
+        "idea",
+        "pre-seed"
+      ],
+      "providesHousing": true,
+      "providesWorkspace": true,
+      "providesFunding": true,
+      "providesDemoDay": true,
+      "providesInvestorAccess": true,
+      "equityTaken": "takes equity (amount varies)",
+      "notes": "Provides housing, food and cash for ~3 months in exchange for equity; cohorts run 3–6 months. Network-wide terms (livetheresidency.com).",
+      "sourceUrls": [
+        "https://www.livetheresidency.com/",
+        "https://www.livetheresidency.com/about"
+      ],
+      "lastVerified": "2026-06-10",
+      "verificationStatus": "verified"
     },
     {
       "name": "The Residency — Arcadia (Berkeley)",
@@ -604,7 +693,29 @@
       "status_detail": "Rolling enrollment on a hotel-turned-campus near Singapore; hundreds of residents. Planned locations in Miami, Dubai & Tokyo.",
       "domain": "ns.com",
       "url": "https://ns.com/",
-      "highlight": "Balaji Srinivasan's 'Network State' made physical — adjacent to, but broader than, a founder residency."
+      "highlight": "Balaji Srinivasan's 'Network State' made physical — adjacent to, but broader than, a founder residency.",
+      "format": "live-in",
+      "cohortSize": "~256 members",
+      "founderFit": [
+        "international-founder",
+        "relocating-founder"
+      ],
+      "sectorFocus": [
+        "AI",
+        "crypto",
+        "tech"
+      ],
+      "providesHousing": true,
+      "providesWorkspace": true,
+      "providesFunding": false,
+      "cost": "~$1,000–2,000/month (room + meals + gym + coworking)",
+      "notes": "Paid membership, not an investor. Forest City, Johor, Malaysia (~1hr from Singapore). Began as a 90-day popup; reopened as a longer-term program.",
+      "sourceUrls": [
+        "https://ns.com/",
+        "https://balajis.com/p/network-school"
+      ],
+      "lastVerified": "2026-06-10",
+      "verificationStatus": "verified"
     },
     {
       "name": "The Foundery",

@@ -1,0 +1,202 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteNav from '../../components/SiteNav.tsx';
+import Logo from '../../components/Logo.tsx';
+import SaveButton from '../../components/SaveButton.tsx';
+import { PROGRAMS, programSlug, type Program } from '../../data/programs';
+import { citySlug } from '../../data/cities';
+import { statusMeta } from '../../lib/status';
+import { livingModelLabel } from '../../lib/living';
+import { applyHref } from '../../components/ProgramCard';
+import { UNKNOWN, displayVal, displayBool, displayDuration, whatYouGet } from '../../lib/display';
+
+export function getStaticPaths() {
+  return PROGRAMS.map((program) => ({ params: { slug: programSlug(program.name) }, props: { program } }));
+}
+
+const { program: p } = Astro.props as { program: Program };
+const s = statusMeta(p.status);
+const living = livingModelLabel(p.format);
+const perks = whatYouGet(p);
+const sources = p.sourceUrls ?? [];
+
+// A few related programs: same country first, then same living model.
+const others = PROGRAMS.filter((x) => x.name !== p.name);
+const related = [
+  ...others.filter((x) => x.country === p.country),
+  ...others.filter((x) => x.country !== p.country && x.format && x.format === p.format),
+].slice(0, 6);
+
+const quickFacts: [string, string][] = [
+  ['Living model', living ?? UNKNOWN],
+  ['Stage fit', (p.stageFit && p.stageFit.join(', ')) || displayVal(p.stage)],
+  ['Sector', (p.sectorFocus && p.sectorFocus.join(', ')) || displayVal(p.focus)],
+  ['Duration', displayDuration(p)],
+  ['Cohort size', displayVal(p.cohortSize)],
+  ['Funding', displayVal(p.fundingAmount)],
+  ['Equity', displayVal(p.equityTaken)],
+  ['Cost', displayVal(p.cost)],
+  ['Housing', displayBool(p.providesHousing)],
+  ['Workspace', displayBool(p.providesWorkspace)],
+  ['Deadline', displayVal(p.applicationDeadline)],
+  ['Last verified', displayVal(p.lastVerified)],
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'EducationalOccupationalProgram',
+  name: p.name,
+  programType: p.type,
+  url: p.url,
+  provider: p.operator ? { '@type': 'Organization', name: p.operator } : undefined,
+  areaServed: [p.city, p.country].filter(Boolean).join(', '),
+  occupationalCategory: p.focus || undefined,
+  description: p.highlight || p.status_detail || undefined,
+  dateModified: p.lastVerified || undefined,
+};
+
+const title = `${p.name} — Founder Atlas`;
+const description = `${p.name}, a ${p.type} in ${p.city}, ${p.country}. See stage fit, funding, equity, duration, housing, application status and official links.`;
+---
+
+<Base title={title} description={description}>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} slot="head" />
+
+  <header class="mx-auto max-w-[920px] px-7 pt-5">
+    <SiteNav current="list" client:load />
+    <a href="/explore" class="mt-5 inline-block text-[12px] text-muted hover:text-text">← Back to all programs</a>
+  </header>
+
+  <main class="mx-auto max-w-[920px] px-7 pb-16 pt-4">
+    <!-- Header -->
+    <div class="mb-5 flex flex-wrap items-start gap-4">
+      <Logo name={p.name} domain={p.domain} size={56} client:load />
+      <div class="min-w-0 flex-1">
+        <h1 class="m-0 font-display text-[26px] font-bold leading-[1.12] text-text">{p.name}</h1>
+        <div class="mt-1 text-[13px] text-muted">
+          {p.type} · <a href={`/cities/${citySlug(p.city)}`} class="font-semibold text-muted hover:text-text">{p.city}</a>, {p.country}
+        </div>
+        <div class="mt-1 text-[12px] text-muted">Run by {p.operator || UNKNOWN}</div>
+        <div class="mt-2.5 flex flex-wrap items-center gap-1.5">
+          <span
+            class="inline-flex items-center gap-1.5 rounded-[3px] px-2.5 py-[3px] text-[10px] font-bold uppercase tracking-wide"
+            style={`background:${s.color};color:#0a0a0a`}
+          >
+            {s.label}
+          </span>
+          {living && (
+            <span class="inline-flex items-center rounded-[3px] border border-a2 px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide text-a2">
+              {living}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+
+    <!-- CTAs -->
+    <div class="mb-7 flex flex-wrap gap-2.5">
+      <a
+        href={applyHref(p)}
+        target="_blank"
+        rel="noopener"
+        class="rounded-[3px] border border-transparent px-5 py-2.5 font-display text-[13px] font-bold text-[#0a0a0a] no-underline"
+        style="background:var(--grad)"
+      >
+        {p.applyUrl ? 'Apply' : 'Visit site'} →
+      </a>
+      {p.applyUrl && (
+        <a
+          href={p.url}
+          target="_blank"
+          rel="noopener"
+          class="rounded-[3px] border border-line2 px-5 py-2.5 text-[13px] font-semibold text-text no-underline transition hover:border-a1"
+        >
+          Visit site
+        </a>
+      )}
+      <a
+        href={`/submit?program=${encodeURIComponent(p.name)}&mode=update`}
+        class="rounded-[3px] border border-line2 px-5 py-2.5 text-[13px] font-semibold text-muted no-underline transition hover:border-a1 hover:text-text"
+      >
+        Report update
+      </a>
+      <SaveButton slug={programSlug(p.name)} name={p.name} size="md" client:load />
+    </div>
+
+    <!-- Quick facts -->
+    <h2 class="m-0 mb-3 font-display text-[15px] font-bold text-text">Quick facts</h2>
+    <dl class="mb-7 grid grid-cols-2 gap-x-6 gap-y-3.5 sm:grid-cols-3">
+      {
+        quickFacts.map(([label, value]) => (
+          <div>
+            <dt class="text-[10.5px] font-semibold uppercase tracking-wide text-muted">{label}</dt>
+            <dd class={`m-0 mt-0.5 text-[13px] ${value === UNKNOWN ? 'italic text-muted/70' : 'text-text'}`}>{value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <!-- What you get -->
+    {
+      perks.length > 0 && (
+        <section class="mb-7">
+          <h2 class="m-0 mb-2.5 font-display text-[15px] font-bold text-text">What you get</h2>
+          <ul class="m-0 flex flex-wrap gap-1.5 p-0">
+            {perks.map((perk) => (
+              <li class="list-none rounded-[3px] border border-line2 px-2.5 py-1 text-[12px] text-text">{perk}</li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <!-- Notes -->
+    {
+      (p.highlight || p.status_detail || p.notes) && (
+        <section class="mb-7">
+          <h2 class="m-0 mb-2.5 font-display text-[15px] font-bold text-text">Notes</h2>
+          {p.highlight && <p class="m-0 mb-2 text-[13px] leading-relaxed text-muted">{p.highlight}</p>}
+          {p.status_detail && <p class="m-0 mb-2 text-[13px] leading-relaxed text-muted">{p.status_detail}</p>}
+          {p.notes && <p class="m-0 mb-2 text-[13px] leading-relaxed text-muted">{p.notes}</p>}
+        </section>
+      )
+    }
+
+    <!-- Sources -->
+    <section class="mb-8">
+      <h2 class="m-0 mb-2.5 font-display text-[15px] font-bold text-text">Sources</h2>
+      <ul class="m-0 list-none p-0 text-[12.5px]">
+        <li><a href={p.url} target="_blank" rel="noopener" class="text-a2">Official site</a></li>
+        {sources.map((src) => (
+          <li class="mt-1"><a href={src} target="_blank" rel="noopener" class="break-all text-a2">{src}</a></li>
+        ))}
+      </ul>
+      <p class="m-0 mt-3 text-[11.5px] italic text-muted">
+        Last checked: {displayVal(p.lastVerified)}. Application status and terms change often — confirm on the official
+        site before applying.
+      </p>
+    </section>
+
+    <!-- Related -->
+    {
+      related.length > 0 && (
+        <section>
+          <h2 class="m-0 mb-3 font-display text-[15px] font-bold text-text">Related programs</h2>
+          <div class="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+            {related.map((r) => (
+              <a
+                href={`/programs/${programSlug(r.name)}`}
+                class="rounded-[3px] border border-line bg-[rgba(10,13,28,.55)] p-3.5 no-underline transition hover:border-a1"
+              >
+                <div class="font-display text-[13px] font-bold text-text">{r.name}</div>
+                <div class="mt-0.5 text-[11.5px] text-muted">
+                  {r.type} · {r.city}, {r.country}
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </main>
+</Base>

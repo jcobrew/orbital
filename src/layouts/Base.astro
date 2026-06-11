@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import IntroOverlay from '../components/IntroOverlay.tsx';
 
 interface Props {
   title: string;
@@ -9,6 +10,9 @@ interface Props {
 }
 
 const { title, description, fullscreen = false } = Astro.props;
+
+// The intro overlay auto-opens (once ever) only on the entry surfaces.
+const autoIntro = ['/', '/explore'].includes(Astro.url.pathname);
 ---
 
 <!doctype html>
@@ -28,5 +32,6 @@ const { title, description, fullscreen = false } = Astro.props;
   </head>
   <body class={fullscreen ? 'h-screen overflow-hidden' : 'min-h-screen'}>
     <slot />
+    <IntroOverlay autoOpen={autoIntro} client:load />
   </body>
 </html>

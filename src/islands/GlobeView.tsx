@@ -11,6 +11,7 @@ import { $filters, initFiltersFromURL } from '../stores/filters';
 import FilterSidebar from '../components/FilterSidebar';
 import Logo from '../components/Logo';
 import StatusBadge from '../components/StatusBadge';
+import SiteNav from '../components/SiteNav';
 import BootSequence from '../components/BootSequence';
 import { useTypewriter } from '../lib/useTypewriter';
 import worldGeo from '../data/world-110m.geo.json';
@@ -61,6 +62,31 @@ function jitter(arr: Program[]) {
 
 const keyOf = (p: Program) => p.dataset + '|' + p.name;
 
+/** Best-effort WebGL capability check for the no-WebGL fallback (handoff §19/§28). */
+function hasWebGL(): boolean {
+  try {
+    const c = document.createElement('canvas');
+    return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')));
+  } catch {
+    return false;
+  }
+}
+function prefersReducedMotion(): boolean {
+  return typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+}
+
+// ---- minimal inline icons for the globe's floating controls ----
+const svg = { width: 17, height: 17, viewBox: '0 0 16 16', fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
+const IconMenu = () => (<svg {...svg}><path d="M2 4h12M2 8h12M2 12h12" /></svg>);
+const IconClose = () => (<svg {...svg}><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" /></svg>);
+const IconRotate = () => (<svg {...svg}><path d="M13.5 8a5.5 5.5 0 1 1-1.7-3.97" /><path d="M13.6 2.3v2.4h-2.4" /></svg>);
+const IconReset = () => (<svg {...svg}><circle cx="8" cy="8" r="5.3" /><path d="M8 1v2.2M8 12.8V15M1 8h2.2M12.8 8H15" /></svg>);
+const IconMinimap = () => (<svg {...svg}><path d="M2 4.3l4-1.6 4 1.6 4-1.6v9l-4 1.6-4-1.6-4 1.6z" /><path d="M6 2.7v9M10 4.3v9" /></svg>);
+const IconLegend = () => (<svg {...svg}><circle cx="3.3" cy="4" r="1.3" /><circle cx="3.3" cy="8" r="1.3" /><circle cx="3.3" cy="12" r="1.3" /><path d="M6.6 4h7.4M6.6 8h7.4M6.6 12h7.4" /></svg>);
+
+const iconBtn =
+  'flex h-9 w-9 items-center justify-center rounded-xl border border-line2 bg-[rgba(16,16,16,.78)] text-muted backdrop-blur transition hover:border-a1 hover:text-text';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobeInstance = any;
 type MiniRec = { map: L.Map; layer: L.LayerGroup; fitted: boolean };
@@ -73,7 +99,14 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   const [selected, setSelected] = useState<Program | null>(null);
   const [spinning, setSpinning] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [webgl, setWebgl] = useState(true);
   const [activeCity, setActiveCity] = useState<string>(DEFAULT_CITY);
+
+  // Everything but the globe starts minimized so the homepage opens on a clean
+  // globe; each surface has its own toggle in the floating controls.
+  const [panelOpen, setPanelOpen] = useState(false);
+  const [dockOpen, setDockOpen] = useState(false);
+  const [legendOpen, setLegendOpen] = useState(false);
 
   // city dock (Leaflet minimaps, managed imperatively)
   const cityElRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -128,6 +161,14 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     installLogoFallback();
     if (!globeEl.current || !globeWrapEl.current || worldRef.current) return;
 
+    // No-WebGL fallback: skip globe init and show the list-view escape hatch.
+    if (!hasWebGL()) {
+      setWebgl(false);
+      setLoading(false);
+      return;
+    }
+    const reduceMotion = prefersReducedMotion();
+
     // globe.gl's factory call signature isn't well typed; cast to call it.
     const world: GlobeInstance = (Globe as unknown as (cfg?: object) => (el: HTMLElement) => GlobeInstance)({ animateIn: false })(globeEl.current)
       // Dot-matrix earth: no photo textures — a near-black sphere with white
@@ -172,7 +213,8 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     world.htmlElementsData(shown);
     world.pointOfView({ lat: 22, lng: 8, altitude: 2.4 }, 0);
     const controls = world.controls();
-    controls.autoRotate = true;
+    controls.autoRotate = !reduceMotion;
+    if (reduceMotion) setSpinning(false);
     controls.autoRotateSpeed = 0.45;
     controls.enableDamping = true;
     controls.dampingFactor = 0.12;
@@ -214,7 +256,14 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   }, [shown]);
 
   // ---- city minimaps: build the active one lazily, keep markers in sync ----
+  // Only while the dock is open; tear the Leaflet maps down when it closes so
+  // they rebuild cleanly (and correctly sized) on the next open.
   useEffect(() => {
+    if (!dockOpen) {
+      Object.values(cityMaps.current).forEach((r) => r.map.remove());
+      cityMaps.current = {};
+      return;
+    }
     CLUSTERS.forEach((cfg) => {
       const el = cityElRefs.current[cfg.id];
       if (!el) return;
@@ -261,7 +310,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeCity, cityData]);
+  }, [dockOpen, activeCity, cityData]);
 
   // tear down minimaps on unmount
   useEffect(
@@ -310,26 +359,214 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
 
   const title = TITLES[filters.dataset] ?? TITLES.all;
   const tagline = useTypewriter('~/ wherever you land, you can build', { speed: 46, startDelay: 2600, loop: true });
-  const btn =
-    'term inline-flex items-center gap-1.5 rounded-xl border border-line2 bg-[rgba(16,16,16,.78)] px-3 py-2 text-[12px] font-semibold text-text backdrop-blur transition hover:border-a1';
 
   return (
-    <div className="flex h-screen">
-      <aside className="relative z-[5] flex w-[360px] min-w-[360px] flex-col border-r border-line bg-panel backdrop-blur-[18px] max-[760px]:hidden">
-        <div className="border-b border-line px-5 pb-3 pt-[18px]">
-          <div className="term mb-2 text-[10.5px] font-semibold uppercase tracking-[.22em] text-a2">
-            founder-atlas · 3d · 2026
-          </div>
-          <div className="mb-2.5">
-            <nav className="viewnav" aria-label="Views">
-              <a href="/" className="active" aria-current="page">Home</a>
-              <a href="/dashboard">Dashboard</a>
-            </nav>
-          </div>
-          <h1
-            className="m-0 mb-2 font-display text-[19px] font-bold leading-[1.18]"
-            style={{ color: 'var(--text)' }}
+    // The globe is the homepage: it fills the viewport, and every other surface
+    // (programs panel, minimaps, legend) is a toggleable overlay on top of it.
+    <div className="relative h-screen overflow-hidden">
+      <div ref={globeWrapEl} className="absolute inset-0 overflow-hidden">
+        {/* z-[1] gives the globe its own stacking context so pin z-indexes stay below the overlay UI */}
+        <div ref={globeEl} className="absolute inset-0 z-[1]" />
+        {/* Terminal boot-up loader, faded out once the globe is ready. */}
+        {webgl && (
+          <div
+            className={`absolute inset-0 z-40 flex items-center justify-center bg-black transition-opacity duration-700 ${loading ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
           >
+            <BootSequence count={data.length} />
+          </div>
+        )}
+        {!webgl && (
+          <div className="absolute inset-0 z-40 flex flex-col items-center justify-center gap-3 p-6 text-center">
+            <div className="font-display text-[16px] font-bold text-text">3D globe unavailable</div>
+            <p className="m-0 max-w-[360px] text-[13px] text-muted">
+              Your browser or device can't render the 3D globe. You can still browse every program in list view.
+            </p>
+            <a
+              href={`/explore${typeof window !== 'undefined' ? window.location.search : ''}`}
+              className="rounded-md border border-transparent px-4 py-2.5 font-display text-[13px] font-bold text-[#0a0a0a] no-underline"
+              style={{ background: 'var(--grad)' }}
+            >
+              Browse in list view →
+            </a>
+          </div>
+        )}
+      </div>
+
+      {/* Top-left: brand wordmark that opens the programs panel (hidden while it's open) */}
+      {!panelOpen && (
+        <button
+          onClick={() => setPanelOpen(true)}
+          aria-label="Open programs panel"
+          className="absolute left-4 top-4 z-20 inline-flex items-center gap-2 rounded-xl border border-line2 bg-[rgba(16,16,16,.78)] px-3 py-2 font-display text-[13px] font-bold text-text backdrop-blur transition hover:border-a1"
+        >
+          <IconMenu />
+          <span>Founder&nbsp;Atlas</span>
+        </button>
+      )}
+
+      {/* Top-right: icon controls — rotate / reset, then panel toggles */}
+      <div className="absolute right-4 top-4 z-20 flex flex-col gap-2">
+        <button
+          className={`${iconBtn} ${spinning ? 'border-a1 text-a2' : ''}`}
+          onClick={toggleSpin}
+          aria-pressed={spinning}
+          aria-label="Toggle auto-rotate"
+          title={spinning ? 'Auto-rotate: on' : 'Auto-rotate: off'}
+        >
+          <IconRotate />
+        </button>
+        <button className={iconBtn} onClick={reset} aria-label="Reset view" title="Reset view">
+          <IconReset />
+        </button>
+        <div className="mx-auto my-0.5 h-px w-5 bg-line2" />
+        <button
+          className={`${iconBtn} ${dockOpen ? 'border-a1 text-a2' : ''}`}
+          onClick={() => setDockOpen((v) => !v)}
+          aria-pressed={dockOpen}
+          aria-label="Toggle city minimaps"
+          title="City minimaps"
+        >
+          <IconMinimap />
+        </button>
+        <button
+          className={`${iconBtn} ${legendOpen ? 'border-a1 text-a2' : ''}`}
+          onClick={() => setLegendOpen((v) => !v)}
+          aria-pressed={legendOpen}
+          aria-label="Toggle status legend"
+          title="Status legend"
+        >
+          <IconLegend />
+        </button>
+      </div>
+
+      {/* Bottom-left interaction hint */}
+      <div className="term pointer-events-none absolute bottom-4 left-4 z-10 rounded-[3px] border border-line bg-[rgba(16,16,16,.6)] px-2.5 py-1.5 text-[11px] text-muted backdrop-blur">
+        drag to rotate · scroll to zoom
+      </div>
+
+      {/* Legend (toggle) */}
+      {legendOpen && (
+        <div className="legend absolute bottom-4 right-4 z-20">
+          <b>Recruiting status</b>
+          {STATUS_ORDER.map((k) => {
+            const s = statusMeta(k);
+            return (
+              <div key={k}>
+                <span className="k" style={{ background: s.color }} />
+                {s.label}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {selected && (
+        <div className="absolute right-[18px] top-1/2 z-[25] w-[330px] -translate-y-1/2 rounded-[3px] border border-line2 bg-[rgba(10,10,10,.94)] p-[18px] shadow-[0_24px_70px_rgba(0,0,0,.65)] backdrop-blur-[18px]">
+          <button className="absolute right-3.5 top-3 border-none bg-transparent text-[18px] text-muted hover:text-white" onClick={() => setSelected(null)}>
+            ✕
+          </button>
+          <div className="mb-2.5 flex items-center gap-3">
+            <Logo name={selected.name} domain={selected.domain} size={48} />
+            <div>
+              <div className="font-display text-[16px] font-bold leading-tight">{selected.name}</div>
+              <div className="mt-0.5 text-[11px] font-semibold text-a2">{selected.type}</div>
+            </div>
+          </div>
+          <div className="mb-3">
+            <StatusBadge status={selected.status} full />
+          </div>
+          <div className="flex flex-col gap-2 text-[12px] leading-snug">
+            <div>📍 <b className="text-muted">Location: </b>{selected.city}, {selected.country}</div>
+            <div>🎯 <b className="text-muted">Focus: </b>{selected.focus}</div>
+            <div>🧭 <b className="text-muted">Run by: </b>{selected.operator || 'Not publicly listed'}</div>
+            <div>🌱 <b className="text-muted">Stage: </b>{selected.stage}</div>
+            {selected.status_detail && (
+              <div>📋 <b className="text-muted">Details: </b>{selected.status_detail}</div>
+            )}
+          </div>
+          {selected.highlight && (
+            <div className="mt-3 border-t border-line pt-3 text-[11.5px] italic leading-normal text-muted">{selected.highlight}</div>
+          )}
+          <a
+            href={selected.url}
+            target="_blank"
+            rel="noopener"
+            className="mt-3.5 inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[12px] font-bold text-[#0a0a0a] no-underline"
+            style={{ background: 'var(--grad)' }}
+          >
+            Visit program →
+          </a>
+        </div>
+      )}
+
+      {/* City minimap dock (toggle) — overlays the bottom of the globe */}
+      {dockOpen && (
+        <div className="absolute inset-x-0 bottom-0 z-20">
+          <div id="cityrow" ref={cityrowEl}>
+            <div
+              id="cityresize"
+              title="Drag to resize"
+              onPointerDown={onResizeDown}
+              onPointerMove={onResizeMove}
+              onPointerUp={onResizeUp}
+              onPointerCancel={onResizeUp}
+            />
+            <button
+              onClick={() => setDockOpen(false)}
+              aria-label="Close minimaps"
+              className="absolute right-2.5 top-2.5 z-[7] flex h-7 w-7 items-center justify-center rounded-lg border border-line2 bg-[rgba(16,16,16,.78)] text-muted transition hover:border-a1 hover:text-text"
+            >
+              <IconClose />
+            </button>
+            <div id="citytabs">
+              {CLUSTERS.map((c) => (
+                <button key={c.id} className={`citytab ${activeCity === c.id ? 'active' : ''}`} onClick={() => setActiveCity(c.id)}>
+                  <span className="led" />
+                  {c.label} <b>{cityCounts[c.id] ?? 0}</b>
+                </button>
+              ))}
+            </div>
+            <div id="citystage">
+              {CLUSTERS.map((c) => {
+                const empty = (cityCounts[c.id] ?? 0) === 0;
+                return (
+                  <div
+                    key={c.id}
+                    ref={(el) => {
+                      cityElRefs.current[c.id] = el;
+                    }}
+                    className={`citymap ${activeCity === c.id ? 'active' : ''} ${empty ? 'empty' : ''}`}
+                  >
+                    {empty ? 'No programs in this dataset' : null}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Programs panel — slides in over the globe from the left */}
+      <aside
+        aria-hidden={!panelOpen}
+        className={`absolute left-0 top-0 z-30 flex h-full w-[360px] min-w-[360px] flex-col border-r border-line bg-panel backdrop-blur-[18px] transition-transform duration-300 max-[760px]:hidden ${
+          panelOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <div className="border-b border-line px-5 pb-3 pt-3">
+          <div className="mb-2 flex justify-end">
+            <button
+              onClick={() => setPanelOpen(false)}
+              aria-label="Close panel"
+              className="flex h-7 w-7 items-center justify-center rounded-lg border border-line2 text-muted transition hover:border-a1 hover:text-text"
+            >
+              <IconClose />
+            </button>
+          </div>
+          <div className="mb-3">
+            <SiteNav current="globe" />
+          </div>
+          <h1 className="m-0 mb-2 font-display text-[19px] font-bold leading-[1.18]" style={{ color: 'var(--text)' }}>
             {title.t}
           </h1>
           <div className="term mb-1.5 text-[11px] text-a2">
@@ -366,116 +603,6 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
           })}
         </div>
       </aside>
-
-      {/* right pane: globe on top, resizable city-minimap dock below */}
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <div ref={globeWrapEl} className="relative min-h-0 flex-1 overflow-hidden">
-          {/* z-[1] gives the globe its own stacking context so pin z-indexes stay below the overlay UI */}
-          <div ref={globeEl} className="absolute inset-0 z-[1]" />
-          <div
-            className={`absolute inset-0 z-40 flex items-center justify-center bg-black transition-opacity duration-700 ${loading ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
-          >
-            <BootSequence count={data.length} />
-          </div>
-          <div className="absolute right-4 top-4 z-20 flex flex-col gap-2">
-            <button className={`${btn} ${spinning ? '' : 'opacity-70'}`} onClick={toggleSpin}>
-              <span className="h-2 w-2 rounded-full" style={{ background: spinning ? 'var(--a2)' : '#555', boxShadow: spinning ? '0 0 8px var(--a2)' : 'none' }} />
-              Auto-rotate
-            </button>
-            <button className={btn} onClick={reset}>↺ Reset view</button>
-          </div>
-          <div className="term absolute bottom-4 left-4 z-20 rounded-[3px] border border-line bg-[rgba(16,16,16,.6)] px-2.5 py-1.5 text-[11px] text-muted backdrop-blur">
-            drag to rotate · scroll to zoom · dense cities mapped below
-          </div>
-
-          <div className="legend absolute bottom-4 right-4 z-20">
-            <b>Recruiting status</b>
-            {STATUS_ORDER.map((k) => {
-              const s = statusMeta(k);
-              return (
-                <div key={k}>
-                  <span className="k" style={{ background: s.color }} />
-                  {s.label}
-                </div>
-              );
-            })}
-          </div>
-
-          {selected && (
-            <div className="absolute right-[18px] top-1/2 z-[25] w-[330px] -translate-y-1/2 rounded-[3px] border border-line2 bg-[rgba(10,10,10,.94)] p-[18px] shadow-[0_24px_70px_rgba(0,0,0,.65)] backdrop-blur-[18px]">
-              <button className="absolute right-3.5 top-3 border-none bg-transparent text-[18px] text-muted hover:text-white" onClick={() => setSelected(null)}>
-                ✕
-              </button>
-              <div className="mb-2.5 flex items-center gap-3">
-                <Logo name={selected.name} domain={selected.domain} size={48} />
-                <div>
-                  <div className="font-display text-[16px] font-bold leading-tight">{selected.name}</div>
-                  <div className="mt-0.5 text-[11px] font-semibold text-a2">{selected.type}</div>
-                </div>
-              </div>
-              <div className="mb-3">
-                <StatusBadge status={selected.status} full />
-              </div>
-              <div className="flex flex-col gap-2 text-[12px] leading-snug">
-                <div>📍 <b className="text-muted">Location: </b>{selected.city}, {selected.country}</div>
-                <div>🎯 <b className="text-muted">Focus: </b>{selected.focus}</div>
-                <div>🧭 <b className="text-muted">Run by: </b>{selected.operator || 'Not publicly listed'}</div>
-                <div>🌱 <b className="text-muted">Stage: </b>{selected.stage}</div>
-                {selected.status_detail && (
-                  <div>📋 <b className="text-muted">Details: </b>{selected.status_detail}</div>
-                )}
-              </div>
-              {selected.highlight && (
-                <div className="mt-3 border-t border-line pt-3 text-[11.5px] italic leading-normal text-muted">{selected.highlight}</div>
-              )}
-              <a
-                href={selected.url}
-                target="_blank"
-                rel="noopener"
-                className="mt-3.5 inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[12px] font-bold text-[#0a0a0a] no-underline"
-                style={{ background: 'var(--grad)' }}
-              >
-                Visit program →
-              </a>
-            </div>
-          )}
-        </div>
-
-        <div id="cityrow" ref={cityrowEl}>
-          <div
-            id="cityresize"
-            title="Drag to resize"
-            onPointerDown={onResizeDown}
-            onPointerMove={onResizeMove}
-            onPointerUp={onResizeUp}
-            onPointerCancel={onResizeUp}
-          />
-          <div id="citytabs">
-            {CLUSTERS.map((c) => (
-              <button key={c.id} className={`citytab ${activeCity === c.id ? 'active' : ''}`} onClick={() => setActiveCity(c.id)}>
-                <span className="led" />
-                {c.label} <b>{cityCounts[c.id] ?? 0}</b>
-              </button>
-            ))}
-          </div>
-          <div id="citystage">
-            {CLUSTERS.map((c) => {
-              const empty = (cityCounts[c.id] ?? 0) === 0;
-              return (
-                <div
-                  key={c.id}
-                  ref={(el) => {
-                    cityElRefs.current[c.id] = el;
-                  }}
-                  className={`citymap ${activeCity === c.id ? 'active' : ''} ${empty ? 'empty' : ''}`}
-                >
-                  {empty ? 'No programs in this dataset' : null}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

@@ -25,6 +25,10 @@ export function filtersFromURL(search = window.location.search): Filters {
     country: u.get('country') ?? '',
     status: status && status in STATUS ? status : '',
     focus: u.get('focus') ?? '',
+    format: u.get('format') ?? '',
+    stage: u.get('stage') ?? '',
+    sector: u.get('sector') ?? '',
+    housing: u.get('housing') ?? '',
   };
 }
 
@@ -37,6 +41,10 @@ export function filtersToQuery(f: Filters): string {
   if (f.country) u.set('country', f.country);
   if (f.status) u.set('status', f.status);
   if (f.focus) u.set('focus', f.focus);
+  if (f.format) u.set('format', f.format);
+  if (f.stage) u.set('stage', f.stage);
+  if (f.sector) u.set('sector', f.sector);
+  if (f.housing) u.set('housing', f.housing);
   return u.toString();
 }
 
@@ -54,4 +62,9 @@ export function setFilters(patch: Partial<Filters>): void {
   $filters.set(next);
   const qs = filtersToQuery(next);
   history.replaceState(null, '', qs ? location.pathname + '?' + qs : location.pathname);
+}
+
+/** Replace all filters with a clean preset (used by the founder triggers). */
+export function applyPreset(preset: Partial<Filters>): void {
+  setFilters({ ...EMPTY_FILTERS, ...preset });
 }
