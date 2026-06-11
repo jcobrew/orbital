@@ -3,6 +3,7 @@ import { programSlug } from '../data/programs';
 import Logo from './Logo';
 import StatusBadge from './StatusBadge';
 import LivingModelBadge from './LivingModelBadge';
+import SaveButton from './SaveButton';
 
 /** Apply link prefers an explicit applyUrl, else the program's site. */
 export function applyHref(p: Program): string {
@@ -36,7 +37,10 @@ export default function ProgramCard({ program: p, onSelect }: { program: Program
             {p.type} · {p.city}, {p.country}
           </div>
         </div>
-        <StatusBadge status={p.status} />
+        <div className="flex flex-none items-center gap-1.5">
+          <StatusBadge status={p.status} />
+          <SaveButton slug={programSlug(p.name)} name={p.name} />
+        </div>
       </div>
 
       {p.highlight && <p className="m-0 mb-3 line-clamp-2 text-[12px] leading-normal text-muted">{p.highlight}</p>}

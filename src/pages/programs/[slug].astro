@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import SiteNav from '../../components/SiteNav.tsx';
 import Logo from '../../components/Logo.tsx';
+import SaveButton from '../../components/SaveButton.tsx';
 import { PROGRAMS, programSlug, type Program } from '../../data/programs';
 import { citySlug } from '../../data/cities';
 import { statusMeta } from '../../lib/status';
@@ -119,6 +120,7 @@ const description = `${p.name}, a ${p.type} in ${p.city}, ${p.country}. See stag
       >
         Report update
       </a>
+      <SaveButton slug={programSlug(p.name)} name={p.name} size="md" client:load />
     </div>
 
     <!-- Quick facts -->

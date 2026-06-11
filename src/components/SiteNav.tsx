@@ -1,8 +1,10 @@
+import { useEffect } from 'react';
 import { useStore } from '@nanostores/react';
 import { $filters, filtersToQuery } from '../stores/filters';
 import { openIntro } from '../stores/ui';
+import { $saved, initSaved } from '../stores/saved';
 
-export type NavCurrent = 'globe' | 'map' | 'list' | 'countries' | 'dashboard' | 'about';
+export type NavCurrent = 'globe' | 'map' | 'list' | 'countries' | 'dashboard' | 'about' | 'saved';
 
 const VIEWS: { key: NavCurrent; href: string; label: string }[] = [
   { key: 'globe', href: '/', label: 'Globe' },
@@ -18,8 +20,13 @@ const VIEWS: { key: NavCurrent; href: string; label: string }[] = [
  */
 export default function SiteNav({ current }: { current?: NavCurrent }) {
   const filters = useStore($filters);
+  const saved = useStore($saved);
   const qs = filtersToQuery(filters);
   const suffix = qs ? '?' + qs : '';
+
+  useEffect(() => {
+    initSaved();
+  }, []);
 
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -61,6 +68,15 @@ export default function SiteNav({ current }: { current?: NavCurrent }) {
           }`}
         >
           Countries
+        </a>
+        <a
+          href="/saved"
+          aria-current={current === 'saved' ? 'page' : undefined}
+          className={`rounded-[3px] px-2.5 py-1.5 font-display text-[12px] font-semibold no-underline transition ${
+            current === 'saved' ? 'text-text' : 'text-muted hover:text-text'
+          }`}
+        >
+          Saved{saved.length > 0 ? ` (${saved.length})` : ''}
         </a>
         <button
           type="button"
