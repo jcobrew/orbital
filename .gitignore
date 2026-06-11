@@ -6,3 +6,6 @@ node_modules/
 # Astro
 dist/
 .astro/
+
+# Claude Code agent worktrees (transient, auto-cleaned)
+.claude/worktrees/
