@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://founder-atlas.com/schemas/program-update.schema.json",
+  "title": "Founder Atlas Update Report",
+  "description": "The aggregate data-update report produced by Stream 7's generateUpdateReport() and served at /api/update-report.json. Report-only: it summarizes freshness, source-URL inventory and MVP-readiness across the dataset and never modifies data. This document describes the `report` object inside that endpoint's response.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["generatedAt", "thresholdDays", "networkChecked", "freshness", "sourceUrls", "readiness", "headline"],
+  "properties": {
+    "generatedAt": { "type": "string", "format": "date-time", "description": "ISO timestamp the report was generated." },
+    "thresholdDays": { "type": "number", "description": "Stale threshold in days." },
+    "networkChecked": { "type": "boolean", "description": "Whether source URLs were probed over the network. False for the build-time export." },
+    "freshness": {
+      "type": "object",
+      "description": "Freshness summary across all programs.",
+      "additionalProperties": true
+    },
+    "sourceUrls": {
+      "type": "object",
+      "description": "Source-URL inventory / health summary. URL-health counts are 0 / not-meaningful when networkChecked is false.",
+      "additionalProperties": true
+    },
+    "readiness": {
+      "type": "object",
+      "description": "MVP-readiness summary (which records meet the curated data standard).",
+      "additionalProperties": true
+    },
+    "headline": {
+      "type": "object",
+      "description": "High-signal headline counts for quick scanning / dashboards.",
+      "additionalProperties": false,
+      "required": ["totalPrograms", "stale", "missingVerificationDate", "missingSourceUrls", "brokenOrUnreachableUrls", "notMvpReady", "taggedMvp"],
+      "properties": {
+        "totalPrograms": { "type": "number" },
+        "stale": { "type": "number" },
+        "missingVerificationDate": { "type": "number" },
+        "missingSourceUrls": { "type": "number" },
+        "brokenOrUnreachableUrls": { "type": "number", "description": "Only meaningful when networkChecked is true; otherwise 0." },
+        "notMvpReady": { "type": "number" },
+        "taggedMvp": { "type": "number" }
+      }
+    }
+  }
+}
