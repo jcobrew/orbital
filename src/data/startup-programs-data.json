@@ -92,7 +92,9 @@
         "https://www.southparkcommons.com/founder-fellowship/"
       ],
       "lastVerified": "2026-06-10",
-      "verificationStatus": "verified"
+      "verificationStatus": "verified",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "South Park Commons — NYC",
@@ -108,7 +110,9 @@
       "status_detail": "Fellows may work from the NYC office. Fall 2026 apps open summer 2026.",
       "domain": "southparkcommons.com",
       "url": "https://www.southparkcommons.com/founder-fellowship/",
-      "highlight": "East-coast hub of the SPC fellowship."
+      "highlight": "East-coast hub of the SPC fellowship.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "South Park Commons — Bangalore",
@@ -161,7 +165,9 @@
       ],
       "lastVerified": "2026-06-10",
       "verificationStatus": "needs-review",
-      "notes": "Live-in 12-week residency. Funding/equity reported inconsistently across sources ($125K/7% up to $1M uncapped/5%) — confirm current cohort terms on hf0.com before relying on a figure."
+      "notes": "Live-in 12-week residency. Funding/equity reported inconsistently across sources ($125K/7% up to $1M uncapped/5%) — confirm current cohort terms on hf0.com before relying on a figure.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "AGI House SF",
@@ -177,7 +183,9 @@
       "status_detail": "Events & residencies for AI builders; perched atop Twin Peaks.",
       "domain": "agihouse.ai",
       "url": "https://agihouse.ai/",
-      "highlight": "Brings hackathon culture back to SF; AGI House Ventures invests up to $1M."
+      "highlight": "Brings hackathon culture back to SF; AGI House Ventures invests up to $1M.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "AGI House (Hillsborough)",
@@ -193,7 +201,9 @@
       "status_detail": "Palatial AI hacker house with its own venture fund (separate from the SF house).",
       "domain": "agihouse.org",
       "url": "https://www.agihouse.org/",
-      "highlight": "The original Peninsula AGI House; AGI House Ventures backs residents."
+      "highlight": "The original Peninsula AGI House; AGI House Ventures backs residents.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "The Residency — SF Parc",
@@ -229,7 +239,9 @@
         "https://www.livetheresidency.com/about"
       ],
       "lastVerified": "2026-06-10",
-      "verificationStatus": "verified"
+      "verificationStatus": "verified",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "The Residency — Arcadia (Berkeley)",
@@ -245,7 +257,9 @@
       "status_detail": "3-month live-in cohorts in the East Bay.",
       "domain": "livetheresidency.com",
       "url": "https://www.livetheresidency.com/residencies",
-      "highlight": "Berkeley house in The Residency network."
+      "highlight": "Berkeley house in The Residency network.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "The Residency — Homebrew (NYC)",
@@ -261,7 +275,9 @@
       "status_detail": "3-month live-in cohorts in NYC.",
       "domain": "livetheresidency.com",
       "url": "https://www.livetheresidency.com/residencies",
-      "highlight": "East-coast house in The Residency network."
+      "highlight": "East-coast house in The Residency network.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "The Residency — Londinium",
@@ -277,7 +293,9 @@
       "status_detail": "AI-focused 5-bedroom home connected to central London.",
       "domain": "livetheresidency.com",
       "url": "https://www.livetheresidency.com/residencies",
-      "highlight": "London AI house in The Residency network."
+      "highlight": "London AI house in The Residency network.",
+      "mvp": true,
+      "ecosystem": "uk"
     },
     {
       "name": "The Residency — Bangalore",
@@ -309,7 +327,9 @@
       "status_detail": "Aurea: sister house to Arcadia for those chasing breakthroughs; intense focus & deep collaboration.",
       "domain": "livetheresidency.com",
       "url": "https://www.livetheresidency.com/residencies",
-      "highlight": "Berlin deep-tech house (Aurea) in The Residency network."
+      "highlight": "Berlin deep-tech house (Aurea) in The Residency network.",
+      "mvp": true,
+      "ecosystem": "europe-wide"
     },
     {
       "name": "Foundry (Foundry Coliving)",
@@ -325,7 +345,9 @@
       "status_detail": "Residency-style coliving; 100+ founders & engineers have lived there.",
       "domain": "foundry.today",
       "url": "https://foundry.today/",
-      "highlight": "Self-styled 'Number One Hacker House' in SF."
+      "highlight": "Self-styled 'Number One Hacker House' in SF.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Accelr8",
@@ -341,7 +363,9 @@
       "status_detail": "Where founders live: co-living + co-working community.",
       "domain": "joinaccelr8.com",
       "url": "https://joinaccelr8.com/",
-      "highlight": "Residency program blending housing and workspace for founders."
+      "highlight": "Residency program blending housing and workspace for founders.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "STAK Space",
@@ -357,7 +381,9 @@
       "status_detail": "Billed as the world's largest hacker house.",
       "domain": "stakspace.com",
       "url": "https://www.techloy.com/17-of-the-best-hacker-houses-for-tech-talents-and-founders-around-the-world/",
-      "highlight": "Large-scale East Bay hacker house."
+      "highlight": "Large-scale East Bay hacker house.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "FoundHer House",
@@ -373,7 +399,9 @@
       "status_detail": "All-female co-living/working space for women founders.",
       "domain": "foundherhouse.com",
       "url": "https://www.techloy.com/17-of-the-best-hacker-houses-for-tech-talents-and-founders-around-the-world/",
-      "highlight": "Designed to foster women-led tech startups."
+      "highlight": "Designed to foster women-led tech startups.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Startup Embassy",
@@ -389,7 +417,9 @@
       "status_detail": "Established co-living for founders coming to the Valley.",
       "domain": "startupembassy.com",
       "url": "https://startupembassy.com/",
-      "highlight": "Long-running Silicon Valley founder house."
+      "highlight": "Long-running Silicon Valley founder house.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Georgia Tech Hacker House",
@@ -405,7 +435,9 @@
       "status_detail": "Collaborative 9-month build program for students.",
       "domain": "gatech.edu",
       "url": "https://www.techloy.com/17-of-the-best-hacker-houses-for-tech-talents-and-founders-around-the-world/",
-      "highlight": "University-run hacker house for student founders."
+      "highlight": "University-run hacker house for student founders.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Casa Bernarda",
@@ -469,7 +501,9 @@
       "status_detail": "Billed as the world's first 'hacker hotel.'",
       "domain": "fr8.fi",
       "url": "https://www.techloy.com/17-of-the-best-hacker-houses-for-tech-talents-and-founders-around-the-world/",
-      "highlight": "Resort-style stay + collaborative tech environment."
+      "highlight": "Resort-style stay + collaborative tech environment.",
+      "mvp": true,
+      "ecosystem": "finland-nordics"
     },
     {
       "name": "Pluto (AI Hacker House)",
@@ -485,7 +519,9 @@
       "status_detail": "AI/robotics residential workspace (also Paris).",
       "domain": "pluto.community",
       "url": "https://www.techloy.com/17-of-the-best-hacker-houses-for-tech-talents-and-founders-around-the-world/",
-      "highlight": "Shared residential workspace for AI/robotics builders."
+      "highlight": "Shared residential workspace for AI/robotics builders.",
+      "mvp": true,
+      "ecosystem": "europe-wide"
     },
     {
       "name": "HackerHouse.world",
@@ -501,7 +537,9 @@
       "status_detail": "Network across Bordeaux, Berlin, Venice, Rome, Dublin & London.",
       "domain": "hackerhouse.world",
       "url": "https://hackerhouse.world/",
-      "highlight": "Multi-city European hacker-house network."
+      "highlight": "Multi-city European hacker-house network.",
+      "mvp": true,
+      "ecosystem": "europe-wide"
     },
     {
       "name": "Bali Hacker House (The Collective)",
@@ -581,7 +619,9 @@
       "status_detail": "Neo Residency: 3 months SF + 2-week Oregon bootcamp; $750K uncapped SAFE + $450K credits.",
       "domain": "neo.com",
       "url": "https://neo.com/residency",
-      "highlight": "Low-dilution residency replacing the original Neo Accelerator (Feb 2026)."
+      "highlight": "Low-dilution residency replacing the original Neo Accelerator (Feb 2026).",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Forge — Bangalore (Cohort 1)",
@@ -747,7 +787,9 @@
       "status_detail": "European house in The Residency network; 3-month live-in cohorts.",
       "domain": "livetheresidency.com",
       "url": "https://www.livetheresidency.com/residencies",
-      "highlight": "Vienna house in The Residency network."
+      "highlight": "Vienna house in The Residency network.",
+      "mvp": true,
+      "ecosystem": "europe-wide"
     },
     {
       "name": "Founders House — Stockholm",
@@ -763,7 +805,9 @@
       "status_detail": "Selective, equity-free 24/7 workspace + community. Launched 2025; 80+ startups supported in year one. Luntmakargatan 34.",
       "domain": "founders.house",
       "url": "https://basepoint.vc/stories/founders-house-stockholm-and-helsinki-hubs",
-      "highlight": "Nordic 'residents' model — no equity, all resources free."
+      "highlight": "Nordic 'residents' model — no equity, all resources free.",
+      "mvp": true,
+      "ecosystem": "finland-nordics"
     },
     {
       "name": "Founders House — Helsinki",
@@ -779,7 +823,9 @@
       "status_detail": "Helsinki hub opened early 2026, expanding the Stockholm model.",
       "domain": "founders.house",
       "url": "https://basepoint.vc/stories/founders-house-stockholm-and-helsinki-hubs",
-      "highlight": "Finnish expansion of Founders House."
+      "highlight": "Finnish expansion of Founders House.",
+      "mvp": true,
+      "ecosystem": "finland-nordics"
     },
     {
       "name": "London Founder House",
@@ -795,7 +841,9 @@
       "status_detail": "Hacker house + residency + community. Notably asks residents to have raised ~$500k. Live-and-build SF energy in London.",
       "domain": "londonfounderhouse.com",
       "url": "https://www.londonfounderhouse.com/",
-      "highlight": "Founder mansion offering acceptance & community against startup loneliness."
+      "highlight": "Founder mansion offering acceptance & community against startup loneliness.",
+      "mvp": true,
+      "ecosystem": "uk"
     },
     {
       "name": "Threshold (UK) — upcoming",
@@ -811,7 +859,9 @@
       "status_detail": "Flagged as an upcoming UK founder program. As of June 2026 there is little public/indexed information — placeholder pending verification of location, terms & operator.",
       "domain": "",
       "url": "https://www.google.com/search?q=Threshold+founder+residency+UK",
-      "highlight": "UNVERIFIED — added on user tip; confirm details before relying on this entry."
+      "highlight": "UNVERIFIED — added on user tip; confirm details before relying on this entry.",
+      "mvp": true,
+      "ecosystem": "uk"
     },
     {
       "name": "The Residency — Inventors (SF)",
@@ -827,7 +877,9 @@
       "status_detail": "The Inventors Residency: high-agency builders lock in for 12 weeks to make something never done before.",
       "domain": "livetheresidency.com",
       "url": "https://www.livetheresidency.com/residencies",
-      "highlight": "SF 'inventors' house in The Residency network."
+      "highlight": "SF 'inventors' house in The Residency network.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "The Residency — SF2",
@@ -843,7 +895,9 @@
       "status_detail": "'A hacker house like no other': rapid iteration, ship-fast energy; robots in the bedrooms, rocket launches in the backyard.",
       "domain": "sf2.sh",
       "url": "https://sf2.sh/",
-      "highlight": "SF deep-tech house in The Residency network."
+      "highlight": "SF deep-tech house in The Residency network.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "The Residency — Odyssey (SF)",
@@ -859,7 +913,9 @@
       "status_detail": "'If what you're building is so ambitious it scares you — Odyssey is for you.'",
       "domain": "livetheresidency.com",
       "url": "https://www.livetheresidency.com/residencies",
-      "highlight": "SF 'purpose-driven' house in The Residency network."
+      "highlight": "SF 'purpose-driven' house in The Residency network.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "The Residency — Biopunk (SF)",
@@ -875,7 +931,9 @@
       "status_detail": "Community biolab and home for biologists & the wildly curious; late-night CRISPR and open lab nights.",
       "domain": "biopunklab.com",
       "url": "https://biopunklab.com/",
-      "highlight": "SF biotech house in The Residency network."
+      "highlight": "SF biotech house in The Residency network.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "The Residency — v2 (Vancouver)",
@@ -923,7 +981,9 @@
       "status_detail": "3+ month fully in-person residency at The LAB Miami (Wynwood); Miami relocation required (all co-founders), 6 days/wk, 10 founders, costs offset, optional $25K–$50K SAFE. Winter 2026 cohort started Jan 2026 — check site for next.",
       "domain": "focal.vc",
       "url": "https://www.focal.vc/residency",
-      "highlight": "'All the firepower of a top accelerator without the heavy dilution' — but genuinely residential (you relocate to Miami)."
+      "highlight": "'All the firepower of a top accelerator without the heavy dilution' — but genuinely residential (you relocate to Miami).",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Frontier Tower (BerlinHouse)",
@@ -939,7 +999,9 @@
       "status_detail": "16-floor 'vertical village' at 995 Market St with 8 themed labs + co-living residences. Originally named Berlin House.",
       "domain": "frontiertower.io",
       "url": "https://frontiertower.io/",
-      "highlight": "A whole tower as a hacker house — co-living floors stacked over themed frontier-tech labs."
+      "highlight": "A whole tower as a hacker house — co-living floors stacked over themed frontier-tech labs.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Hive Coliving (Founder House)",
@@ -955,7 +1017,9 @@
       "status_detail": "50-bedroom co-living + co-working house at 1040 Folsom St, SoMa.",
       "domain": "hivecolivingsf.com",
       "url": "https://www.hivecolivingsf.com/home-techpreneurs",
-      "highlight": "Large SoMa co-living house oriented to founders & builders."
+      "highlight": "Large SoMa co-living house oriented to founders & builders.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Launch House",
@@ -971,7 +1035,9 @@
       "status_detail": "Pioneered the 4-week live-in residency (a Beverly Hills mansion) + year-long community; the live-in model later wound down / pivoted. Listed for reference.",
       "domain": "launchhouse.com",
       "url": "https://techcrunch.com/2021/08/19/launch-house-raises-millions-to-launch-houses-and-the-next-big-startups/",
-      "highlight": "Iconic early-2020s 'new-age hacker house' that popularized the live-in founder residency."
+      "highlight": "Iconic early-2020s 'new-age hacker house' that popularized the live-in founder residency.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Hexa House",
@@ -987,7 +1053,9 @@
       "status_detail": "New SF home for AI founders, opened by European startup studio Hexa as its Bay Area base.",
       "domain": "hexa.com",
       "url": "https://www.hexa.com/blog/news/hexa-opens-hexa-house-san-francisco-a-new-home-for-ai-founders-in-the-bay-area",
-      "highlight": "Hexa's US expansion — a live-and-build house for AI founders."
+      "highlight": "Hexa's US expansion — a live-and-build house for AI founders.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Project6",
@@ -1019,7 +1087,9 @@
       "status_detail": "46,000 sq ft community & coworking club in the Ferry Building (Scandinavian design). Not residential, but a major founder gathering hub.",
       "domain": "shack15.com",
       "url": "https://www.shack15.com/",
-      "highlight": "SF's Ferry Building founder community & events club."
+      "highlight": "SF's Ferry Building founder community & events club.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Bili House",
@@ -1035,7 +1105,9 @@
       "status_detail": "Rolling applications; 1–3 month stays ($500–$2,000/mo). 7,000 sq ft waterfront house on Meydenbauer Bay with pool and boat dock.",
       "domain": "joinbili.com",
       "url": "https://www.joinbili.com/apply",
-      "highlight": "Seattle area's flagship founder hacker house — waterfront mansion in Bellevue supporting the Pacific Northwest startup scene."
+      "highlight": "Seattle area's flagship founder hacker house — waterfront mansion in Bellevue supporting the Pacific Northwest startup scene.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Hacker Residency Group",
@@ -1067,7 +1139,9 @@
       "status_detail": "Summer 2026 (late May–July): 12 Yale founders in a Nob Hill house for 10 weeks. Sponsored by Raymond Tonsing (Caffeinated Capital). First edition.",
       "domain": "yesyale.org",
       "url": "https://www.yesyale.org/programs/yale-hacker-house",
-      "highlight": "Yale's first SF hacker house — elite student founders plugging directly into the Bay Area ecosystem for a summer."
+      "highlight": "Yale's first SF hacker house — elite student founders plugging directly into the Bay Area ecosystem for a summer.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     }
   ]
 }
