@@ -1,69 +1,125 @@
 ---
 name: founder-atlas-refresh
 description: >-
-  Refresh the Founder Atlas program datasets. Use when asked to update, refresh,
-  re-verify, or add to the founder-program data (startup-programs-data.json /
-  traditional-programs-data.json) — whether run interactively or from a scheduled
-  routine. Gathers via web research, verifies, dedupes against existing entries,
-  edits the JSON, and opens a DRAFT PR. Never pushes data straight to the live site.
+  Refresh the Founder Atlas program dataset. Use when asked to update, refresh,
+  re-verify, or add to the founder-program data (src/data/programs-data.json) —
+  whether run interactively or from a scheduled routine. Gathers via web research,
+  verifies, dedupes against existing entries, edits the JSON, and opens a DRAFT PR.
+  Never pushes data straight to the live site.
 ---
 
 # Founder Atlas — data refresh
 
 You are maintaining the data behind a public, auto-deploying map of founder programs.
-The two JSON files are the **single source of truth** and Vercel deploys `master` on
-push — so a bad entry is live immediately. Your job is to gather and curate carefully,
-then **open a draft PR for human review**. Do not push data to `master`.
+The JSON file is the **single source of truth** and Vercel deploys `master` on push —
+so a bad entry is live immediately. Your job is to gather and curate carefully, then
+**open a draft PR for human review**. Do not push data to `master`.
 
-This skill encodes the *steady-state refresh* process. Big discovery passes,
-taxonomy changes, and judgment-heavy curation are done interactively (in Cowork),
-and any new rules learned there should be folded back into this file.
+This skill encodes the *steady-state refresh* process. Big discovery passes, taxonomy
+changes, and judgment-heavy curation are done interactively (in Cowork), and any new
+rules learned there should be folded back into this file.
 
-## The two datasets
+## The dataset (one unified file)
 
-The datasets live in **`src/data/`** (they moved there in the Astro migration — older
-references to the repo root are stale):
+There is **one** dataset:
 
-- `src/data/startup-programs-data.json` — **residential** programs: residencies, hacker
-  houses, co-living, startup campuses, programs with a genuine **live-in or
-  relocation** component.
-- `src/data/traditional-programs-data.json` — traditional accelerators, incubators,
-  talent investors **without** a live-in/relocation element.
+- `src/data/programs-data.json` — **every** founder-support program in a single
+  top-level `programs` array. Residencies, hacker houses, accelerators, fellowships,
+  government grants, startup visas, co-founder communities — all live here together.
 
-The dividing line is real and load-bearing. Antler, EF, YC, a16z Speedrun, Sequoia
-Arc, Techstars, Betaworks, On Deck, Z Fellows, HAX, etc. are **traditional** — never
-put them in the residential file. When unsure which file an entry belongs in, flag it
-in the PR rather than guessing.
+> **There is no residential vs traditional split.** The old two-file model
+> (`startup-programs-data.json` / `traditional-programs-data.json`) and the
+> `residential`/`traditional` dataset axis are **retired**. A program is no longer
+> classified by *which file it goes in*; it is classified by its **`canonicalType`**
+> plus the other canonical dimensions below. (`dataset` survives only as a derived
+> back-compat value in the legacy `/api/programs.json` shim — never set it by hand,
+> never use it to decide where a record goes.)
 
-### Hybrid / relocation-cohort programs (emerging — flag, don't reclassify)
+The "lives in a house / must relocate" quality that the old `residential` file tried to
+capture is now expressed **on the record itself**: `format: "live-in"` (or
+`"relocation"`) plus `housing` in `supportModes`. A live-in residency and a commute-in
+accelerator are two `canonicalType` values in the same file, not two files.
 
-Some programs don't fit the binary: a **traditional accelerator that includes a
-relocation or live-in phase** — e.g. EF's "The Bridge" (traditional + relocation for
-part of the program), or cohort-based accelerators that temporarily relocate founders
-to SF. A **`hybrid` category** is under discussion but **not yet adopted**. For now:
+## Step 1 — pick the `canonicalType`
 
-- Keep the entry in the file that matches its *primary* model and **do not invent a
-  third file or a `hybrid` dataset value**.
-- Capture the nuance in fields instead: `format: "hybrid"`, and describe the
-  relocation/phase structure in `notes` (e.g. "12-wk accelerator; weeks 6–12 relocate
-  to SF").
-- **Add a "Needs human review" item** in the PR for any program where the
-  residential/traditional split feels wrong, so the taxonomy decision stays human.
+The **first question** when adding (or re-checking) a program is: *what is its
+`canonicalType`?* This is the canonical machine ID from
+[`src/data/taxonomy.ts`](../../../src/data/taxonomy.ts) (`programType` dimension),
+documented in [`docs/program-taxonomy.md`](../../../docs/program-taxonomy.md). The **8
+MVP categories** are:
+
+| `canonicalType` | Use it when… |
+| --- | --- |
+| `founder-residency` | Live-in / relocation cohort built around focus — you move into a house/campus for a fixed term (HF0, The Residency, Neo). |
+| `hacker-house` | Shared house / coliving organized around a tech scene; the value is builder density, often pay-rent (AGI House, STAK, Foundry). |
+| `accelerator` | Fixed-length cohort: small cheque + mentorship + demo day, usually for equity (Y Combinator, Techstars). |
+| `pre-accelerator` | Earlier, lighter-touch program that preps idea / pre-product founders for a full accelerator or first raise. |
+| `founder-fellowship` | Membership + capital that backs the person before (or independent of) an idea (South Park Commons, Afore FIR). |
+| `government-grant` | Public, non-dilutive funding / grant-backed program — money without equity (Start-Up Chile, national innovation grants). |
+| `startup-visa` | Visa, relocation, or soft-landing program that lets a founder build in a country (Estonia / France / UK startup visas, Hub71). |
+| `cofounder-matching` | Talent-investor or online community whose core value is finding a co-founder, peers, or a first cheque (Entrepreneur First, Antler, On Deck). |
+
+Future / non-MVP types are also representable (`incubator`, `startup-studio`,
+`corporate-accelerator`, `university-program`, `tech-transfer`, `deep-tech-program`,
+`startup-campus`, `venture-debt`, `pop-up-village`, `ecosystem-support`, `other`). Use
+them when a program genuinely fits, but remember they are **not** part of the MVP set
+(see `docs/mvp-data-scope.md`), so they will not be tagged `mvp: true`.
+
+**How to choose:**
+
+- **Live-in / relocation → `founder-residency`** (with `format: "live-in"` and `housing`
+  in `supportModes`). Do **not** route it to a separate file — the file is the same.
+- **Shared house, pay-rent, network-first → `hacker-house`** (`housing` in
+  `supportModes`, usually `format: "live-in"`, `costFundingModel: "fee"`).
+- **Cohort + cheque + demo day → `accelerator`**; an earlier, lighter prep program →
+  `pre-accelerator`.
+- **Backs the person pre-idea → `founder-fellowship`**; matches you to a co-founder or
+  is an online founder community → `cofounder-matching`.
+- **Non-dilutive public money → `government-grant`**; visa / soft-landing →
+  `startup-visa`.
+- **Hybrid programs** (e.g. a cohort accelerator with a relocation phase) get their
+  *primary* `canonicalType`, with the nuance captured in `format` and `notes` — do not
+  invent a new type. If the primary type is genuinely ambiguous, **flag it in the PR**
+  rather than guessing.
+- If nothing fits, use `other` and **flag it** so a human can extend the taxonomy.
 
 ## Entry schema
 
-Each program is an object in the top-level `programs` array. Copy an existing entry
-as a template. Required fields:
+Each program is an object in the top-level `programs` array of
+`src/data/programs-data.json`. Copy an existing entry as a template.
+
+### Canonical fields (set these first)
+
+```json
+{
+  "canonicalType": "founder-residency",
+  "supportModes": ["housing", "structure", "community", "funding"],
+  "format": "live-in"
+}
+```
+
+- `canonicalType` — one canonical `programType` ID (see Step 1).
+- `supportModes` — array of `supportMode` IDs describing what the program concretely
+  provides: `funding`, `housing`, `workspace`, `mentorship`, `investor-access`,
+  `demo-day`, `visa-support`, `community`, `co-founder-matching`, `structure` (MVP);
+  `customers`, `compute-credits`, `lab-access`, `legal-admin` (future).
+- `format` — one of `in-person` | `remote` | `hybrid` | `live-in` | `relocation`.
+  `live-in` / `relocation` express the old "residential" quality.
+- `intakeMethod`, `intakeFrequency`, `costFundingModel` — optional canonical IDs from
+  the same taxonomy (`rolling` / `cohort-application` / …; `equity` /
+  `equity-free-grant` / `stipend` / `fee` / `free` / `mixed` / …). Fill when verifiable.
+
+### Identity + display fields
 
 ```json
 {
   "name": "Program Name",
-  "type": "Hacker House | Residency | Startup Campus + Fund | Accelerator | ...",
+  "type": "Hacker House / Coliving",
   "city": "San Francisco",
   "country": "USA",
   "lat": 37.8065,
   "lng": -122.429,
-  "focus": "AI, hardware, robotics, ...",
+  "focus": "AI, hardware, robotics",
   "operator": "Who runs it",
   "stage": "Pre-seed / very early",
   "status": "rolling",
@@ -74,16 +130,27 @@ as a template. Required fields:
 }
 ```
 
+> **`type` is now a human-readable label, not the category.** It still renders in the
+> UI, but it no longer decides anything. The category is `canonicalType`. Keep `type`
+> short and descriptive (e.g. `"Hacker House / Coliving"`, `"Pre-seed Accelerator"`)
+> and let `canonicalType` carry the machine meaning.
+
 `status` must be one of (see `meta.status_legend` in the JSON):
 `rolling`, `open`, `closing-soon`, `opening-soon`, `running`, `closed`.
 
-### Optional founder fields (fill when verifiable — never guess)
+### Provenance (required on every add or change)
 
-The UI and API also support these optional fields (added in the founder-first refactor). They show
-as **"Unknown"** in the product until populated, so only add a field when a **primary source**
-states it. Add `sourceUrls` + `lastVerified` whenever you fill any of them.
+Whenever you add a record or change a fact, supply provenance:
 
-- `format`: one of `in-person` | `remote` | `hybrid` | `live-in`
+- `sourceUrls`: array of URLs used to verify this entry (≥1, primary source preferred).
+- `lastVerified`: ISO date you confirmed it (e.g. `"2026-06-12"`).
+- `verificationStatus`: `verified` | `needs-review` | `unverified`.
+
+### Other optional founder fields (fill when verifiable — never guess)
+
+They show as **"Unknown"** in the product until populated, so only add a field when a
+**primary source** states it.
+
 - `stageFit`: array from `pre-idea, idea, pre-product, mvp, pre-seed, seed, series-a-plus, repeat-founder, student, researcher`
 - `founderFit`: array from `first-time-founder, solo-founder, technical-builder, domain-expert, repeat-founder, student-founder, researcher, international-founder, relocating-founder, fundraising-soon, needs-focus, needs-community, needs-customers, needs-capital`
 - `sectorFocus`: array of sector tags (e.g. `["AI","climate"]`)
@@ -91,11 +158,10 @@ states it. Add `sourceUrls` + `lastVerified` whenever you fill any of them.
 - `durationWeeksMin`, `durationWeeksMax`: numbers; `cohortSize`: free text
 - `fundingAmount`, `equityTaken`, `cost`: free text (e.g. `"$250K"`, `"7%"`)
 - `providesHousing` / `providesWorkspace` / `providesFunding` / `providesMentorship` /
-  `providesInvestorAccess` / `providesDemoDay` / `providesVisaSupport`: `true` | `false` | `null` (unknown)
+  `providesInvestorAccess` / `providesDemoDay` / `providesVisaSupport`: `true` | `false` | `null`
 - `applyUrl`: direct application URL (distinct from `url`)
-- `sourceUrls`: array of URLs used to verify this entry
-- `lastVerified`: ISO date you confirmed the entry
-- `verificationStatus`: `verified` | `needs-review` | `unverified`
+- `mvp`: `true` only for a curated, in-scope record (MVP `canonicalType` **and** MVP
+  ecosystem — see `docs/mvp-data-scope.md`); `ecosystem`: one controlled string when `mvp`.
 - `tags`, `notes`: optional free-form
 
 Coordinates: `lat`/`lng` are decimal degrees for the program's city/building. Use a
@@ -104,23 +170,22 @@ coordinates. A city-center coordinate is fine — the UI jitters overlapping pin
 
 ## Process
 
-1. **Read both JSON files** and build a mental index of existing `name` + `domain`
-   values. This is your dedup key.
-2. **Research.** Check program websites and social handles first; corroborate with
-   the source list below and fresh web search. Prefer primary sources (the program's
-   own site/X) over aggregators.
-3. **Refresh existing entries.** For each program, re-verify `status` /
-   `status_detail` (cohorts open/close often) and fix anything stale. Touch only
-   fields that changed.
-4. **Add clearly-verified new programs** to the correct file, using the schema.
-   - Skip anything you cannot corroborate on the program's own site or two
-     independent sources.
+1. **Read `src/data/programs-data.json`** and build a mental index of existing `name` +
+   `domain` values. This is your dedup key.
+2. **Research.** Check program websites and social handles first; corroborate with the
+   source list below and fresh web search. Prefer primary sources (the program's own
+   site / X) over aggregators.
+3. **Refresh existing entries.** For each program, re-verify `status` / `status_detail`
+   (cohorts open/close often) and fix anything stale. Touch only fields that changed,
+   and bump `lastVerified` when you re-confirm.
+4. **Add clearly-verified new programs**, using the schema — `canonicalType` first.
+   - Skip anything you cannot corroborate on the program's own site or two independent
+     sources.
    - De-dupe: do not add a program whose `name` or `domain` already exists.
 5. **Flag, don't guess.** Anything uncertain — unverifiable existence, ambiguous
-   residential-vs-traditional classification, missing coordinates, suspected
-   duplicate — goes in the **PR body as a checklist**, not silently into the data.
-   (Precedent: "Threshold (UK)" was kept out / clearly labelled because it had no
-   verifiable public presence.)
+   `canonicalType`, missing coordinates, suspected duplicate — goes in the **PR body as
+   a checklist**, not silently into the data. (Precedent: "Threshold (UK)" was kept out
+   / clearly labelled because it had no verifiable public presence.)
 6. **Validate** the JSON parses and the schema is intact (see Validation).
 7. **Open a draft PR** (see Output).
 
@@ -128,11 +193,11 @@ coordinates. A city-center coordinate is fine — the UI jitters overlapping pin
 
 - **PR-gated, never direct to `master`.** Always open a *draft* PR.
 - **Refresh + verified additions only.** Do not restructure the taxonomy, rename
-  fields, remove programs in bulk, or change the residential/traditional boundary.
-  Those are interactive decisions — surface them in the PR body instead.
-- **When in doubt, flag it.** A short PR with a few solid updates and a list of
-  "needs human review" items is the success case. A large diff full of
-  low-confidence additions is a failure.
+  fields, remove programs in bulk, or add new `canonicalType` IDs. Those are
+  interactive decisions — surface them in the PR body instead.
+- **When in doubt, flag it.** A short PR with a few solid updates and a list of "needs
+  human review" items is the success case. A large diff full of low-confidence
+  additions is a failure.
 - **Cite sources** for every new program and every status change, in the PR body.
 
 ## Validation
@@ -140,18 +205,18 @@ coordinates. A city-center coordinate is fine — the UI jitters overlapping pin
 Before opening the PR:
 
 ```bash
-# Both files must be valid JSON
-python3 -c "import json; json.load(open('src/data/startup-programs-data.json'))"
-python3 -c "import json; json.load(open('src/data/traditional-programs-data.json'))"
+# The dataset must be valid JSON
+python3 -c "import json; json.load(open('src/data/programs-data.json'))"
 
-# Spot-check: every program has the required keys
+# Spot-check: every program has the required keys (incl. canonical + provenance)
 python3 - <<'PY'
 import json
-req = {"name","type","city","country","lat","lng","status","url"}
-for f in ("src/data/startup-programs-data.json","src/data/traditional-programs-data.json"):
-    progs = json.load(open(f))["programs"]
-    bad = [p.get("name","?") for p in progs if not req <= set(p)]
-    print(f, len(progs), "programs", "— missing fields:" , bad or "none")
+req = {"name","type","canonicalType","supportModes","url","city","country",
+       "lat","lng","status","sourceUrls","lastVerified","verificationStatus"}
+progs = json.load(open("src/data/programs-data.json"))["programs"]
+bad = [p.get("name","?") for p in progs if not req <= set(p)]
+print("src/data/programs-data.json", len(progs), "programs",
+      "— missing required keys:", bad or "none")
 PY
 ```
 
@@ -168,16 +233,16 @@ Commit to the working branch and open a **draft** PR. Body template:
 - <Program> — <what changed> — <source URL>
 
 ### Added (<n>)
-- <Program> (<file>) — <source URL>
+- <Program> (<canonicalType>) — <source URL>
 
 ### Needs human review
 - [ ] <uncertain item + why>
 
-Datasets remain the source of truth; merging triggers a Vercel deploy.
+Dataset remains the source of truth; merging triggers a Vercel deploy.
 ```
 
-Keep the PR focused; if a change is large or judgment-heavy, describe it in
-"Needs human review" rather than committing it.
+Keep the PR focused; if a change is large or judgment-heavy, describe it in "Needs
+human review" rather than committing it.
 
 ## Trusted sources (starting set — extend as you learn)
 
@@ -193,3 +258,5 @@ Keep the PR focused; if a change is large or judgment-heavy, describe it in
 
 - **Threshold (UK)** — was an unverified placeholder; de-flag only with a real source.
 - **Forge Dubai**, **Arrayah Melbourne & Brisbane** — "opening-soon"; catch first cohorts.
+</content>
+</invoke>

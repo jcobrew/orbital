@@ -54,9 +54,9 @@
 
 | File | Purpose |
 |---|---|
-| `src/data/programs.ts` | Merges both JSON datasets → `PROGRAMS[]`; exports `Program` interface, `ProgramFormat`/`StageFit`/`FounderFit`/`VerificationStatus` enums, `FACETS`, `TYPES`, `COUNTRIES`, `API_SCHEMA`, `STATUS_LEGEND`, `programSlug()` |
-| `src/data/startup-programs-data.json` | 59 residential programs (hacker houses, residencies, live-in incubators, …) |
-| `src/data/traditional-programs-data.json` | 64 traditional programs (accelerators, fellowships, talent investors, …) |
+| `src/data/programs.ts` | Loads the unified dataset → `PROGRAMS[]`; exports `Program` interface, `ProgramFormat`/`StageFit`/`FounderFit`/`VerificationStatus` enums, `FACETS`, `TYPES`, `COUNTRIES`, `API_SCHEMA`, `STATUS_LEGEND`, `programSlug()` |
+| `src/data/programs-data.json` | The single unified program dataset (123 programs across all `canonicalType`s — residencies, hacker houses, accelerators, fellowships, grants, visas, communities). Categorized by `canonicalType`, not by file. |
+| `src/data/taxonomy.ts` | Canonical taxonomy: `programType` (`canonicalType`) + support-mode / founder-stage / intake / cost dimensions, with MVP flags |
 | `src/data/countries.ts` | `CountryRecord`/`Country` interfaces; merges `countries-data.json` with program counts → `COUNTRIES[]`, `getCountry()`, `countrySlug()`, `hasCountryProfile()` |
 | `src/data/countries-data.json` | 6 country ecosystem profiles (slug, name, region, summary, visas, organizations, links) |
 | `src/data/cities.ts` | Derives city groupings from `PROGRAMS` → `CITIES[]`, `getCity()`, `citySlug()` (no separate JSON source) |
@@ -86,7 +86,7 @@
 
 | File | Purpose |
 |---|---|
-| `FilterSidebar.tsx` | React island: all filter controls (text search, dataset toggle, type/country/status dropdowns, format/stage/sector/housing filters); syncs with `$filters` store and URL |
+| `FilterSidebar.tsx` | React island: all filter controls (text search, Program Type / `canonicalType` filter, type-label/country/status dropdowns, format/stage/sector/housing filters); syncs with `$filters` store and URL. (The old residential/traditional dataset toggle is replaced by the Program Type filter.) |
 | `ExploreResults.tsx` | React island: filtered card grid for `/explore`; subscribes to `$filters` |
 | `ProgramsTable.tsx` | React island: sortable table for `/dashboard`; subscribes to `$filters` |
 | `ProgramCard.tsx` | Shared card component; used by `ExploreResults` + `SavedList`; exports `applyHref()` helper |
@@ -126,9 +126,11 @@
 **Core fields** (always present in the JSON, rendered everywhere):
 
 ```
-name, type, city, country, lat, lng, focus, operator, stage,
-status, status_detail, domain, url, highlight?, dataset
+name, type (display label), canonicalType, supportModes, city, country, lat, lng,
+focus, operator, stage, status, status_detail, domain, url, highlight?
 ```
+
+(`dataset` is no longer a stored core field; it is a derived back-compat value exposed only by the legacy `/api/programs.json` shim. `canonicalType` is the category.)
 
 **Founder schema fields** (all optional; `undefined`/`null` or absent until verified and filled):
 
@@ -154,26 +156,19 @@ tags (string[]), notes
 | `VerificationStatus` | `verified`, `needs-review`, `unverified` |
 | `StatusKey` (in `src/lib/status.ts`) | `rolling`, `open`, `closing-soon`, `opening-soon`, `running`, `closed` |
 
-### Dataset merge
+### Dataset load
 
-`src/data/programs.ts` imports both JSON files and spreads them into `PROGRAMS[]`, tagging each with `dataset: 'residential' | 'traditional'`. There is no build script — the merge is an import-time ES module join. All pages and API endpoints import `PROGRAMS` directly from this file.
+`src/data/programs.ts` loads the single `src/data/programs-data.json` into `PROGRAMS[]`. There is no build script — it is an import-time ES module load. All pages and API endpoints import `PROGRAMS` directly from this file.
 
 ```
-startup-programs-data.json   → 59 records  (residential)
-traditional-programs-data.json → 64 records (traditional)
-                                  ─────────────────────────
-PROGRAMS[]                   → 123 total
+programs-data.json → 123 records → PROGRAMS[]
 ```
 
-### The `type` problem
+The old `residential` vs `traditional` two-file split is retired. A program is categorized by its **`canonicalType`** (from `src/data/taxonomy.ts`), not by which file it lives in. A `dataset` value survives only as a derived back-compat field in the legacy `/api/programs.json` shim.
 
-`type` is a free-text string. There are currently **66 distinct values** across both datasets (e.g. `"Hacker House"`, `"Hacker House / Residency"`, `"Hacker House + Fund"` are three separate strings; `"Accelerator"`, `"AI Accelerator"`, `"Accelerator (No Equity)"` are another three). There are no canonical type IDs. This blocks reliable MVP-vs-future tagging and any typed filtering beyond exact-string matching.
+### `canonicalType` is the category; `type` is a label
 
-**Residential dataset type examples (25 values):** `Hacker House`, `Live-in Residency`, `Hacker House / Coliving`, `Founder Fellowship / Community`, `Pop-up Village`, `Startup Campus + Fund`, …
-
-**Traditional dataset type examples (41 values):** `Accelerator`, `Pre-seed Accelerator`, `Talent Investor`, `Fellowship + Fund`, `Government-backed Accelerator`, `Seed Accelerator`, `AI Accelerator (No Equity)`, …
-
-Stream 2 (taxonomy/schema) is the only stream authorized to resolve this by introducing a canonical taxonomy in `src/data/taxonomy.ts`.
+Categorization is driven by **`canonicalType`** — a canonical machine ID from `src/data/taxonomy.ts` (the 8 MVP types plus future ones). The legacy `type` field is free-text (many near-duplicate strings like `"Hacker House"`, `"Hacker House / Residency"`, `"Accelerator"`, `"AI Accelerator"`) and is now a **human-readable label only** — it no longer drives MVP scope or typed filtering. Where a record lacks an explicit `canonicalType`, `src/lib/normalizeProgram.ts` derives one from the legacy `type` as a fallback (defaulting to `other`).
 
 ---
 
@@ -211,9 +206,9 @@ Both `/explore` and `/dashboard` accept the same query params (parsed by `filter
 
 | Param | Values | Description |
 |---|---|---|
-| `dataset` | `all` \| `residential` \| `traditional` | Filter by data source; default `all` |
+| `canonicalType` | any `programType` ID | Filter by canonical Program Type (e.g. `accelerator`, `hacker-house`); replaces the old `dataset` toggle |
 | `q` | free text | Substring match over `name + city + country + focus + operator + type` |
-| `type` | exact string | Exact match against `program.type` (free-text field, see §3 caveat) |
+| `type` | exact string | Exact match against the free-text `type` **label** (display value, see §3 caveat) |
 | `country` | exact string | Exact match against `program.country` |
 | `status` | `rolling` \| `open` \| `closing-soon` \| `opening-soon` \| `running` \| `closed` | Exact match |
 | `focus` | free text | Substring match within `program.focus` |
@@ -234,8 +229,8 @@ Filter state is reflected back to the URL via `history.replaceState`, making eve
 All conditions are AND-composed. An empty/default filter value is a no-op:
 
 1. **Text search (`q`):** case-insensitive substring against concatenated `name + city + country + focus + operator + type`
-2. **Dataset:** exact equality to `program.dataset` (`residential` / `traditional`)
-3. **Type:** exact equality to `program.type` (free-text — see §3)
+2. **Program Type:** exact equality to `program.canonicalType` (canonical category; replaces the old dataset match)
+3. **Type label:** exact equality to the free-text `type` label (display value — see §3)
 4. **Country:** exact equality to `program.country`
 5. **Status:** exact equality to `program.status`
 6. **Focus:** case-insensitive substring within `program.focus`
@@ -302,23 +297,23 @@ These are depended upon by external consumers (agents, tools, crawlers, bookmark
 
 | Surface | What must not change |
 |---|---|
-| `GET /api/programs.json` | Top-level keys: `meta`, `schema`, `count`, `facets`, `programs`; all `Program` core fields in each record; `facets.{dataset, type, country, status}` structure |
+| `GET /api/programs.json` | Top-level keys: `meta`, `schema`, `count`, `facets`, `programs`; all `Program` core fields in each record; `facets.{dataset, type, country, status}` structure (the `dataset` facet stays for legacy back-compat, populated from the derived value) |
 | `GET /api/countries.json` | Top-level keys: `meta`, `count`, `countries`; `CountryRecord` shape + `programCount` |
 | `GET /llms.txt` | Plain text at `/llms.txt`; URL param documentation section; the API endpoint references |
 | `/dashboard` URL params | All 10 filter params + `sort` must keep working; deep links must stay valid |
 | `/explore` URL params | Same as dashboard minus `sort` |
 | `/programs/<slug>` routing | Slug algorithm (`programSlug()`) must not change; existing slugs must not break |
 | `/country/<slug>` routing | Country slugs from `countries-data.json` must not change |
-| `PROGRAMS[]` export from `src/data/programs.ts` | Shape, merge order, `dataset` tag; all pages import this |
+| `PROGRAMS[]` export from `src/data/programs.ts` | Shape and record ordering; all pages import this (the legacy `dataset` value is derived for back-compat only) |
 | Globe, map, list, program pages | Visual rendering; no functional regressions |
 
 ### Risk list
 
 | Risk | Where | Mitigation |
 |---|---|---|
-| `type` free-text breaks filtering if values are normalized | `src/data/programs.ts`, both JSON files | Stream 2 must add canonical fields additively; do not replace `type` |
+| Filtering relies on `canonicalType`, not free-text `type` | `src/data/programs.ts`, `src/data/programs-data.json` | Keep `canonicalType` populated; `type` is a display label and can vary freely |
 | Slug collision if two programs produce the same `programSlug()` | `programSlug()` in `programs.ts` | Never change the slug algorithm; check for collisions before adding records |
-| `PROGRAMS[]` import order change breaks facet counts or display ordering | Both JSON files | Append new records only; do not reorder existing arrays |
+| `PROGRAMS[]` order change breaks facet counts or display ordering | `src/data/programs-data.json` | Append new records only; do not reorder the existing array |
 | Editing `src/lib/filter.ts` breaks all filter surfaces simultaneously | `passes()`, `sortPrograms()` | Prefer additive modules; do not modify `passes()` without testing all views |
 | Adding required fields to `Program` breaks build for records that lack them | `src/data/programs.ts` | All new fields must be optional (`?`); Stream 2 owns the only additive schema edits |
 | Island state desync if `initFiltersFromURL()` runs before `window` exists | `src/stores/filters.ts` | Keep the guard; do not SSR the filters store |
@@ -362,8 +357,7 @@ These boundaries follow the file-ownership rules in `docs/mvp-implementation-pla
 | File | Owned by | Rule for others |
 |---|---|---|
 | `src/data/programs.ts` | **Stream 2** | Others import only; never destructively change existing exports |
-| `src/data/startup-programs-data.json` | **Stream 3** | Others read only; content edits require the `founder-atlas-refresh` skill draft-PR flow |
-| `src/data/traditional-programs-data.json` | **Stream 3** | Same as above |
+| `src/data/programs-data.json` | **Stream 3** | The single unified dataset; others read only; content edits require the `founder-atlas-refresh` skill draft-PR flow |
 | `src/stores/filters.ts` | Stream 5 / Stream 6 can extend | Keep existing filter keys; add new ones additively |
 | `src/lib/filter.ts` | Stream 5 | Keep `passes()` / `sortPrograms()` / `defaultSort()` signatures stable |
 | `src/data/triggers.ts` | Stream 5 | Evolve presets alongside matching; keep existing presets working |

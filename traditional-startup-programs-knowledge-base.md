@@ -1,14 +1,35 @@
 # Traditional Startup Support Programs — Reference
 
-*Compiled June 2, 2026. Companion to the residential knowledge base (`startup-support-programs-knowledge-base.md`). Database: `traditional-programs-data.json`. Both datasets are viewable on the same map/globe via the **Residential ⇄ Traditional** toggle.*
+*Compiled June 2, 2026.*
+
+> **⚠️ Legacy source material — not the operating model.** This file is preserved
+> research from the old "residential vs traditional" two-dataset era. **That binary is
+> retired.** There is now **one unified dataset** (`src/data/programs-data.json`) and
+> there is no "Residential ⇄ Traditional" toggle — the UI filters by **Program Type**
+> (`canonicalType`) instead. The programs described here map onto canonical types such
+> as `accelerator`, `pre-accelerator`, `cofounder-matching` (talent investors / online
+> communities), `government-grant`, `startup-visa`, `corporate-accelerator`,
+> `deep-tech-program`, and `startup-campus`, defined in
+> [`src/data/taxonomy.ts`](src/data/taxonomy.ts) and documented in
+> [`docs/program-taxonomy.md`](docs/program-taxonomy.md) — which **supersede** the
+> residential/traditional split. Read this for the landscape narrative and economics;
+> use the canonical taxonomy for any data work.
 
 ---
 
-## 1. What "traditional" means here
+## 1. What this section covers
 
-This is the **other half** of the founder-support world — the part that does *not* require you to move into a house or relocate to a co-living space. Where the residential database is about *place* (a mansion, a campus, a city you move to), the traditional database is about a **program**: a fixed-length cohort that gives you money, mentorship, and a network, then sends you to a demo day.
+This material covers the **commute-in** half of the founder-support world — programs
+that do *not* require you to move into a house or relocate to a co-living space. The
+emphasis is on the **program** itself: a fixed-length cohort that gives you money,
+mentorship, and a network, then sends you to a demo day.
 
-A clean analogy: if a residency is a **monastery** (you move in, the environment changes you), a traditional accelerator is a **bootcamp** (you commute in for a defined term, drill hard, graduate). You usually keep living wherever you already live.
+A clean analogy: if a residency is a **monastery** (you move in, the environment changes
+you), an accelerator is a **bootcamp** (you commute in for a defined term, drill hard,
+graduate). You usually keep living wherever you already live. In the current data, that
+move-in vs commute-in distinction is captured per record by `format`
+(`live-in`/`relocation` vs `in-person`/`hybrid`/`remote`) and by `canonicalType` — not
+by which file a program lives in.
 
 The category splits into a few recognizable shapes:
 
@@ -21,7 +42,11 @@ The category splits into a few recognizable shapes:
 | **Deep-tech / lab program** | Lab space + mentorship for science startups | IndieBio, HAX, CDL |
 | **Startup campus** | A building hosting many programs at once | Station F |
 
-> **Why this is a separate view.** Earlier we deliberately *removed* these from the residential map because they're not residencies — there's no live-in or relocation element. But they're the backbone of the global ecosystem, so they get their own database and their own toggle on the map rather than being deleted outright.
+> **Historical note.** These programs were once kept in a separate "traditional"
+> dataset with its own map toggle, because they aren't residencies (no live-in /
+> relocation element). That separation is gone: they now sit in the **one unified
+> dataset** alongside residencies, distinguished by `canonicalType` and `format` rather
+> than by file. They remain the backbone of the global ecosystem.
 
 ---
 

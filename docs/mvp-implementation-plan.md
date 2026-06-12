@@ -34,10 +34,11 @@ startup-support program in the world."
 - **Stack:** Astro 5.18 (no adapter → static output), React 19 islands, Tailwind v4 (theme in
   `src/styles/global.css`), nanostores, Vercel (`vercel.json`: cleanUrls + CORS on `*.json`/`llms.txt`).
   Node 20+/22, npm, TypeScript strict, path alias `@/* → src/*`.
-- **Data source of truth:** `src/data/startup-programs-data.json` (59 residential) +
-  `src/data/traditional-programs-data.json` (~64 traditional). Merged + typed in
+- **Data source of truth:** the single unified `src/data/programs-data.json` (~123 programs;
+  the old `residential` + `traditional` two-file split is retired). Typed in
   `src/data/programs.ts` → `PROGRAMS[]`, `FACETS`, `TYPES`, `COUNTRIES`, `API_SCHEMA`.
-- **Schema is strong but `type` is free-text** (~25 distinct strings, no canonical IDs).
+- **Programs are categorized by `canonicalType`** (`src/data/taxonomy.ts`); the free-text
+  `type` is now a display label only.
   `ProgramFormat`, `StageFit`, `FounderFit`, `VerificationStatus` enums already exist in
   `src/data/programs.ts`. Provenance fields already exist; there is **no** `ApplicationWindow` /
   `SourceRecord` model yet.
@@ -58,8 +59,8 @@ startup-support program in the world."
 
 ## 1. Current repo architecture summary
 
-Static Astro 5 + React islands, Tailwind v4, nanostores, Vercel static deploy. Two JSON datasets
-merged/typed by `src/data/programs.ts` and consumed by every page plus the JSON/`llms.txt` surfaces.
+Static Astro 5 + React islands, Tailwind v4, nanostores, Vercel static deploy. One unified JSON
+dataset typed by `src/data/programs.ts` and consumed by every page plus the JSON/`llms.txt` surfaces.
 No backend, DB, auth, or tests. Contribution = prefilled GitHub issue → human verify → draft-PR data
 edit via `founder-atlas-refresh`.
 
@@ -210,8 +211,8 @@ streams below.
 
 ### Stream 1 — Repo Audit & MVP Architecture Map · `feat/repo-architecture-audit`
 - **Focus:** Understand and document before changing anything; set safe boundaries.
-- **Background:** No `docs/` exists yet; the repo is a static Astro site with two JSON datasets and
-  agent-facing JSON/`llms.txt` surfaces.
+- **Background:** No `docs/` exists yet; the repo is a static Astro site with its program dataset
+  (since unified into one `src/data/programs-data.json`) and agent-facing JSON/`llms.txt` surfaces.
 - **Inspect:** `package.json`, `astro.config.mjs`, `tsconfig.json`, `vercel.json`, `src/pages/**`,
   `src/data/*`, `src/lib/*`, `src/components/*`, `src/pages/api/*`, `src/pages/llms.txt.ts`, `README.md`.
 - **Create/modify:** `docs/architecture.md` (architecture summary, key-file map, current data model,

@@ -25,18 +25,23 @@ submit form (name, type, URL, city, country, stage, status, source URL).
 
 ### Option 3 — Submit a pull request (for maintainers / trusted contributors)
 
-Data lives in two JSON files:
+All data lives in **one** file: `src/data/programs-data.json`. (The old two-file
+`residential` / `traditional` split is retired — every program lives here, classified by
+its `canonicalType`, not by which file it's in.)
 
-| File | Contents |
-|---|---|
-| `src/data/startup-programs-data.json` | Residential programs (hacker houses, residencies, startup campuses, co-living) |
-| `src/data/traditional-programs-data.json` | Traditional programs (accelerators, fellowships, grants, visas, online communities) |
-
-Each file has a top-level `programs` array. Add your entry there, following the
-existing shape. Required fields per MVP standard:
+The file has a top-level `programs` array. Add your entry there, following the existing
+shape. Required fields per MVP standard:
 
 - `name` — official program name
-- `type` — program category (e.g. "Accelerator", "Residency", "Fellowship")
+- `canonicalType` — the canonical program category (machine ID), one of
+  `founder-residency`, `hacker-house`, `accelerator`, `pre-accelerator`,
+  `founder-fellowship`, `government-grant`, `startup-visa`, `cofounder-matching` (the 8
+  MVP types; see [`docs/program-taxonomy.md`](./program-taxonomy.md)). **Pick this first.**
+- `supportModes` — array of what the program provides (`funding`, `housing`, `workspace`,
+  `mentorship`, `investor-access`, `demo-day`, `visa-support`, `community`,
+  `co-founder-matching`, `structure`, …)
+- `type` — short human-readable **label** (e.g. "Accelerator", "Residency",
+  "Fellowship"). This is display text only; `canonicalType` is the category.
 - `url` — canonical website or application URL
 - `city` — city, or `"Remote"` / `"Global"` if fully remote
 - `country` — country name (e.g. `"Finland"`, `"USA"`)
@@ -47,6 +52,8 @@ existing shape. Required fields per MVP standard:
 - `operator` — the organization running the program
 - `focus` — short comma-separated list of focus areas
 - `domain` — website domain only (e.g. `"example.com"`)
+- `format` — `in-person` | `remote` | `hybrid` | `live-in` | `relocation` (use `live-in`
+  for move-in residencies / hacker houses)
 - `sourceUrls` — array of URLs used to verify this entry
 - `lastVerified` — ISO date string (e.g. `"2026-06-01"`)
 - `verificationStatus` — one of: `"verified"` | `"needs-review"` | `"unverified"`
@@ -56,7 +63,7 @@ improve the matching experience — include them if you have reliable sources.
 
 ### Pull request checklist
 
-- [ ] Entry added to the correct JSON file (residential vs traditional)
+- [ ] Entry added to `src/data/programs-data.json` with a valid `canonicalType`
 - [ ] All required fields present and non-empty
 - [ ] `sourceUrls` includes at least one public URL confirming the data
 - [ ] `lastVerified` set to today's date
@@ -89,7 +96,7 @@ Maintainer verifies against source URLs
 founder-atlas-refresh skill runs:
   - reads the issue or PR description
   - researches the program via web search
-  - edits the JSON data files
+  - edits the JSON data file (`src/data/programs-data.json`)
   - opens a DRAFT pull request for human review
         │
         ▼

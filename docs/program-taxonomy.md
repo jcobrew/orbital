@@ -5,19 +5,26 @@ parts are **in MVP scope** vs. **future**. The taxonomy lives in code at
 [`src/data/taxonomy.ts`](../src/data/taxonomy.ts) and is the single source of truth; this
 doc explains it.
 
-> **Why a canonical taxonomy?** The legacy `type` field on `Program` is free-text (~67
-> distinct strings across the two datasets). Free-text cannot reliably mark a record as
-> "MVP" vs "future" or drive deterministic matching. The canonical taxonomy gives stable
-> machine IDs while the free-text fields keep rendering exactly as before.
+> **Why a canonical taxonomy?** A program is described by its **`canonicalType`** (one of
+> the categories below) — not by which dataset file it lives in or by a free-text `type`
+> string. The legacy `type` field still exists as a **human-readable label**, but it no
+> longer carries category meaning. `canonicalType` is what marks a record MVP-vs-future
+> and drives deterministic filtering and matching.
 
-## How it relates to the existing data
+## How it relates to the data
 
-- The taxonomy is **additive and non-destructive**. Legacy fields (`type`, `stage`,
-  `format`, …) are untouched and remain the rendered/display values.
-- Canonical IDs are **derived** from the legacy text by
-  [`src/lib/normalizeProgram.ts`](../src/lib/normalizeProgram.ts), or set explicitly on the
-  optional canonical fields added to `Program` (`canonicalType`, `supportModes`,
-  `intakeMethod`, `intakeFrequency`, `costFundingModel`).
+- There is **one unified dataset** (`src/data/programs-data.json`). The old
+  `residential` vs `traditional` split and the two-file model are retired; a program's
+  category is its `canonicalType`, not its file.
+- Each record carries the canonical fields directly: `canonicalType`, `supportModes`,
+  `format`, optional `intakeMethod` / `intakeFrequency` / `costFundingModel`, plus the
+  MVP scope markers `mvp` / `ecosystem` and provenance.
+- The free-text `type` (and `stage`, `format`) remain as rendered/display values; the
+  legacy `dataset` value survives only as a **derived back-compat field** in the legacy
+  `/api/programs.json` shim, not as a real categorization axis.
+- Where a record lacks an explicit `canonicalType`, [`src/lib/normalizeProgram.ts`](../src/lib/normalizeProgram.ts)
+  can **derive** one from the legacy `type` text as a fallback (defaulting to `other`),
+  but curated records set `canonicalType` explicitly.
 - Every taxonomy entry is `{ id, label, mvp, description? }`. `mvp: true` marks values in
   scope for the MVP; everything else is representable but `mvp: false`.
 
@@ -80,12 +87,13 @@ interoperate. `series-a-plus` and `researcher` are `mvp: false`.
 - `labelFor(dimension, id)` — human label lookup with raw-id fallback.
 - `TAXONOMY` — all dimensions keyed by name, for generic tooling / export generation.
 
-## Legacy → canonical mapping
+## Legacy → canonical fallback mapping
 
-The mapping rules (exact lookup table + keyword heuristics) live in
-[`src/lib/normalizeProgram.ts`](../src/lib/normalizeProgram.ts). Across the current 123
-records, **all 123 legacy `type` values and all 123 `stage` values map without warnings**;
-the normalizer emits a non-fatal warning (never throws) for any value it cannot confidently
+Curated records set `canonicalType` explicitly. For any record that still carries only a
+legacy free-text `type`, [`src/lib/normalizeProgram.ts`](../src/lib/normalizeProgram.ts)
+**derives** a `canonicalType` as a fallback (exact lookup table + keyword heuristics).
+Across the full record set the legacy `type` and `stage` values map without warnings; the
+normalizer emits a non-fatal warning (never throws) for any value it cannot confidently
 map, defaulting `canonicalType` to `other`.
 
 See [`data-model.md`](./data-model.md) for the full field-level schema and the

@@ -43,7 +43,13 @@ typed, validated data.
 ```
 
 An `update` proposal is matched to a live program via `programSlug(name)` so it
-stays robust to ordering and dataset split.
+stays robust to record ordering.
+
+> **Note.** The `target.dataset: 'residential' | 'traditional'` discriminant above
+> reflects the legacy two-file model. With the unified single dataset, a `new` proposal
+> is just a new record in `src/data/programs-data.json` classified by its `canonicalType`;
+> `dataset` is a derived back-compat value only. This snippet will simplify once the
+> `refactor/unify-canonical-taxonomy` change lands.
 
 ## Validation rules
 
