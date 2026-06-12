@@ -47,7 +47,9 @@
         "https://www.ycombinator.com/deal"
       ],
       "lastVerified": "2026-06-10",
-      "verificationStatus": "verified"
+      "verificationStatus": "verified",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Techstars",
@@ -63,7 +65,9 @@
       "status_detail": "Dozens of city/vertical programs worldwide; $20K for 5% + $200K MFN SAFE.",
       "domain": "techstars.com",
       "url": "https://www.techstars.com/",
-      "highlight": "One of the largest global accelerator networks."
+      "highlight": "One of the largest global accelerator networks.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "a16z Speedrun",
@@ -79,7 +83,9 @@
       "status_detail": "SR007 apps closed May 17, 2026; cohort runs late Jul–Oct 2026. Up to $1M. <0.4% acceptance.",
       "domain": "a16z.com",
       "url": "https://speedrun.a16z.com/",
-      "highlight": "a16z's ultra-competitive in-house accelerator."
+      "highlight": "a16z's ultra-competitive in-house accelerator.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "500 Global (Flagship)",
@@ -95,7 +101,9 @@
       "status_detail": "4-month Flagship in Palo Alto, $150K for 6%; batches several times a year.",
       "domain": "500.co",
       "url": "https://500.co/",
-      "highlight": "Global accelerator + fund active across 80+ countries."
+      "highlight": "Global accelerator + fund active across 80+ countries.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Pear VC (PearX)",
@@ -111,7 +119,9 @@
       "status_detail": "12-week program, $250K–$2M, max ~20 companies.",
       "domain": "pear.vc",
       "url": "https://www.pear.vc/",
-      "highlight": "Boutique, high-touch Bay Area accelerator."
+      "highlight": "Boutique, high-touch Bay Area accelerator.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Alchemist Accelerator",
@@ -127,7 +137,9 @@
       "status_detail": "6-month program, $25K–$50K; B2B/enterprise focus.",
       "domain": "alchemistaccelerator.com",
       "url": "https://www.alchemistaccelerator.com/",
-      "highlight": "The go-to enterprise-focused accelerator."
+      "highlight": "The go-to enterprise-focused accelerator.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "LAUNCH Accelerator",
@@ -143,7 +155,9 @@
       "status_detail": "14–15 weeks, $125K for 7%.",
       "domain": "launch.co",
       "url": "https://www.launch.co/accelerator",
-      "highlight": "Founder-friendly accelerator from Jason Calacanis."
+      "highlight": "Founder-friendly accelerator from Jason Calacanis.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Founder Institute",
@@ -159,7 +173,9 @@
       "status_detail": "4-month program; runs in 200+ cities worldwide; equity via warrants.",
       "domain": "fi.co",
       "url": "https://fi.co/",
-      "highlight": "The world's largest pre-seed accelerator by geographic reach."
+      "highlight": "The world's largest pre-seed accelerator by geographic reach.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "AI Grant",
@@ -175,7 +191,9 @@
       "status_detail": "$250K uncapped SAFE + $600K+ in credits for AI-native startups.",
       "domain": "aigrant.com",
       "url": "https://aigrant.com/",
-      "highlight": "High-signal AI accelerator from Friedman & Gross."
+      "highlight": "High-signal AI accelerator from Friedman & Gross.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Conviction Embed",
@@ -191,7 +209,9 @@
       "status_detail": "8-week program; $150K–$250K uncapped MFN SAFE + large cloud credits.",
       "domain": "conviction.com",
       "url": "https://embed.conviction.com/",
-      "highlight": "AI-first program from Conviction."
+      "highlight": "AI-first program from Conviction.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Betaworks Camp",
@@ -207,7 +227,9 @@
       "status_detail": "12-week NYC program, up to $500K, themed AI 'Camps.'",
       "domain": "betaworks.com",
       "url": "https://www.betaworks.com/camp",
-      "highlight": "Long-running NYC studio + camp model."
+      "highlight": "Long-running NYC studio + camp model.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "MassChallenge",
@@ -223,7 +245,9 @@
       "status_detail": "4-month program, NO EQUITY, $200K+ in prizes; Boston/Texas/Switzerland/Israel.",
       "domain": "masschallenge.org",
       "url": "https://masschallenge.org/",
-      "highlight": "Major equity-free accelerator network."
+      "highlight": "Major equity-free accelerator network.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Plug and Play",
@@ -255,7 +279,9 @@
       "status_detail": "Open to Sequoia-backed founders only; 4-day/4-week intensive, $500K–$1M.",
       "domain": "sequoiacap.com",
       "url": "https://www.sequoiacap.com/arc/",
-      "highlight": "Sequoia's structured company-building program."
+      "highlight": "Sequoia's structured company-building program.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Entrepreneur First (EF)",
@@ -292,7 +318,9 @@
         "https://www.joinef.com/"
       ],
       "lastVerified": "2026-06-10",
-      "verificationStatus": "verified"
+      "verificationStatus": "verified",
+      "mvp": true,
+      "ecosystem": "uk"
     },
     {
       "name": "Antler",
@@ -324,7 +352,9 @@
       "status_detail": "€100K–€200K for ~7%; portfolio includes Wise, Revolut, UiPath.",
       "domain": "seedcamp.com",
       "url": "https://seedcamp.com/",
-      "highlight": "'Europe's seed fund' — flagship early-stage program."
+      "highlight": "'Europe's seed fund' — flagship early-stage program.",
+      "mvp": true,
+      "ecosystem": "uk"
     },
     {
       "name": "Station F",
@@ -356,7 +386,9 @@
       "status_detail": "Up to €65K for equity; one of Europe's most active B2B accelerators.",
       "domain": "startupwiseguys.com",
       "url": "https://www.startupwiseguys.com/",
-      "highlight": "Leading Central/Eastern European B2B accelerator."
+      "highlight": "Leading Central/Eastern European B2B accelerator.",
+      "mvp": true,
+      "ecosystem": "estonia"
     },
     {
       "name": "APX",
@@ -372,7 +404,9 @@
       "status_detail": "Up to €500K (typically €50K for 5%); rolling intake in Berlin.",
       "domain": "apx.vc",
       "url": "https://apx.vc/",
-      "highlight": "Berlin's joint Axel Springer–Porsche early-stage accelerator."
+      "highlight": "Berlin's joint Axel Springer–Porsche early-stage accelerator.",
+      "mvp": true,
+      "ecosystem": "europe-wide"
     },
     {
       "name": "Founders Factory",
@@ -628,7 +662,9 @@
       "status_detail": "4-month program (SF/NYC), ~$525K for ~10%; lab access included.",
       "domain": "indiebio.co",
       "url": "https://indiebio.co/",
-      "highlight": "Leading biology-focused accelerator with wet-lab space."
+      "highlight": "Leading biology-focused accelerator with wet-lab space.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "HAX (SOSV)",
@@ -644,7 +680,9 @@
       "status_detail": "6 months in Newark (+ Shenzhen/Pune/Tokyo); $250K initial.",
       "domain": "hax.co",
       "url": "https://hax.co/",
-      "highlight": "Lab-based hard-tech program with global build sites."
+      "highlight": "Lab-based hard-tech program with global build sites.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "gener8tor",
@@ -660,7 +698,9 @@
       "status_detail": "GBeta + full accelerator across 40+ US programs; ~$100K investments.",
       "domain": "gener8tor.com",
       "url": "https://www.gener8tor.com/",
-      "highlight": "Prolific accelerator network across mid-America."
+      "highlight": "Prolific accelerator network across mid-America.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "StartX (Stanford)",
@@ -676,7 +716,9 @@
       "status_detail": "3-month program, NO EQUITY, $1M+ in resources; 1,300+ companies, 20 unicorns.",
       "domain": "startx.com",
       "url": "https://startx.com/apply",
-      "highlight": "Stanford's non-profit, equity-free accelerator and founder community."
+      "highlight": "Stanford's non-profit, equity-free accelerator and founder community.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Berkeley SkyDeck",
@@ -708,7 +750,9 @@
       "status_detail": "1% for up to $100K via All Access Fund + coworking, mentorship; ~2,000 investments since 2009.",
       "domain": "capitalfactory.com",
       "url": "https://capitalfactory.com/",
-      "highlight": "'Center of gravity for entrepreneurs' outside Silicon Valley — Austin's anchor."
+      "highlight": "'Center of gravity for entrepreneurs' outside Silicon Valley — Austin's anchor.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "MuckerLab",
@@ -724,7 +768,9 @@
       "status_detail": "$100K–$175K for 10–15%; long-term, highly selective LA program.",
       "domain": "mucker.com",
       "url": "https://mucker.com/accelerator/",
-      "highlight": "LA's leading operator-led accelerator."
+      "highlight": "LA's leading operator-led accelerator.",
+      "mvp": true,
+      "ecosystem": "us-global-remote"
     },
     {
       "name": "Forum Ventures",
@@ -772,7 +818,9 @@
       "status_detail": "9-week Base Camp accelerator; current Injective Catalyst cohort open. Partners with Polkadot, Polygon, Filecoin.",
       "domain": "outlierventures.io",
       "url": "https://outlierventures.io/",
-      "highlight": "The leading dedicated Web3 accelerator."
+      "highlight": "The leading dedicated Web3 accelerator.",
+      "mvp": true,
+      "ecosystem": "uk"
     },
     {
       "name": "Kickstart Innovation",
@@ -788,7 +836,9 @@
       "status_detail": "2-month program, CHF 10K allowance + VC/partner network; one of Europe's largest zero-equity programs.",
       "domain": "kickstart-innovation.com",
       "url": "https://www.kickstart-innovation.com/",
-      "highlight": "Switzerland's flagship corporate-innovation accelerator."
+      "highlight": "Switzerland's flagship corporate-innovation accelerator.",
+      "mvp": true,
+      "ecosystem": "europe-wide"
     },
     {
       "name": "Rockstart",
@@ -804,7 +854,9 @@
       "status_detail": "6-month programs; SAFE + follow-on up to €2M. Amsterdam, Copenhagen & Bogotá.",
       "domain": "rockstart.com",
       "url": "https://www.rockstart.com/",
-      "highlight": "Long-running European domain-focused accelerator."
+      "highlight": "Long-running European domain-focused accelerator.",
+      "mvp": true,
+      "ecosystem": "europe-wide"
     },
     {
       "name": "Norrsken Impact Accelerator",
@@ -820,7 +872,9 @@
       "status_detail": "8-week sprint at Norrsken House Stockholm for early-stage impact startups.",
       "domain": "norrsken.org",
       "url": "https://www.norrsken.org/",
-      "highlight": "Europe's flagship impact accelerator (Niklas Adalberth, Klarna co-founder)."
+      "highlight": "Europe's flagship impact accelerator (Niklas Adalberth, Klarna co-founder).",
+      "mvp": true,
+      "ecosystem": "finland-nordics"
     },
     {
       "name": "Norrsken House Kigali",
@@ -1012,7 +1066,9 @@
       "status_detail": "2 batches of 20 companies/yr. $1M+ in AI credits + model access from all major labs. 0% equity. Recommendation-only selection. Launched Jan 2026.",
       "domain": "stationf.co",
       "url": "https://stationf.co/news/f-ai",
-      "highlight": "The first accelerator backed by every major AI lab simultaneously — OpenAI, Anthropic, Google, Meta, Microsoft, Mistral, plus Sequoia & General Catalyst. Free."
+      "highlight": "The first accelerator backed by every major AI lab simultaneously — OpenAI, Anthropic, Google, Meta, Microsoft, Mistral, plus Sequoia & General Catalyst. Free.",
+      "mvp": true,
+      "ecosystem": "europe-wide"
     },
     {
       "name": "Antler ONE",
@@ -1028,7 +1084,9 @@
       "status_detail": "Launched March 2026. €500K initial (€200K for 8.5% + €300K matching) + up to €30M follow-on. Hubs: Berlin, Amsterdam, Munich, Paris. Top 0.3% of applicants (from ~10,000).",
       "domain": "antler.co",
       "url": "https://content.antler.co/ce-one",
-      "highlight": "Antler's new flagship for Continental Europe — 6–10 week intensive with €500K at entry and a runway to €30M Series-C follow-on."
+      "highlight": "Antler's new flagship for Continental Europe — 6–10 week intensive with €500K at entry and a runway to €30M Series-C follow-on.",
+      "mvp": true,
+      "ecosystem": "europe-wide"
     },
     {
       "name": "CDL-Doha",
@@ -1060,7 +1118,9 @@
       "status_detail": "Cohort 1 open (Sep–Nov 2026, Demo Day Vienna). 3-month online program; distribution via 32-country agency network. Launched May 2026.",
       "domain": "acceleratorx.eu",
       "url": "https://acceleratorx.eu/",
-      "highlight": "Europe's first accelerator built around distribution — 2,000+ pilot-ready clients from day one, via the EU's largest marketing agency alliance."
+      "highlight": "Europe's first accelerator built around distribution — 2,000+ pilot-ready clients from day one, via the EU's largest marketing agency alliance.",
+      "mvp": true,
+      "ecosystem": "europe-wide"
     },
     {
       "name": "Google DeepMind APAC Accelerator (AI for the Planet)",
