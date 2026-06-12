@@ -3,6 +3,7 @@ import { useStore } from '@nanostores/react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Program } from '../data/programs';
+import { programTypeLabel } from '../data/programs';
 import { passes, defaultSort } from '../lib/filter';
 import { statusMeta, STATUS_ORDER } from '../lib/status';
 import { logoMarkupHTML, installLogoFallback } from '../lib/logo';
@@ -11,20 +12,18 @@ import FilterSidebar from '../components/FilterSidebar';
 import Logo from '../components/Logo';
 import SiteNav from '../components/SiteNav';
 
-const TITLES: Record<string, { t: string; s: string }> = {
-  all: {
-    t: 'Where founders build, worldwide',
-    s: 'Find the best places to relocate and the startup support waiting there — click a pin or list item for details. Status as of June 2026 — verify on each site.',
-  },
-  residential: {
-    t: 'Residencies, Hacker Houses & Startup Campuses',
-    s: 'Programs that house or relocate founders. Click a pin for details. Status as of June 2026 — verify on each site.',
-  },
-  traditional: {
-    t: 'Traditional Accelerators & Incubators',
-    s: 'Accelerators, incubators & talent investors — no live-in component. Status as of June 2026 — verify on each site.',
-  },
+const TITLE_ALL = {
+  t: 'Where founders build, worldwide',
+  s: 'Find the best places to relocate and the startup support waiting there — click a pin or list item for details. Status as of June 2026 — verify on each site.',
 };
+/** Subtitle when a specific canonical program type is selected. */
+function titleFor(typeId: string, label: string): { t: string; s: string } {
+  if (!typeId) return TITLE_ALL;
+  return {
+    t: label,
+    s: `${label} programs worldwide. Click a pin for details. Status as of June 2026 — verify on each site.`,
+  };
+}
 
 // Off-coast cluster callouts for dense regions (ported from index.html).
 // `place` is an open-ocean lat/lng where the card floats; `anchor` is the true
@@ -72,7 +71,7 @@ function popupHTML(p: Program): string {
   </div>`;
 }
 
-const keyOf = (p: Program) => p.dataset + '|' + p.name;
+const keyOf = (p: Program) => (p.canonicalType ?? 'other') + '|' + p.name;
 
 export default function MapView({ programs }: { programs: Program[] }) {
   const filters = useStore($filters);
@@ -313,7 +312,7 @@ export default function MapView({ programs }: { programs: Program[] }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shown]);
 
-  const title = TITLES[filters.dataset] ?? TITLES.all;
+  const title = titleFor(filters.type, programTypeLabel(filters.type));
 
   return (
     <div className="flex h-screen">

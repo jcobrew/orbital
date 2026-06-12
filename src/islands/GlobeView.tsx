@@ -4,6 +4,7 @@ import Globe from 'globe.gl';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Program } from '../data/programs';
+import { programTypeLabel } from '../data/programs';
 import { passes, defaultSort } from '../lib/filter';
 import { statusMeta, STATUS_ORDER } from '../lib/status';
 import { logoMarkupHTML, installLogoFallback } from '../lib/logo';
@@ -21,11 +22,18 @@ import worldGeo from '../data/world-110m.geo.json';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const LAND_FEATURES = (worldGeo as any).features as any[];
 
-const TITLES: Record<string, { t: string; s: string }> = {
-  all: { t: 'Where founders build, worldwide', s: 'Spin the globe or pick a program to fly there; dense cities are mapped below. Status as of June 2026 — verify on each site.' },
-  residential: { t: 'Residencies, Hacker Houses & Startup Campuses', s: 'Programs that house or relocate founders. Spin or pick a program to fly there; dense cities are mapped below.' },
-  traditional: { t: 'Traditional Accelerators & Incubators', s: 'Accelerators, incubators & talent investors — no live-in component. Dense cities are mapped below.' },
+const TITLE_ALL = {
+  t: 'Where founders build, worldwide',
+  s: 'Spin the globe or pick a program to fly there; dense cities are mapped below. Status as of June 2026 — verify on each site.',
 };
+/** Subtitle when a specific canonical program type is selected. */
+function titleFor(typeId: string, label: string): { t: string; s: string } {
+  if (!typeId) return TITLE_ALL;
+  return {
+    t: label,
+    s: `${label} programs worldwide. Spin or pick a program to fly there; dense cities are mapped below.`,
+  };
+}
 
 // Dense regions get their own crisp, interactive minimap in the dock below the
 // globe (one shown at a time, defaulting to SF). Membership is by lat/lng box.
@@ -60,7 +68,7 @@ function jitter(arr: Program[]) {
   });
 }
 
-const keyOf = (p: Program) => p.dataset + '|' + p.name;
+const keyOf = (p: Program) => (p.canonicalType ?? 'other') + '|' + p.name;
 
 /** Best-effort WebGL capability check for the no-WebGL fallback (handoff §19/§28). */
 function hasWebGL(): boolean {
@@ -122,11 +130,11 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
 
   const shown = useMemo(() => defaultSort(data.filter((p) => passes(p, filters))), [data, filters]);
 
-  // Dock membership tracks the dataset toggle only (not search/status), so each
-  // dense-city minimap is a stable overview and doesn't rebuild on every keystroke.
+  // Dock membership tracks the program-type filter only (not search/status), so
+  // each dense-city minimap is a stable overview and doesn't rebuild on every keystroke.
   const cityData = useMemo(
-    () => data.filter((p) => filters.dataset === 'all' || p.dataset === filters.dataset),
-    [data, filters.dataset],
+    () => data.filter((p) => !filters.type || p.canonicalType === filters.type),
+    [data, filters.type],
   );
   const cityCounts = useMemo(() => {
     const m: Record<string, number> = {};
@@ -357,7 +365,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     seedRings(null);
   }
 
-  const title = TITLES[filters.dataset] ?? TITLES.all;
+  const title = titleFor(filters.type, programTypeLabel(filters.type));
   const tagline = useTypewriter('~/ wherever you land, you can build', { speed: 46, startDelay: 2600, loop: true });
 
   return (

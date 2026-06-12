@@ -5,9 +5,12 @@ import type { Program } from '../data/programs';
 import { STATUS_ORDER, type StatusKey } from './status';
 
 export interface Filters {
-  dataset: 'all' | 'residential' | 'traditional';
-  q: string;
+  /**
+   * Primary categorical axis: a canonical program-type ID (see taxonomy), or
+   * 'all' for no constraint. The legacy `dataset` binary was removed.
+   */
   type: string;
+  q: string;
   country: string;
   status: string;
   focus: string;
@@ -20,9 +23,8 @@ export interface Filters {
 }
 
 export const EMPTY_FILTERS: Filters = {
-  dataset: 'all',
-  q: '',
   type: '',
+  q: '',
   country: '',
   status: '',
   focus: '',
@@ -38,8 +40,7 @@ export function passes(p: Program, f: Filters): boolean {
   const hay = (p.name + p.city + p.country + p.focus + p.operator + p.type).toLowerCase();
   return (
     (!q || hay.includes(q)) &&
-    (f.dataset === 'all' || p.dataset === f.dataset) &&
-    (!f.type || p.type === f.type) &&
+    (!f.type || f.type === 'all' || p.canonicalType === f.type) &&
     (!f.country || p.country === f.country) &&
     (!f.status || p.status === f.status) &&
     (!f.focus || (p.focus || '').toLowerCase().includes(f.focus.trim().toLowerCase())) &&

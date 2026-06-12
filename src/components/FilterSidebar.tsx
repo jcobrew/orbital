@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useStore } from '@nanostores/react';
 import type { Program } from '../data/programs';
+import { programTypeLabel } from '../data/programs';
+import { PROGRAM_TYPES, isMvpProgramType } from '../data/taxonomy';
 import { STATUS_ORDER, statusMeta, shortStatusLabel } from '../lib/status';
 import { $filters, setFilters, initFiltersFromURL } from '../stores/filters';
 import { livingModelLabel } from '../lib/living';
@@ -8,11 +10,10 @@ import type { ProgramFormat } from '../data/programs';
 
 type Variant = 'dashboard' | 'sidebar';
 
-const DATASETS = [
-  { k: 'all', label: 'All' },
-  { k: 'residential', label: 'Residential' },
-  { k: 'traditional', label: 'Traditional' },
-] as const;
+/** Canonical program-type IDs in display order: the 8 MVP types first. */
+const PROGRAM_TYPE_ORDER = [...PROGRAM_TYPES]
+  .map((e) => e.id)
+  .sort((a, b) => (isMvpProgramType(a) === isMvpProgramType(b) ? 0 : isMvpProgramType(a) ? -1 : 1));
 
 const inputCls =
   'w-full rounded-xl border border-line2 bg-[rgba(8,10,22,.6)] px-3 py-2.5 text-[13px] text-text outline-none transition focus:border-a1';
@@ -33,12 +34,26 @@ export default function FilterSidebar({
     initFiltersFromURL();
   }, []);
 
-  // Options + chip counts reflect the active dataset.
+  // Options + chip counts reflect the active program-type filter.
   const slice = useMemo(
-    () => (filters.dataset === 'all' ? programs : programs.filter((p) => p.dataset === filters.dataset)),
-    [programs, filters.dataset],
+    () => (!filters.type ? programs : programs.filter((p) => p.canonicalType === filters.type)),
+    [programs, filters.type],
   );
-  const types = useMemo(() => [...new Set(slice.map((p) => p.type))].sort(), [slice]);
+  // Program-type options: canonical types present in the data, MVP types first,
+  // each with a live count (computed against the full set, not the slice).
+  const programTypes = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const p of programs) {
+      if (!p.canonicalType) continue;
+      counts.set(p.canonicalType, (counts.get(p.canonicalType) ?? 0) + 1);
+    }
+    return PROGRAM_TYPE_ORDER.filter((id) => counts.has(id)).map((id) => ({
+      id,
+      label: programTypeLabel(id),
+      mvp: isMvpProgramType(id),
+      count: counts.get(id) ?? 0,
+    }));
+  }, [programs]);
   const countries = useMemo(() => [...new Set(slice.map((p) => p.country))].sort(), [slice]);
   // Founder dimensions — these light up only once the data is filled (handoff: no
   // dead controls while values are unknown).
@@ -67,29 +82,47 @@ export default function FilterSidebar({
 
   return (
     <div className={wrap}>
-      {/* Dataset toggle */}
+      {/* Program-type filter (canonical taxonomy — the primary axis) */}
       <div
-        className="inline-flex gap-1 rounded-xl border border-line2 bg-[rgba(8,10,22,.5)] p-1"
+        className="inline-flex flex-wrap gap-1 rounded-xl border border-line2 bg-[rgba(8,10,22,.5)] p-1"
         role="tablist"
-        aria-label="Dataset"
+        aria-label="Program type"
       >
-        {DATASETS.map((d) => {
-          const active = filters.dataset === d.k;
+        {(() => {
+          const allActive = !filters.type;
           return (
             <button
-              key={d.k}
               role="tab"
-              aria-selected={active}
-              onClick={() => setFilters({ dataset: d.k, status: '' })}
-              className={`flex-1 rounded-[3px] px-3 py-2 font-display text-[12.5px] font-semibold transition ${
-                active ? 'text-[#0a0a0a]' : 'text-muted hover:text-text'
+              aria-selected={allActive}
+              onClick={() => setFilters({ type: '', status: '' })}
+              className={`rounded-[3px] px-3 py-2 font-display text-[12.5px] font-semibold transition ${
+                allActive ? 'text-[#0a0a0a]' : 'text-muted hover:text-text'
               }`}
-              style={active ? { background: 'var(--grad)' } : undefined}
+              style={allActive ? { background: 'var(--grad)' } : undefined}
             >
-              {d.label}
+              All
             </button>
           );
-        })}
+        })()}
+        {programTypes
+          .filter((t) => t.mvp)
+          .map((t) => {
+            const active = filters.type === t.id;
+            return (
+              <button
+                key={t.id}
+                role="tab"
+                aria-selected={active}
+                onClick={() => setFilters({ type: active ? '' : t.id, status: '' })}
+                className={`rounded-[3px] px-3 py-2 font-display text-[12.5px] font-semibold transition ${
+                  active ? 'text-[#0a0a0a]' : 'text-muted hover:text-text'
+                }`}
+                style={active ? { background: 'var(--grad)' } : undefined}
+              >
+                {t.label} <span className="opacity-60">{t.count}</span>
+              </button>
+            );
+          })}
       </div>
 
       {/* Search + selects */}
@@ -117,17 +150,32 @@ export default function FilterSidebar({
           />
         </div>
         <select
-          aria-label="Filter by type"
+          aria-label="Filter by program type"
           value={filters.type}
           onChange={(e) => setFilters({ type: e.target.value })}
           className={selectCls + (variant === 'sidebar' ? ' w-full' : '')}
         >
-          <option value="">All types</option>
-          {types.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
+          <option value="">All program types</option>
+          <optgroup label="MVP types">
+            {programTypes
+              .filter((t) => t.mvp)
+              .map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.label} ({t.count})
+                </option>
+              ))}
+          </optgroup>
+          {programTypes.some((t) => !t.mvp) && (
+            <optgroup label="More">
+              {programTypes
+                .filter((t) => !t.mvp)
+                .map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.label} ({t.count})
+                  </option>
+                ))}
+            </optgroup>
+          )}
         </select>
         <select
           aria-label="Filter by country"

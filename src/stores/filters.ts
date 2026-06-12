@@ -1,7 +1,11 @@
 // Cross-island filter state. Astro islands are isolated, so the map/globe and
 // the sidebar share state through this nanostore rather than props. The store
 // also stays in sync with the URL query string — the deep-link contract that
-// agents and humans use (e.g. /dashboard?dataset=all&country=USA&status=open).
+// agents and humans use (e.g. /dashboard?type=accelerator&country=USA&status=open).
+//
+// `type` carries a canonical program-type ID (the primary categorical axis).
+// The legacy `dataset` URL-param was removed; an old `?dataset=residential`
+// link no longer constrains results (it is silently ignored).
 
 import { atom } from 'nanostores';
 import { EMPTY_FILTERS, type Filters } from '../lib/filter';
@@ -9,19 +13,14 @@ import { STATUS } from '../lib/status';
 
 export const $filters = atom<Filters>({ ...EMPTY_FILTERS });
 
-const DATASETS = ['all', 'residential', 'traditional'] as const;
-
 /** Parse the current location.search into a Filters object. */
 export function filtersFromURL(search = window.location.search): Filters {
   const u = new URLSearchParams(search);
-  const ds = u.get('dataset');
   const status = u.get('status');
+  const type = u.get('type') ?? '';
   return {
-    dataset: (DATASETS as readonly string[]).includes(ds ?? '')
-      ? (ds as Filters['dataset'])
-      : 'all',
+    type: type === 'all' ? '' : type,
     q: u.get('q') ?? '',
-    type: u.get('type') ?? '',
     country: u.get('country') ?? '',
     status: status && status in STATUS ? status : '',
     focus: u.get('focus') ?? '',
@@ -35,7 +34,6 @@ export function filtersFromURL(search = window.location.search): Filters {
 /** Serialize filters back into a query string (omitting defaults). */
 export function filtersToQuery(f: Filters): string {
   const u = new URLSearchParams();
-  if (f.dataset !== 'all') u.set('dataset', f.dataset);
   if (f.q) u.set('q', f.q);
   if (f.type) u.set('type', f.type);
   if (f.country) u.set('country', f.country);

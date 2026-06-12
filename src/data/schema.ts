@@ -68,7 +68,7 @@ export const PROGRAM_SCHEMA: SchemaField[] = [
   { field: 'url', meaning: 'Program website / application URL.', requirement: 'mvp-required', kind: 'legacy', type: 'string' },
   { field: 'domain', meaning: 'Program website domain.', requirement: 'optional', kind: 'legacy', type: 'string' },
   { field: 'operator', meaning: 'Organization or person running the program.', requirement: 'optional', kind: 'legacy', type: 'string' },
-  { field: 'dataset', meaning: 'Storage split: residential | traditional.', requirement: 'mvp-required', kind: 'legacy', type: 'string' },
+  { field: 'dataset', meaning: 'Deprecated, derived back-compat value (residential | traditional) computed from canonicalType/format — NOT a stored field. Prefer canonicalType.', requirement: 'optional', kind: 'legacy', type: 'string' },
 
   // ---- Location ----
   { field: 'country', meaning: 'Country (or "Remote").', requirement: 'mvp-required', kind: 'legacy', type: 'string' },
