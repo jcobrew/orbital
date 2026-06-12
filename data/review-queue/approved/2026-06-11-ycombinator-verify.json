@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "2026-06-11-ycombinator-verify",
+  "target": { "kind": "update", "name": "Y Combinator" },
+  "changes": {
+    "status_detail": "Funds ~1,000 companies/yr across multiple batches. Standard deal: $500K total ($125K for 7% + $375K uncapped MFN SAFE), 3 months in San Francisco.",
+    "applicationDeadline": "2026-08-12",
+    "lastVerified": "2026-06-11",
+    "verificationStatus": "verified"
+  },
+  "sources": [
+    {
+      "url": "https://www.ycombinator.com/apply",
+      "title": "Y Combinator — Apply (Winter 2027 batch deadline)",
+      "retrievedAt": "2026-06-11"
+    },
+    {
+      "url": "https://www.ycombinator.com/deal",
+      "title": "Y Combinator — The YC Deal",
+      "retrievedAt": "2026-06-11"
+    }
+  ],
+  "submitter": "agent:founder-atlas-refresh",
+  "submittedAt": "2026-06-11T14:30:00Z",
+  "status": "approved",
+  "reviewNote": "Verified against the YC apply + deal pages on 2026-06-11. Deadline and standard-deal copy confirmed; approved for apply.",
+  "rationale": "Refresh YC application deadline + re-verify the standard-deal terms ahead of the next batch."
+}

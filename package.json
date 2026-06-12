@@ -14,7 +14,8 @@
     "freshness": "tsx scripts/check-program-freshness.ts",
     "check:urls": "tsx scripts/check-source-urls.ts",
     "check:mvp": "tsx scripts/check-mvp-readiness.ts",
-    "report:update": "tsx scripts/generate-update-report.ts"
+    "report:update": "tsx scripts/generate-update-report.ts",
+    "apply-updates": "tsx scripts/apply-updates.ts"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",
