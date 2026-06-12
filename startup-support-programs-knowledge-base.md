@@ -1,6 +1,20 @@
 # Founder Residencies, Hacker Houses & Startup Campuses — Base Knowledge
 
-*Compiled June 1, 2026. Companion files: `startup-programs-data.json` (the database) and `startup-programs-map.html` (interactive world map).*
+*Compiled June 1, 2026.*
+
+> **⚠️ Legacy source material — not the operating model.** This file is preserved
+> research from when Founder Atlas split programs into a "residential" vs "traditional"
+> binary across two datasets. **That split is retired.** There is now **one unified
+> dataset** (`src/data/programs-data.json`) and programs are classified by their
+> **`canonicalType`** plus `supportModes` / `format` / `mvp` / `ecosystem`, defined in
+> [`src/data/taxonomy.ts`](src/data/taxonomy.ts) and documented in
+> [`docs/program-taxonomy.md`](docs/program-taxonomy.md) — which **supersede** anything
+> here. The categories described below (residencies, hacker houses, fellowships,
+> talent investors, pop-up villages) now map onto canonical types like
+> `founder-residency`, `hacker-house`, `founder-fellowship`, `cofounder-matching`, and
+> `pop-up-village`; the "live-in / move-in" quality is captured by `format: "live-in"`
+> + `housing` in `supportModes`, **not** by a separate file. Read this for the landscape
+> narrative and operator notes — but use the canonical taxonomy for any data work.
 
 ---
 
@@ -114,12 +128,20 @@ For several pure hacker houses (STAK, FoundHer House, Casa Bernarda, etc.) the i
 
 ---
 
-## 8. How to use the companion files
+## 8. How this maps onto the current data
 
-- **`startup-programs-data.json`** — the structured database. Each record has: `name, type, city, country, lat, lng, focus, operator, stage, status, status_detail, domain, url, highlight`. Add or edit rows here; the map reads the same schema.
-- **`startup-programs-map.html`** — open it in any browser (double-click). It's a single self-contained file: an interactive world map with one pin per program, color-coded by recruiting status, with logos and a click-through panel showing location, focus, who runs it, and whether they're recruiting. Filters let you narrow by type and status.
+> **Historical note.** This section originally described two separate companion files
+> (a "residential" JSON database + a standalone HTML map). Both are gone. The programs
+> covered here now live in the **single unified dataset** `src/data/programs-data.json`
+> alongside every other program, and are rendered by the live Astro site (globe / list /
+> dashboard / map), not a hand-built HTML file.
 
-> **Next action for you:** open `startup-programs-map.html` now and click three pins — Founders Inc, South Park Commons, and HF0 — to sanity-check that the detail panels read the way you want. If you want more programs added (or the pure-rent hacker houses removed so it's only equity/residency models for your thesis), tell me which filter and I'll regenerate the database in one pass.
+To add or edit a program covered by this research, follow the
+[`founder-atlas-refresh`](.claude/skills/founder-atlas-refresh/SKILL.md) skill: set its
+**`canonicalType`** (e.g. `founder-residency`, `hacker-house`, `founder-fellowship`),
+its `supportModes`, its `format` (`live-in` for move-in residencies), and provenance
+(`sourceUrls` + `lastVerified` + `verificationStatus`). See
+[`docs/data-model.md`](docs/data-model.md) for the full field reference.
 
 ---
 

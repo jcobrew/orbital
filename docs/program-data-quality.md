@@ -33,9 +33,10 @@ an MVP record and **how** they must be filled. It adds no new fields.
 
 ### 2.1 Always-required (every record, MVP or not — existing dataset invariant)
 
-These are the base keys the datasets and the `founder-atlas-refresh` skill already require:
+These are the base keys the dataset and the `founder-atlas-refresh` skill already require:
 
-`name` · `type` · `city` · `country` · `lat` · `lng` · `status` · `url`
+`name` · `canonicalType` · `supportModes` · `type` (display label) · `city` · `country` ·
+`lat` · `lng` · `status` · `url`
 
 ### 2.2 Required for an MVP-ready record
 
@@ -45,7 +46,7 @@ following. This is the field checklist from the implementation plan, mapped to c
 | Requirement | Field(s) on `Program` | Rule |
 | --- | --- | --- |
 | **Name** | `name` | Non-empty. |
-| **Type** | `type` (legacy) → must normalize to an **MVP canonical type** | `canonicalProgramType(type)` returns one of the 8 MVP IDs (matched). |
+| **Program Type** | `canonicalType` → must be an **MVP canonical type** | `canonicalType` is one of the 8 MVP IDs (set explicitly, or derived from the legacy `type` label as a fallback). |
 | **URL** | `url` | Non-empty, looks like an absolute `http(s)://` URL. |
 | **Location / remote** | `country` + (`city` **or** `format`) | Physical programs need a `city`; fully remote/online programs may omit `city` but must declare `format: "remote"`. |
 | **Stage focus** | `stageFit` (preferred) **or** non-empty `stage` text | At least one stage signal so matching can reason about fit. |
@@ -60,8 +61,9 @@ following. This is the field checklist from the implementation plan, mapped to c
 
 `highlight` · `subtype` · `region` · `applyUrl` · `applicationDeadline` · `nextCohortStart` ·
 `durationWeeksMin` / `durationWeeksMax` · `cohortSize` · `fundingAmount` · `equityTaken` ·
-`cost` · `sectorFocus` · `tags` · the canonical-derived fields (`canonicalType`,
-`supportModes`, `intakeMethod`, `intakeFrequency`, `costFundingModel`) · `verificationStatus`.
+`cost` · `sectorFocus` · `tags` · the optional canonical fields (`intakeMethod`,
+`intakeFrequency`, `costFundingModel`) · `verificationStatus`. (`canonicalType` and
+`supportModes` are **required** — see §2.1 — not optional.)
 
 Also optional / explicitly out of MVP standard: acceptance rate, notable alumni, discovery
 channels, long ecosystem analysis, full sector taxonomy, historical cohorts, deep alumni
@@ -98,19 +100,22 @@ literal `unknown`. The convention:
 
 ### 3.4 Consistency & shape
 
-- Both JSON files must stay **valid JSON** and keep the same record shape and order. Tagging is
-  **additive only** (`mvp`, `ecosystem`).
+- The dataset file (`src/data/programs-data.json`) must stay **valid JSON** and keep a consistent
+  record shape and order. Tagging is **additive** (`mvp`, `ecosystem`).
 - `country` strings must match the controlled country→ecosystem map in
   [`mvp-data-scope.md`](./mvp-data-scope.md) for an MVP record to be taggable.
 - `lat`/`lng` are decimal degrees for the program's city/building; city-center is acceptable.
 - `ecosystem`, when present, must be exactly one of:
   `finland-nordics`, `estonia`, `europe-wide`, `uk`, `us-global-remote`.
 
-### 3.5 Residential vs traditional placement
+### 3.5 Correct `canonicalType`
 
-Live-in / relocation programs belong in `startup-programs-data.json`; everything else in
-`traditional-programs-data.json` (per the `founder-atlas-refresh` skill). Misplacement is a
-quality defect even if all fields are present.
+Every program lives in the one unified `src/data/programs-data.json` and must carry a correct
+**`canonicalType`** (per the `founder-atlas-refresh` skill). Live-in / relocation programs are
+`founder-residency` (or `hacker-house`) with `format: "live-in"` + `housing` in `supportModes` —
+there is no separate residential file. A wrong or missing `canonicalType` is a quality defect
+even if all other fields are present. (`type` is a display label only and does not need to match
+any controlled vocabulary.)
 
 ---
 

@@ -5,22 +5,30 @@ is **MVP-required** or **optional**, and whether it is a **legacy** or **canonic
 The schema lives in code at [`src/data/schema.ts`](../src/data/schema.ts); the `Program`
 interface is in [`src/data/programs.ts`](../src/data/programs.ts). This doc explains both.
 
-## Backward-compatibility contract
+## One unified dataset
 
-Stream 2 is **additive only**:
+All programs live in **one** file, `src/data/programs-data.json`. The old `residential`
+vs `traditional` two-dataset split is retired: a program is categorized by its
+**`canonicalType`**, not by which file it lives in. The legacy `dataset` value survives
+only as a **derived back-compat field** exposed by the legacy `/api/programs.json` shim —
+it is not a real categorization axis and should never be hand-authored.
 
-- No existing field on `Program` was deleted or renamed.
-- All new canonical fields are **optional** on `Program`, so the site still builds
-  (`astro build` passes) and all existing data still renders.
-- Canonical values are **derived, never written over** the legacy free-text fields. `type`,
-  `stage`, and `format` remain the rendered/display values.
-- No JSON data records were migrated or modified.
+## Field roles
+
+- The canonical fields (`canonicalType`, `supportModes`, `format`, `mvp`, `ecosystem`,
+  and the optional intake/cost IDs) carry the **machine meaning** and drive
+  filtering/matching and MVP scope.
+- The legacy free-text fields (`type`, `stage`) remain as **human-readable display
+  values** only. `type` is a label, not a category.
+- Provenance (`sourceUrls`, `lastVerified`, `verificationStatus`) is required on curated
+  records.
 
 ## Field kinds
 
-- **legacy** — pre-existing field (free-text or core), kept working forever.
+- **legacy** — pre-existing field (free-text or core), kept working as a display value.
 - **legacy-optional** — pre-existing optional founder-schema field.
-- **canonical** — new in Stream 2; always optional on `Program`.
+- **canonical** — the machine-meaning fields (`canonicalType`, `supportModes`, …) that
+  drive categorization, filtering, matching, and MVP scope.
 
 ## Requirement levels
 
@@ -31,8 +39,10 @@ Stream 2 is **additive only**:
 
 ### MVP-required fields
 
-`name`, `type`, `url`, `dataset`, `country`, `stage`, `status`, `sourceUrls`,
+`name`, `type` (display label), `url`, `country`, `stage`, `status`, `sourceUrls`,
 `lastVerified`, `verificationStatus`, `canonicalType`, `supportModes`.
+
+(`dataset` is **not** a required field — it is a derived back-compat value only.)
 
 (Mirrors the plan's "Required MVP program fields": name · type · URL · country/remote · stage
 focus · support modes · application status · source URL · last verified date · verification
@@ -47,7 +57,7 @@ Stream 9). Summary of the groups:
 
 | Group | Fields |
 | --- | --- |
-| Identity | `name`, `type` (legacy free-text), `url`, `domain`, `operator`, `dataset` |
+| Identity | `name`, `type` (legacy free-text **label**), `url`, `domain`, `operator`, `dataset` (derived back-compat only) |
 | Location | `country`, `city`, `lat`, `lng`, `region` |
 | Legacy descriptors | `focus`, `stage` (legacy free-text), `highlight`, `subtype`, `format`, `sectorFocus`, `stageFit`, `founderFit` |
 | Application / cohort | `status`, `status_detail`, `applyUrl`, `applicationDeadline`, `nextCohortStart`, `durationWeeksMin/Max`, `cohortSize` |
@@ -61,7 +71,7 @@ Stream 9). Summary of the groups:
 
 | Field | Type | Constrained by | Meaning |
 | --- | --- | --- | --- |
-| `canonicalType` | enum | `programType` taxonomy | Canonical program type derived from legacy `type`. |
+| `canonicalType` | enum | `programType` taxonomy | The program's canonical category (the primary classifier); set explicitly on curated records, derived from legacy `type` as a fallback. |
 | `supportModes` | enum[] | `supportMode` taxonomy | What the program concretely provides. |
 | `intakeMethod` | enum | `intakeMethod` taxonomy | How founders get in. |
 | `intakeFrequency` | enum | `intakeFrequency` taxonomy | How often intake happens. |
@@ -69,10 +79,11 @@ Stream 9). Summary of the groups:
 | `mvp` | boolean | — | Curated, launch-ready MVP record (set by Stream 3). |
 | `ecosystem` | string | — | MVP ecosystem tag (set by Stream 3). |
 
-## Normalization (legacy → canonical)
+## Normalization (legacy → canonical fallback)
 
-[`src/lib/normalizeProgram.ts`](../src/lib/normalizeProgram.ts) exposes pure,
-non-destructive helpers:
+Curated records carry `canonicalType` directly. For records that still have only a legacy
+free-text `type`, [`src/lib/normalizeProgram.ts`](../src/lib/normalizeProgram.ts) exposes
+pure helpers that **derive** the canonical values as a fallback:
 
 ```ts
 normalizeProgram(program) => {
@@ -85,8 +96,8 @@ normalizeProgram(program) => {
 ```
 
 It uses an exact lookup table for the known legacy strings plus keyword heuristics as a
-fallback, so new/edited records still map without code changes. Across the current 123
-records there are **0 type warnings and 0 stage warnings**.
+fallback, so records that lack an explicit `canonicalType` still map without code changes.
+Across the full record set there are **0 type warnings and 0 stage warnings**.
 
 See [`program-taxonomy.md`](./program-taxonomy.md) for the taxonomy dimensions and MVP-vs-
 future category breakdown.

@@ -18,9 +18,9 @@ field/quality standard) and builds on the canonical taxonomy in
 
 A record is tagged **`mvp: true`** only when it is **both**:
 
-1. **An MVP canonical program type** — its legacy `type` normalizes (via
-   [`normalizeProgram.ts`](../src/lib/normalizeProgram.ts) → `canonicalProgramType`) to one of
-   the **8 MVP categories** flagged `mvp: true` in the taxonomy:
+1. **An MVP canonical program type** — its `canonicalType` (set explicitly, or derived
+   from legacy `type` via [`normalizeProgram.ts`](../src/lib/normalizeProgram.ts) as a
+   fallback) is one of the **8 MVP categories** flagged `mvp: true` in the taxonomy:
    `founder-residency`, `hacker-house`, `accelerator`, `pre-accelerator`,
    `founder-fellowship`, `government-grant`, `startup-visa`, `cofounder-matching`; **and**
 2. **In an MVP ecosystem** — its `country` maps to one of the 5 controlled ecosystems below.
@@ -29,15 +29,14 @@ Records that fail either test are **left untagged** (no `mvp` key, or `mvp` abse
 carry no `ecosystem`. This is deliberately conservative: a future, out-of-region, or
 out-of-type record stays fully representable and rendered, but is not claimed as launch-ready.
 
-The tagging is **additive and non-destructive** — only the `mvp` and `ecosystem` keys are added
-to in-scope records in `src/data/startup-programs-data.json` and
-`src/data/traditional-programs-data.json`. No existing field, value, record, or ordering was
-changed (verified: stripping the two new keys reproduces the pre-change files byte-for-byte).
+The `mvp` and `ecosystem` keys are set on in-scope records in the unified dataset
+`src/data/programs-data.json`. A record is tagged by its `canonicalType` + `country`, not by
+which file it lives in (there is only one file).
 
 ### Why type *and* region, conservatively
 
-Several current records are an MVP type but outside the 5 ecosystems (e.g. accelerators in
-India, Singapore, Brazil, Africa), and several are in an MVP region but a non-MVP type (e.g.
+Several records are an MVP type but outside the 5 ecosystems (e.g. accelerators in India,
+Singapore, Brazil, Africa), and several are in an MVP region but a non-MVP type (e.g.
 `startup-campus` Station F, `pop-up-village` Edge Esmeralda, `deep-tech-program` Conception X).
 Tagging requires *both*, so these are excluded — keeping the MVP set tight and trustworthy.
 
@@ -108,36 +107,30 @@ beyond its two records) are in-scope but under-populated and are **expansion pri
 
 ## 4. Current tagging summary
 
-After tagging the two existing datasets, **67 of 123 records** are `mvp: true`.
-
-| File | Records | Tagged `mvp: true` |
-| --- | --- | --- |
-| `startup-programs-data.json` (residential) | 59 | **37** |
-| `traditional-programs-data.json` (traditional) | 64 | **30** |
-| **Total** | **123** | **67** |
+Of the **123 records** in the unified `src/data/programs-data.json`, **67** are `mvp: true`.
 
 ### Per ecosystem
 
-| `ecosystem` | Residential | Traditional | Total |
-| --- | --- | --- | --- |
-| `us-global-remote` | 27 | 19 | **46** |
-| `europe-wide` | 4 | 6 | **10** |
-| `uk` | 3 | 3 | **6** |
-| `finland-nordics` | 3 | 1 | **4** |
-| `estonia` | 0 | 1 | **1** |
-| **Total** | **37** | **30** | **67** |
+| `ecosystem` | Tagged `mvp: true` |
+| --- | --- |
+| `us-global-remote` | **46** |
+| `europe-wide` | **10** |
+| `uk` | **6** |
+| `finland-nordics` | **4** |
+| `estonia` | **1** |
+| **Total** | **67** |
 
 ### Per canonical type
 
-| Canonical type | Residential | Traditional | Total |
-| --- | --- | --- | --- |
-| `hacker-house` | 21 | 0 | **21** |
-| `accelerator` | 0 | 26 | **26** |
-| `founder-residency` | 14 | 0 | **14** |
-| `founder-fellowship` | 2 | 0 | **2** |
-| `cofounder-matching` | 0 | 2 | **2** |
-| `pre-accelerator` | 0 | 2 | **2** |
-| **Total** | **37** | **30** | **67** |
+| Canonical type | Tagged `mvp: true` |
+| --- | --- |
+| `accelerator` | **26** |
+| `hacker-house` | **21** |
+| `founder-residency` | **14** |
+| `founder-fellowship` | **2** |
+| `cofounder-matching` | **2** |
+| `pre-accelerator` | **2** |
+| **Total** | **67** |
 
 > **Distribution note.** The current tagged set is heavily skewed to `us-global-remote` (46/67)
 > and to `accelerator` + `hacker-house` + `founder-residency` (61/67). It is also light on the
@@ -180,9 +173,10 @@ draft-PR discipline of the `founder-atlas-refresh` skill.
   fully-verified records.
 - **Stay within the 5 ecosystems and 8 types.** A great program outside the controlled
   vocabulary is *out of MVP scope* until the scope is formally widened — flag it, don't tag it.
-- **Respect the residential/traditional split** (see the `founder-atlas-refresh` skill): live-in
-  / relocation programs go in `startup-programs-data.json`; everything else in
-  `traditional-programs-data.json`.
+- **Set the `canonicalType` first** (see the `founder-atlas-refresh` skill): every record goes
+  in the one unified `src/data/programs-data.json`, classified by its `canonicalType`. Live-in /
+  relocation programs are `founder-residency` (or `hacker-house`) with `format: "live-in"` +
+  `housing` in `supportModes` — not a separate file.
 - **No global completeness.** We are explicitly *not* covering every country or every program
   type. Out-of-scope categories (`tech-transfer`, `corporate-accelerator`, `venture-debt`,
   meetups, angel networks, etc.) stay out.

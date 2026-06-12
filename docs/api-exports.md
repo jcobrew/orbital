@@ -36,10 +36,10 @@ unchanged); the new exports are richer and may evolve.
 ## Endpoint details
 
 ### `/api/programs.normalized.json`
-Per record: `slug`, identity (`name`, `dataset`, `url`, `country`, `city`, `region`,
-`ecosystem`), the legacy `legacyType`, canonical `canonicalType` / `canonicalStages` /
-`supportModes` / `costFundingModel` (derived non-destructively via
-`src/lib/normalizeProgram.ts`), a window-aware `applicationStatus`
+Per record: `slug`, identity (`name`, `url`, `country`, `city`, `region`, `ecosystem`;
+plus `dataset` as a derived back-compat value), the legacy `legacyType` (display label),
+canonical `canonicalType` (the primary classifier) / `canonicalStages` / `supportModes` /
+`costFundingModel`, a window-aware `applicationStatus`
 (`open|upcoming|closed|unknown` + `source` + legacy status + windows), a `freshness` block
 (`lastVerified`, `ageDays`, `isStale`, `verificationStatus`), and a `provenance` block
 (`bestTrust`, `realSourceCount`, `sampleOnly`, `sources`). `mvp` flags curated records.
