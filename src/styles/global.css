@@ -326,47 +326,7 @@ a {
   vertical-align: middle;
 }
 
-/* ---- Tabbed, resizable city minimap dock (globe page) ---- */
-#cityrow {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  height: 264px;
-  min-height: 184px;
-  background: #000000;
-  border-top: 1px solid var(--line2);
-}
-#cityresize {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 11px;
-  cursor: ns-resize;
-  z-index: 6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  touch-action: none;
-}
-#cityresize::before {
-  content: '';
-  width: 46px;
-  height: 4px;
-  border-radius: 3px;
-  background: var(--line2);
-  transition: 0.15s;
-}
-#cityresize:hover::before {
-  background: var(--a1);
-  width: 64px;
-}
-#citytabs {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  padding: 13px 12px 9px;
-}
+/* ---- City minimap tabs + map (bottom-right floating window, globe page) ---- */
 .citytab {
   display: inline-flex;
   align-items: center;
@@ -402,21 +362,12 @@ a {
   color: var(--a2);
   font-weight: 700;
 }
-#citystage {
-  flex: 1;
-  position: relative;
-  min-height: 0;
-}
 .citymap {
-  /* Inset with a clear border so the minimap reads as a contained card —
-     it doesn't bleed to the screen edges or touch the globe / neighbours. */
+  /* Fills the floating window's map area (the window supplies the border/shadow). */
   position: absolute;
-  inset: 0 14px 14px;
+  inset: 0;
   background: #000000;
-  border: 1px solid var(--line2);
-  border-radius: 3px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   display: none;
 }
 .citymap.active {
