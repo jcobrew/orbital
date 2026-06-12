@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteNav from '../components/SiteNav.tsx';
+import FindSupportFlow from '../components/find-support/FindSupportFlow.tsx';
+import { PROGRAMS } from '../data/programs';
+---
+
+<Base
+  title="Find support — guided founder discovery — Founder Atlas"
+  description="Describe your situation — stage, needs, constraints, urgency — and get a small set of relevant, trustworthy, explained matches. Every recommendation shows why it fits, what blocks it, application status, and a next step. No login."
+>
+  <header class="mx-auto max-w-[1100px] px-7 pt-5">
+    <SiteNav current="list" client:load />
+  </header>
+
+  <main class="mx-auto max-w-[1100px] px-7 pb-16 pt-6">
+    <div class="mb-6">
+      <h1 class="m-0 font-display text-[26px] font-bold tracking-tight text-text">Find the right support</h1>
+      <p class="m-0 mt-1.5 max-w-[640px] text-[13.5px] leading-normal text-muted">
+        Two ways in: tell us about your situation and we’ll rank a small set of relevant programs with a
+        clear explanation for each — or jump straight to faceted search if you already know what you want.
+      </p>
+    </div>
+
+    <FindSupportFlow programs={PROGRAMS} client:load />
+  </main>
+</Base>
