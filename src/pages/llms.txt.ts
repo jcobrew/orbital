@@ -10,11 +10,60 @@ const BODY = `# Founder Atlas
 This site is a static, agent-friendly directory. AI agents should prefer the JSON API below
 over scraping the HTML views.
 
+## MVP scope & positioning
+
+Founder Atlas is in a focused MVP: depth and trust over global completeness. The curated
+launch set targets ~100–200 high-trust records across a few ecosystems (Finland/Nordics,
+Estonia, EU/Europe-wide, UK, US/global-remote) and 6–8 actively-populated program categories:
+founder residencies, hacker/founder houses, accelerators, pre-accelerators, founder
+fellowships, government grants / non-dilutive, startup visas / soft-landing, and co-founder
+matching / online founder communities. The full schema and taxonomy represent the long-term
+landscape, but only values flagged \`mvp:true\` are in active MVP scope. Records NOT yet curated
+still appear in the full dataset; the curated slice is exposed separately (see below).
+
+## Freshness & provenance
+
+- Every record carries a \`lastVerified\` date and a \`verificationStatus\`
+  (\`verified\` | \`needs-review\` | \`unverified\`). A record older than ~90 days is treated as stale.
+- "A program exists" is NOT "applications are open". Application status is computed from
+  time-aware application windows when available, falling back to the legacy recruiting \`status\`.
+  Resolved status is one of \`open\` | \`upcoming\` | \`closed\` | \`unknown\` — shown honestly, never hidden.
+- Provenance is first-class: sources carry a \`kind\` (official | press | aggregator | …) and a
+  \`trust\` level (\`trusted\` | \`reported\` | \`unverified\` | \`sample\`). Placeholder data is marked
+  \`sample\` and must never be presented as fact.
+- Status and visa/relocation details change frequently — always confirm on the official program site.
+
 ## Machine-readable data (preferred for agents)
+
+Legacy, stable contracts (output shape will not change):
 
 - [Unified program API](/api/programs.json): All programs in one file. Each entry is tagged
   with \`dataset\` (residential | traditional). Includes \`meta\`, \`schema\`, \`count\`, and \`facets\`
   (distinct types, countries and statuses with counts). Served with CORS \`Access-Control-Allow-Origin: *\`.
+- [Countries API](/api/countries.json): machine-readable country ecosystem profiles (see below).
+
+New, agent-oriented exports (additive; richer, may evolve):
+
+- [Normalized programs](/api/programs.normalized.json): every program with canonical taxonomy IDs
+  (\`canonicalType\`, \`supportModes\`, \`canonicalStages\`, \`costFundingModel\`), a resolved
+  \`applicationStatus\` (window-aware), a \`freshness\` summary, and a \`provenance\`/trust summary.
+  Prefer this when you want structured, normalized data.
+- [Curated MVP programs](/api/programs.mvp.json): only the curated, launch-ready (\`mvp:true\`)
+  records — the vetted slice. May be empty until records are tagged; treat an empty list as
+  "no curated records yet", not an error.
+- [Program-type taxonomy](/api/program-types.json): the full canonical taxonomy (program types
+  and the supporting dimensions) with IDs, labels, MVP flags and descriptions.
+- [Founder-needs schema](/api/founder-needs-schema.json): the machine-readable \`FounderNeedsProfile\`
+  shape consumed by the deterministic matching engine. Every field is optional; enum fields use
+  canonical taxonomy IDs.
+- [Update report](/api/update-report.json): offline-computed freshness / source-inventory /
+  MVP-readiness summary across the dataset (report-only; no network probing at build time).
+
+JSON Schema documents (Draft 2020-12):
+
+- [Program schema](/schemas/program.schema.json)
+- [Founder-needs schema](/schemas/founder-needs.schema.json)
+- [Update-report schema](/schemas/program-update.schema.json)
 
 ## Program schema
 

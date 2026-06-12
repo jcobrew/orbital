@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://founder-atlas.com/schemas/program.schema.json",
+  "title": "Founder Atlas Program",
+  "description": "A founder-support program. Mirrors the canonical Founder Atlas schema (src/data/schema.ts). Legacy free-text fields (type, stage, status) are preserved and rendered; canonical fields (canonicalType, supportModes, …) are derived non-destructively. Every canonical and most legacy founder-schema fields are optional for backward compatibility; the `required` list reflects the always-present identity fields on /api/programs.json records.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["dataset", "name", "type", "city", "country", "lat", "lng", "focus", "operator", "stage", "status", "status_detail", "domain", "url"],
+  "properties": {
+    "dataset": { "type": "string", "enum": ["residential", "traditional"], "description": "Storage split." },
+    "name": { "type": "string", "description": "Program name." },
+    "type": { "type": "string", "description": "Legacy free-text program category. Canonicalized via canonicalType." },
+    "city": { "type": "string", "description": "City when physical (may be empty for remote)." },
+    "country": { "type": "string", "description": "Country (or \"Remote\")." },
+    "lat": { "type": "number", "description": "Latitude." },
+    "lng": { "type": "number", "description": "Longitude." },
+    "focus": { "type": "string", "description": "Areas of focus (comma-separated text)." },
+    "operator": { "type": "string", "description": "Organization or person running the program." },
+    "stage": { "type": "string", "description": "Legacy free-text founder stage served. Canonicalized via stageFit/canonicalStages." },
+    "status": {
+      "type": "string",
+      "enum": ["rolling", "open", "closing-soon", "opening-soon", "running", "closed"],
+      "description": "Recruiting status enum."
+    },
+    "status_detail": { "type": "string", "description": "Human-readable recruiting detail." },
+    "domain": { "type": "string", "description": "Program website domain." },
+    "url": { "type": "string", "format": "uri", "description": "Program website / application URL." },
+    "highlight": { "type": "string", "description": "Optional differentiator / key fact." },
+
+    "subtype": { "type": "string", "description": "Free-text sub-category." },
+    "region": { "type": "string", "description": "Broader region grouping." },
+    "format": {
+      "type": "string",
+      "enum": ["in-person", "remote", "hybrid", "live-in", "relocation", "unknown"],
+      "description": "Living model."
+    },
+    "stageFit": { "type": "array", "items": { "type": "string" }, "description": "Canonical-aligned founder stages served (founderStage taxonomy IDs)." },
+    "founderFit": { "type": "array", "items": { "type": "string" }, "description": "Founder archetypes served." },
+    "sectorFocus": { "type": "array", "items": { "type": "string" }, "description": "Sector focus tags." },
+    "applicationDeadline": { "type": "string", "description": "Next application deadline (ISO date)." },
+    "nextCohortStart": { "type": "string", "description": "Next cohort start (ISO date)." },
+    "durationWeeksMin": { "type": "number", "description": "Minimum program length (weeks)." },
+    "durationWeeksMax": { "type": "number", "description": "Maximum program length (weeks)." },
+    "cohortSize": { "type": "string", "description": "Approximate cohort size." },
+    "fundingAmount": { "type": "string", "description": "Funding offered (free text)." },
+    "equityTaken": { "type": "string", "description": "Equity taken (free text)." },
+    "cost": { "type": "string", "description": "Cost / fee to the founder." },
+
+    "providesHousing": { "type": ["boolean", "null"], "description": "Housing provided." },
+    "providesWorkspace": { "type": ["boolean", "null"], "description": "Workspace provided." },
+    "providesFunding": { "type": ["boolean", "null"], "description": "Funding provided." },
+    "providesMentorship": { "type": ["boolean", "null"], "description": "Mentorship provided." },
+    "providesInvestorAccess": { "type": ["boolean", "null"], "description": "Investor access." },
+    "providesDemoDay": { "type": ["boolean", "null"], "description": "Demo day." },
+    "providesVisaSupport": { "type": ["boolean", "null"], "description": "Visa/relocation support." },
+
+    "applyUrl": { "type": "string", "format": "uri", "description": "Direct application URL (falls back to url)." },
+    "sourceUrls": { "type": "array", "items": { "type": "string" }, "description": "Sources used to verify this entry." },
+    "lastVerified": { "type": "string", "description": "Date this entry was last verified (ISO date)." },
+    "verificationStatus": {
+      "type": "string",
+      "enum": ["verified", "needs-review", "unverified"],
+      "description": "Record verification status."
+    },
+    "tags": { "type": "array", "items": { "type": "string" }, "description": "Free-form tags." },
+    "notes": { "type": "string", "description": "Short editorial note." },
+
+    "canonicalType": {
+      "type": "string",
+      "enum": [
+        "founder-residency", "hacker-house", "accelerator", "pre-accelerator", "founder-fellowship",
+        "government-grant", "startup-visa", "cofounder-matching", "incubator", "startup-studio",
+        "corporate-accelerator", "university-program", "tech-transfer", "deep-tech-program",
+        "startup-campus", "venture-debt", "pop-up-village", "ecosystem-support", "other"
+      ],
+      "description": "Canonical program-type ID derived from legacy `type` (programType taxonomy)."
+    },
+    "supportModes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "funding", "housing", "workspace", "mentorship", "investor-access", "demo-day",
+          "visa-support", "community", "co-founder-matching", "customers", "structure",
+          "compute-credits", "lab-access", "legal-admin"
+        ]
+      },
+      "description": "Canonical support modes the program provides (supportMode taxonomy)."
+    },
+    "intakeMethod": {
+      "type": "string",
+      "enum": ["rolling", "cohort-application", "open-call", "invitation", "membership", "unknown"],
+      "description": "How founders get in (intakeMethod taxonomy)."
+    },
+    "intakeFrequency": {
+      "type": "string",
+      "enum": ["rolling", "annual", "biannual", "quarterly", "ad-hoc", "unknown"],
+      "description": "How often intake happens (intakeFrequency taxonomy)."
+    },
+    "costFundingModel": {
+      "type": "string",
+      "enum": ["equity", "equity-free-grant", "stipend", "fee", "free", "venture-debt", "mixed", "unknown"],
+      "description": "The equity/money axis (costFundingModel taxonomy)."
+    },
+    "mvp": { "type": "boolean", "description": "True when this is a curated, launch-ready MVP record." },
+    "ecosystem": { "type": "string", "description": "MVP ecosystem tag (e.g. finland-nordics, estonia, eu-europe, uk, us-global-remote)." }
+  }
+}
