@@ -37,9 +37,11 @@ still appear in the full dataset; the curated slice is exposed separately (see b
 
 Legacy, stable contracts (output shape will not change):
 
-- [Unified program API](/api/programs.json): All programs in one file. Each entry is tagged
-  with \`dataset\` (residential | traditional). Includes \`meta\`, \`schema\`, \`count\`, and \`facets\`
-  (distinct types, countries and statuses with counts). Served with CORS \`Access-Control-Allow-Origin: *\`.
+- [Unified program API](/api/programs.json): All programs in one file, categorized by
+  \`canonicalType\` (the primary axis). Each entry also carries a deprecated, derived
+  \`dataset\` (residential | traditional) for back-compat only. Includes \`meta\`, \`schema\`,
+  \`count\`, and \`facets\` (\`canonicalType\`, \`country\`, \`status\` counts, plus a derived
+  \`dataset\` facet). Served with CORS \`Access-Control-Allow-Origin: *\`.
 - [Countries API](/api/countries.json): machine-readable country ecosystem profiles (see below).
 
 New, agent-oriented exports (additive; richer, may evolve):
@@ -67,8 +69,10 @@ JSON Schema documents (Draft 2020-12):
 
 ## Program schema
 
-Core fields (always present): \`name\`, \`type\`, \`dataset\`, \`city\`, \`country\`, \`lat\`, \`lng\`, \`focus\`,
-\`operator\`, \`stage\`, \`status\`, \`status_detail\`, \`domain\`, \`url\`, \`highlight\`.
+Core fields (always present): \`name\`, \`type\` (human label), \`canonicalType\` (primary
+categorical axis), \`city\`, \`country\`, \`lat\`, \`lng\`, \`focus\`, \`operator\`, \`stage\`,
+\`status\`, \`status_detail\`, \`domain\`, \`url\`, \`highlight\`. \`dataset\` (residential |
+traditional) is also present but deprecated/derived — prefer \`canonicalType\`.
 
 Founder fields (optional; absent/"unknown" until verified & filled): \`format\`, \`stageFit[]\`,
 \`founderFit[]\`, \`sectorFocus[]\`, \`applicationDeadline\`, \`nextCohortStart\`, \`durationWeeksMin/Max\`,
@@ -84,15 +88,14 @@ Funding/Mentorship/InvestorAccess/DemoDay/VisaSupport), \`applyUrl\`, \`sourceUr
 The [Dashboard](/dashboard) renders the full directory as a semantic, sortable table with
 schema.org JSON-LD per program. Drive it entirely by query params (filters compose with AND):
 
-- \`dataset\` = \`all\` | \`residential\` | \`traditional\`
+- \`type\` = canonical program-type ID (the primary axis; see \`facets.canonicalType\` in the API)
 - \`q\` = free-text match over name, city, country, focus, operator, type
-- \`type\` = exact program type (see \`facets.type\` in the API)
 - \`country\` = exact country (see \`facets.country\`)
 - \`status\` = one of the status enum values
 - \`focus\` = free-text match within the focus field
 - \`sort\` = column to sort by (\`name\`, \`type\`, \`country\`, \`status\`, ...)
 
-Example: \`/dashboard?dataset=all&country=USA&status=open\` opens pre-filtered to open US programs.
+Example: \`/dashboard?type=accelerator&country=USA&status=open\` opens pre-filtered to open US accelerators.
 Any filter state is reflected back into the URL, so a dashboard URL is a shareable deep link.
 
 ## Country ecosystem profiles

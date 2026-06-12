@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useStore } from '@nanostores/react';
 import { motion, AnimatePresence } from 'motion/react';
 import type { Program } from '../data/programs';
+import { programTypeLabel } from '../data/programs';
 import { passes, sortPrograms, type SortKey } from '../lib/filter';
 import { $filters, initFiltersFromURL } from '../stores/filters';
 import Logo from './Logo';
@@ -16,7 +17,7 @@ interface Column {
 const COLUMNS: Column[] = [
   { key: 'name', label: 'Program' },
   { key: 'type', label: 'Type' },
-  { key: 'dataset', label: 'Track' },
+  { key: 'canonicalType', label: 'Category' },
   { key: 'city', label: 'City' },
   { key: 'country', label: 'Country' },
   { key: 'status', label: 'Status' },
@@ -62,16 +63,16 @@ export default function ProgramsTable({ programs }: { programs: Program[] }) {
     syncSortToURL(nextSort, nextDir);
   }
 
-  const total = filters.dataset === 'all' ? programs.length : programs.filter((p) => p.dataset === filters.dataset).length;
+  const total = !filters.type ? programs.length : programs.filter((p) => p.canonicalType === filters.type).length;
 
   return (
     <div>
       <div className="mb-2.5 text-[11.5px] font-semibold tracking-wide text-muted">
         Showing <code className="rounded bg-[rgba(8,10,22,.6)] px-1.5 py-px text-[11px] text-a2">{rows.length}</code> of{' '}
         <code className="rounded bg-[rgba(8,10,22,.6)] px-1.5 py-px text-[11px] text-a2">{total}</code> programs
-        {filters.dataset !== 'all' && (
+        {filters.type && (
           <>
-            {' '}in the <code className="rounded bg-[rgba(8,10,22,.6)] px-1.5 py-px text-[11px] text-a2">{filters.dataset}</code> track
+            {' '}in <code className="rounded bg-[rgba(8,10,22,.6)] px-1.5 py-px text-[11px] text-a2">{programTypeLabel(filters.type)}</code>
           </>
         )}
       </div>
@@ -108,7 +109,7 @@ export default function ProgramsTable({ programs }: { programs: Program[] }) {
               ) : (
                 rows.map((p) => (
                   <motion.tr
-                    key={p.dataset + p.name}
+                    key={(p.canonicalType ?? 'other') + p.name}
                     layout
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -137,12 +138,12 @@ export default function ProgramsTable({ programs }: { programs: Program[] }) {
                       <span
                         className="rounded-md border px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide"
                         style={
-                          p.dataset === 'residential'
+                          p.canonicalType === 'founder-residency' || p.canonicalType === 'hacker-house'
                             ? { color: '#9be9ff', borderColor: 'rgba(155,233,255,.4)' }
                             : { color: '#c9c2ff', borderColor: 'rgba(201,194,255,.4)' }
                         }
                       >
-                        {p.dataset}
+                        {programTypeLabel(p.canonicalType)}
                       </span>
                     </td>
                     <td className="px-3.5 py-2.5 align-top">{p.city}</td>

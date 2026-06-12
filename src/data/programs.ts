@@ -1,10 +1,12 @@
-// Loads + merges the two human-edited source datasets into one typed array.
-// This replaces the old standalone build-api.js: the merge/facets logic now
-// lives here and is consumed both by the pages and the /api + /llms endpoints.
+// Loads the single unified source dataset into one typed array.
+// All records live in `programs-data.json`, categorized by the canonical
+// taxonomy (`canonicalType`) rather than the legacy residential/traditional
+// split. The merge/facets logic lives here and is consumed both by the pages
+// and the /api + /llms endpoints.
 
-import residentialRaw from './startup-programs-data.json';
-import traditionalRaw from './traditional-programs-data.json';
+import programsRaw from './programs-data.json';
 import { STATUS } from '../lib/status';
+import { PROGRAM_TYPES, labelFor } from './taxonomy';
 import type {
   ProgramTypeId,
   SupportModeId,
@@ -24,6 +26,12 @@ export type {
   CostFundingModelId,
 } from './taxonomy';
 
+/**
+ * @deprecated Legacy binary dataset axis. This is no longer a source field — it
+ * is *derived* from `canonicalType`/`format` via {@link deriveDataset} purely
+ * for back-compat with the legacy `/api/programs.json` contract. New code should
+ * categorize by `canonicalType`.
+ */
 export type Dataset = 'residential' | 'traditional';
 
 // Founder-facing enums (handoff §14). Values are optional on Program for now and
@@ -41,8 +49,15 @@ export type FounderFit =
 export type VerificationStatus = 'verified' | 'needs-review' | 'unverified';
 
 export interface Program {
+  /**
+   * @deprecated Derived back-compat value (residential | traditional) computed
+   * by {@link deriveDataset}, NOT a stored source field. Kept on the in-memory
+   * `Program` so legacy consumers + the legacy API keep working. Prefer
+   * `canonicalType`.
+   */
   dataset: Dataset;
   name: string;
+  /** Human-readable type LABEL (free text). The machine axis is `canonicalType`. */
   type: string;
   city: string;
   country: string;
@@ -115,18 +130,38 @@ export function programSlug(name: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
+/** Source record shape: the unified JSON stores no `dataset` field. */
+type SourceProgram = Omit<Program, 'dataset'>;
+
 interface SourceFile {
   meta?: Record<string, unknown>;
-  programs: Omit<Program, 'dataset'>[];
+  programs: SourceProgram[];
 }
 
-const residential = residentialRaw as SourceFile;
-const traditional = traditionalRaw as SourceFile;
+const source = programsRaw as SourceFile;
 
-export const PROGRAMS: Program[] = [
-  ...residential.programs.map((p) => ({ dataset: 'residential' as const, ...p })),
-  ...traditional.programs.map((p) => ({ dataset: 'traditional' as const, ...p })),
-];
+/**
+ * @deprecated Derive the legacy residential|traditional value from a record's
+ * canonical fields. `residential` when the record is a founder-residency /
+ * hacker-house OR is `format: 'live-in'`; `traditional` otherwise. This is the
+ * only place the legacy binary is produced, and it exists purely for the
+ * back-compat `/api/programs.json` shape — prefer `canonicalType`.
+ */
+export function deriveDataset(p: Pick<Program, 'canonicalType' | 'format'>): Dataset {
+  if (
+    p.canonicalType === 'founder-residency' ||
+    p.canonicalType === 'hacker-house' ||
+    p.format === 'live-in'
+  ) {
+    return 'residential';
+  }
+  return 'traditional';
+}
+
+export const PROGRAMS: Program[] = source.programs.map((p) => ({
+  ...(p as SourceProgram),
+  dataset: deriveDataset(p as Program),
+}));
 
 function countBy(items: Program[], key: keyof Program): Record<string, number> {
   const out: Record<string, number> = {};
@@ -139,14 +174,42 @@ function countBy(items: Program[], key: keyof Program): Record<string, number> {
 }
 
 export const FACETS = {
-  dataset: countBy(PROGRAMS, 'dataset'),
-  type: countBy(PROGRAMS, 'type'),
+  canonicalType: countBy(PROGRAMS, 'canonicalType'),
   country: countBy(PROGRAMS, 'country'),
   status: countBy(PROGRAMS, 'status'),
 };
 
+/**
+ * Program-type label map (canonical ID → human label) for filter UIs + tables.
+ * Ordered with the 8 MVP types first, then the rest.
+ */
+export const PROGRAM_TYPE_LABELS: Record<string, string> = Object.fromEntries(
+  PROGRAM_TYPES.map((e) => [e.id, e.label]),
+);
+
+/** Program-type facet entries (id, label, mvp, count), MVP types first. */
+export const PROGRAM_TYPE_FACETS: Array<{
+  id: ProgramTypeId;
+  label: string;
+  mvp: boolean;
+  count: number;
+}> = PROGRAM_TYPES.map((e) => ({
+  id: e.id,
+  label: e.label,
+  mvp: e.mvp,
+  count: FACETS.canonicalType[e.id] ?? 0,
+}))
+  .filter((e) => e.count > 0)
+  .sort((a, b) => (a.mvp === b.mvp ? b.count - a.count : a.mvp ? -1 : 1));
+
+/** Human label for a canonical program-type id (raw-id fallback). */
+export function programTypeLabel(id: string | undefined): string {
+  if (!id) return 'Unknown';
+  return labelFor('programType', id);
+}
+
 /** Sorted distinct values, handy for filter dropdowns. */
-export const TYPES = Object.keys(FACETS.type).sort();
+export const TYPES = Object.keys(countBy(PROGRAMS, 'type')).sort();
 export const COUNTRIES = Object.keys(FACETS.country).sort();
 
 export const STATUS_LEGEND: Record<string, string> = {
@@ -160,8 +223,10 @@ export const STATUS_LEGEND: Record<string, string> = {
 
 export const API_SCHEMA: Record<string, string> = {
   name: 'Program name',
-  type: 'Program category (e.g. Accelerator, Residency, Hacker House)',
-  dataset: 'residential | traditional',
+  type: 'Human-readable type label (free text, e.g. "Seed Accelerator", "Hacker House")',
+  canonicalType:
+    'Canonical program-type ID (primary categorical axis): ' + PROGRAM_TYPES.map((e) => e.id).join(' | '),
+  dataset: '(deprecated, derived) residential | traditional — derived from canonicalType/format for back-compat; prefer canonicalType',
   city: 'City',
   country: 'Country',
   lat: 'Latitude (number)',
@@ -176,6 +241,9 @@ export const API_SCHEMA: Record<string, string> = {
   highlight: 'Optional differentiator / key fact',
   // Founder schema (optional; "unknown"/absent until verified & filled).
   format: 'Living model: live-in | relocation | hybrid | in-person | remote | unknown',
+  supportModes: 'Canonical support modes provided (array, e.g. funding, housing, mentorship)',
+  mvp: 'true when this is a curated, launch-ready MVP record',
+  ecosystem: 'MVP ecosystem tag (e.g. "finland-nordics", "estonia", "uk") when set',
   stageFit: 'Founder stages served (array, e.g. mvp, pre-seed)',
   founderFit: 'Founder archetypes served (array)',
   sectorFocus: 'Sector focus tags (array)',

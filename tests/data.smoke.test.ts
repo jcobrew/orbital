@@ -6,7 +6,8 @@
  * source/schema/data files.
  */
 import { describe, it, expect } from 'vitest';
-import { PROGRAMS, FACETS } from '@/data/programs';
+import { PROGRAMS, FACETS, deriveDataset } from '@/data/programs';
+import { isProgramTypeId } from '@/data/taxonomy';
 
 describe('PROGRAMS', () => {
   it('is a non-empty array', () => {
@@ -29,14 +30,39 @@ describe('PROGRAMS', () => {
       expect(program.status.trim().length, `status is empty on: ${program.name}`).toBeGreaterThan(0);
     }
   });
+
+  it('every program has a valid canonicalType (the primary categorical axis)', () => {
+    for (const program of PROGRAMS) {
+      expect(
+        typeof program.canonicalType === 'string' && isProgramTypeId(program.canonicalType),
+        `canonicalType invalid/missing on: ${program.name} (got ${JSON.stringify(program.canonicalType)})`,
+      ).toBe(true);
+    }
+  });
+
+  it('no program resolves canonicalType to the "other" fallback', () => {
+    const others = PROGRAMS.filter((p) => p.canonicalType === 'other').map((p) => p.name);
+    expect(others, `programs with canonicalType "other": ${others.join(', ')}`).toHaveLength(0);
+  });
+
+  it('derived dataset is residential for residencies / hacker houses / live-in', () => {
+    for (const p of PROGRAMS) {
+      const expected = deriveDataset(p);
+      expect(p.dataset).toBe(expected);
+      if (p.canonicalType === 'founder-residency' || p.canonicalType === 'hacker-house' || p.format === 'live-in') {
+        expect(p.dataset, `${p.name} should be residential`).toBe('residential');
+      }
+    }
+  });
 });
 
 describe('FACETS', () => {
-  it('has the expected top-level keys', () => {
-    const expectedKeys = ['dataset', 'type', 'country', 'status'];
-    for (const key of expectedKeys) {
-      expect(FACETS, `FACETS missing key: ${key}`).toHaveProperty(key);
-    }
+  it('uses canonicalType as the primary facet (legacy dataset/type facets removed)', () => {
+    expect(FACETS, 'canonicalType facet missing').toHaveProperty('canonicalType');
+    expect(FACETS, 'legacy dataset facet should be gone').not.toHaveProperty('dataset');
+    expect(FACETS, 'legacy type facet should be gone').not.toHaveProperty('type');
+    expect(FACETS).toHaveProperty('country');
+    expect(FACETS).toHaveProperty('status');
   });
 
   it('facet values are non-empty objects', () => {
@@ -46,8 +72,9 @@ describe('FACETS', () => {
     }
   });
 
-  it('dataset facet contains residential and traditional', () => {
-    expect(FACETS.dataset).toHaveProperty('residential');
-    expect(FACETS.dataset).toHaveProperty('traditional');
+  it('canonicalType facet keys are all valid taxonomy IDs', () => {
+    for (const id of Object.keys(FACETS.canonicalType)) {
+      expect(isProgramTypeId(id), `invalid canonicalType facet key: ${id}`).toBe(true);
+    }
   });
 });

@@ -43,7 +43,7 @@ export default function SavedList({ programs }: { programs: Program[] }) {
       ) : (
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
           {shown.map((p) => (
-            <ProgramCard key={p.dataset + '|' + p.name} program={p} onSelect={setSelected} />
+            <ProgramCard key={(p.canonicalType ?? 'other') + '|' + p.name} program={p} onSelect={setSelected} />
           ))}
         </div>
       )}

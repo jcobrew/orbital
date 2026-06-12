@@ -42,9 +42,13 @@ const QUEUE_DIR = join(REPO_ROOT, 'data', 'review-queue');
 const APPROVED_DIR = join(QUEUE_DIR, 'approved');
 const AUDIT_LOG = join(QUEUE_DIR, 'audit-log.jsonl');
 
+// Single unified source file. The legacy residential/traditional split was
+// removed; both `TargetDataset` values now resolve to the same file. The
+// `targetDataset()` classification is retained only for the audit trail.
+const UNIFIED_FILE = join(REPO_ROOT, 'src', 'data', 'programs-data.json');
 const DATASET_FILES: Record<TargetDataset, string> = {
-  residential: join(REPO_ROOT, 'src', 'data', 'startup-programs-data.json'),
-  traditional: join(REPO_ROOT, 'src', 'data', 'traditional-programs-data.json'),
+  residential: UNIFIED_FILE,
+  traditional: UNIFIED_FILE,
 };
 
 interface SourceFile {
@@ -134,18 +138,21 @@ function applyPlan(
   proposals: Array<{ file: string; proposal: ProposedProgramUpdate }>,
 ): AuditEntry[] {
   const byId = new Map(proposals.map((p) => [p.proposal.id, p.proposal]));
-  // Lazily load + mutate each dataset file once, then write back.
-  const loaded = new Map<TargetDataset, SourceFile>();
+  // Lazily load + mutate each physical file once, then write back. Keyed by file
+  // path so the (now single) unified file is never loaded twice even when
+  // proposals classify to both `residential` and `traditional`.
+  const loaded = new Map<string, SourceFile>();
   const audit: AuditEntry[] = [];
 
   for (const item of plan) {
     if (item.status !== 'apply' || !item.dataset) continue;
     const proposal = byId.get(item.proposalId)!;
     const dataset = item.dataset;
-    if (!loaded.has(dataset)) {
-      loaded.set(dataset, JSON.parse(readFileSync(DATASET_FILES[dataset], 'utf8')) as SourceFile);
+    const path = DATASET_FILES[dataset];
+    if (!loaded.has(path)) {
+      loaded.set(path, JSON.parse(readFileSync(path, 'utf8')) as SourceFile);
     }
-    const file = loaded.get(dataset)!;
+    const file = loaded.get(path)!;
 
     if (item.action === 'created') {
       file.programs.push({ ...applyChanges(proposal.changes, undefined) });
@@ -174,8 +181,8 @@ function applyPlan(
   }
 
   // Persist mutated dataset files (preserve 2-space JSON + trailing newline).
-  for (const [dataset, file] of loaded) {
-    writeFileSync(DATASET_FILES[dataset], JSON.stringify(file, null, 2) + '\n', 'utf8');
+  for (const [path, file] of loaded) {
+    writeFileSync(path, JSON.stringify(file, null, 2) + '\n', 'utf8');
   }
 
   // Append the audit trail (JSONL — one entry per line).
