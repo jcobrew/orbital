@@ -9,6 +9,16 @@ import { statusMeta } from '../../lib/status';
 import { livingModelLabel } from '../../lib/living';
 import { applyHref } from '../../components/ProgramCard';
 import { UNKNOWN, displayVal, displayBool, displayDuration, whatYouGet } from '../../lib/display';
+import { windowsForSlug } from '../../data/applicationWindows';
+import { provenanceForSlug } from '../../data/sources';
+import {
+  resolveApplicationStatus,
+  applicationStatusMeta,
+  computeStale,
+  summarizeTrust,
+  statusForWindow,
+} from '../../lib/applicationStatus';
+import { ApplicationStatusBadge, StaleBadge } from '../../components/StatusBadge.tsx';
 
 export function getStaticPaths() {
   return PROGRAMS.map((program) => ({ params: { slug: programSlug(program.name) }, props: { program } }));
@@ -19,6 +29,19 @@ const s = statusMeta(p.status);
 const living = livingModelLabel(p.format);
 const perks = whatYouGet(p);
 const sources = p.sourceUrls ?? [];
+
+// ── Stream 4 (additive): application windows + provenance ────────────────────
+// All of this is opt-in: a program with no window/source data leaves these
+// undefined/empty and the page renders exactly as before.
+const slug = programSlug(p.name);
+const programWindows = windowsForSlug(slug);
+const provenance = provenanceForSlug(slug);
+const appStatus = resolveApplicationStatus({ legacyStatus: p.status, windows: programWindows });
+const appStatusMeta = applicationStatusMeta(appStatus.status);
+const stale = computeStale(p.lastVerified);
+const trust = summarizeTrust(provenance);
+const hasWindowData = !!programWindows && programWindows.windows.length > 0;
+const provenanceSources = provenance?.sources ?? [];
 
 // A few related programs: same country first, then same living model.
 const others = PROGRAMS.filter((x) => x.name !== p.name);
@@ -88,6 +111,13 @@ const description = `${p.name}, a ${p.type} in ${p.city}, ${p.country}. See stag
             <span class="inline-flex items-center rounded-[3px] border border-a2 px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide text-a2">
               {living}
             </span>
+          )}
+          {/* Stream 4: derived application status (only when window data exists,
+              so legacy-status-only programs keep their single existing badge). */}
+          {hasWindowData && <ApplicationStatusBadge status={appStatus.status} client:load />}
+          {/* Stream 4: stale-data badge when the record is old or unverified. */}
+          {(stale.isStale || stale.unknown) && (
+            <StaleBadge ageDays={stale.ageDays} unknown={stale.unknown} client:load />
           )}
         </div>
       </div>
@@ -162,9 +192,90 @@ const description = `${p.name}, a ${p.type} in ${p.city}, ${p.country}. See stag
       )
     }
 
+    <!-- Application window (Stream 4 — only when window data exists) -->
+    {
+      hasWindowData && (
+        <section class="mb-7">
+          <h2 class="m-0 mb-2.5 font-display text-[15px] font-bold text-text">Application window</h2>
+          <div class="mb-3 flex flex-wrap items-center gap-1.5">
+            <ApplicationStatusBadge status={appStatus.status} client:load />
+            <span class="text-[11.5px] italic text-muted">
+              Derived from the application window below. The program's overall status is "{s.label}".
+            </span>
+          </div>
+          <ul class="m-0 list-none p-0">
+            {programWindows!.windows.map((w) => {
+              const ws = applicationStatusMeta(statusForWindow(w));
+              return (
+                <li class="mb-2 rounded-[3px] border border-line2 p-3">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span
+                      class="inline-flex items-center rounded-[3px] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide"
+                      style={`background:${ws.color};color:#0a0a0a`}
+                    >
+                      {ws.label}
+                    </span>
+                    {w.cohortLabel && (
+                      <span class="text-[12.5px] font-semibold text-text">{w.cohortLabel}</span>
+                    )}
+                  </div>
+                  <div class="mt-1 text-[12px] text-muted">
+                    {w.rolling
+                      ? 'Rolling — applications always open.'
+                      : [w.opens && `Opens ${w.opens}`, w.closes && `Closes ${w.closes}`]
+                          .filter(Boolean)
+                          .join(' · ') || 'Dates unknown'}
+                  </div>
+                  {w.notes && <div class="mt-1 text-[11.5px] italic text-muted">{w.notes}</div>}
+                  {w.applyUrl && (
+                    <a href={w.applyUrl} target="_blank" rel="noopener" class="mt-1 inline-block text-[12px] text-a2">
+                      Apply for this window →
+                    </a>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )
+    }
+
     <!-- Sources -->
     <section class="mb-8">
       <h2 class="m-0 mb-2.5 font-display text-[15px] font-bold text-text">Sources</h2>
+      {
+        (stale.isStale || stale.unknown || trust.best) && (
+          <div class="mb-2.5 flex flex-wrap items-center gap-1.5">
+            {(stale.isStale || stale.unknown) && (
+              <StaleBadge ageDays={stale.ageDays} unknown={stale.unknown} client:load />
+            )}
+            {trust.best && (
+              <span class="inline-flex items-center rounded-[3px] border border-line2 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-muted">
+                {trust.sampleOnly ? 'Sample source only' : `Trust: ${trust.best}`}
+              </span>
+            )}
+          </div>
+        )
+      }
+      {
+        provenanceSources.length > 0 && (
+          <ul class="m-0 mb-2 list-none p-0 text-[12.5px]">
+            {provenanceSources.map((src) => (
+              <li class="mt-1">
+                <a href={src.url} target="_blank" rel="noopener" class="break-all text-a2">
+                  {src.title}
+                </a>
+                <span class="text-[11px] text-muted">
+                  {' '}
+                  {[src.publisher, src.kind === 'sample' ? 'sample' : src.kind, src.retrievedAt && `retrieved ${src.retrievedAt}`]
+                    .filter(Boolean)
+                    .join(' · ')}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )
+      }
       <ul class="m-0 list-none p-0 text-[12.5px]">
         <li><a href={p.url} target="_blank" rel="noopener" class="text-a2">Official site</a></li>
         {sources.map((src) => (
