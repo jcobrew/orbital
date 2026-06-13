@@ -6,7 +6,7 @@
  * source/schema/data files.
  */
 import { describe, it, expect } from 'vitest';
-import { PROGRAMS, FACETS, deriveDataset } from '@/data/programs';
+import { PROGRAMS, ALL_PROGRAMS, FACETS, deriveDataset } from '@/data/programs';
 import { isProgramTypeId } from '@/data/taxonomy';
 
 describe('PROGRAMS', () => {
@@ -45,8 +45,16 @@ describe('PROGRAMS', () => {
     expect(others, `programs with canonicalType "other": ${others.join(', ')}`).toHaveLength(0);
   });
 
-  it('derived dataset is residential for residencies / hacker houses / live-in', () => {
+  it('every co-living program Orbital ships is residential', () => {
+    // PROGRAMS is the co-living-filtered view, so every record here must be residential.
     for (const p of PROGRAMS) {
+      expect(p.dataset, `${p.name} should be residential`).toBe('residential');
+    }
+  });
+
+  it('dataset derivation holds across the full corpus', () => {
+    // Validate the derivation over every source record, not just the co-living subset.
+    for (const p of ALL_PROGRAMS) {
       const expected = deriveDataset(p);
       expect(p.dataset).toBe(expected);
       if (p.canonicalType === 'founder-residency' || p.canonicalType === 'hacker-house' || p.format === 'live-in') {

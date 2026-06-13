@@ -158,10 +158,37 @@ export function deriveDataset(p: Pick<Program, 'canonicalType' | 'format'>): Dat
   return 'traditional';
 }
 
-export const PROGRAMS: Program[] = source.programs.map((p) => ({
+/**
+ * Predicate for the co-living niche Orbital focuses on: founder residencies and
+ * hacker/founder houses where people live and build together. This is exactly
+ * the set {@link deriveDataset} labels `'residential'`; expressed here as a named
+ * predicate so it reads at the call site and stays the single source of truth.
+ */
+export function isCoLiving(p: Pick<Program, 'canonicalType' | 'format'>): boolean {
+  return (
+    p.canonicalType === 'founder-residency' ||
+    p.canonicalType === 'hacker-house' ||
+    p.format === 'live-in'
+  );
+}
+
+/**
+ * The full source corpus (all records), with the derived `dataset` field. This
+ * is the escape hatch for tooling/tests that need every record; the live site
+ * and the public APIs all go through the co-living-filtered {@link PROGRAMS}.
+ */
+export const ALL_PROGRAMS: Program[] = source.programs.map((p) => ({
   ...(p as SourceProgram),
   dataset: deriveDataset(p as Program),
 }));
+
+/**
+ * The dataset every page, island and API route consumes. Orbital is scoped to
+ * co-living programs only, so this is the co-living-filtered view of
+ * {@link ALL_PROGRAMS}. Filtering here is the single chokepoint — facets,
+ * country/city counts, static-path generation and the APIs all derive from it.
+ */
+export const PROGRAMS: Program[] = ALL_PROGRAMS.filter(isCoLiving);
 
 function countBy(items: Program[], key: keyof Program): Record<string, number> {
   const out: Record<string, number> = {};
