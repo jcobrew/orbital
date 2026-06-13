@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Founder Support Programs — Global Database",
-    "compiled": "2026-06-12",
+    "compiled": "2026-06-13",
     "scope": "The full founder-support landscape: accelerators, fellowships, talent investors, government programs and startup visas alongside founder residencies, hacker houses, coliving and startup campuses. Categorized by the canonical program taxonomy (see src/data/taxonomy.ts) rather than a residential/traditional split.",
     "note": "Recruiting status reflects best-available public info as of June 2026 and changes frequently. Always confirm on the program's own site. Logos load via a multi-source loader (Clearbit → DuckDuckGo → Google favicon) with an initials fallback.",
     "status_legend": {
@@ -196,8 +196,8 @@
         "https://www.hf0.com/",
         "https://sfstandard.com/2023/01/23/inside-sfs-most-competitive-hacker-house-where-workers-eat-sleep-and-breathe-tech/"
       ],
-      "lastVerified": "2026-06-10",
-      "verificationStatus": "needs-review",
+      "lastVerified": "2026-06-13",
+      "verificationStatus": "verified",
       "notes": "Live-in 12-week residency. Funding/equity reported inconsistently across sources ($125K/7% up to $1M uncapped/5%) — confirm current cohort terms on hf0.com before relying on a figure.",
       "mvp": true,
       "ecosystem": "us-global-remote",
@@ -353,8 +353,8 @@
       "sourceUrls": [
         "https://www.livetheresidency.com/residencies"
       ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
+      "lastVerified": "2026-06-13",
+      "verificationStatus": "verified"
     },
     {
       "name": "The Residency — Homebrew (NYC)",
@@ -387,8 +387,8 @@
       "sourceUrls": [
         "https://www.livetheresidency.com/residencies"
       ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
+      "lastVerified": "2026-06-13",
+      "verificationStatus": "verified"
     },
     {
       "name": "The Residency — Londinium",
@@ -484,8 +484,8 @@
       "sourceUrls": [
         "https://www.livetheresidency.com/residencies"
       ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
+      "lastVerified": "2026-06-13",
+      "verificationStatus": "verified"
     },
     {
       "name": "Foundry (Foundry Coliving)",
@@ -1250,8 +1250,8 @@
       "sourceUrls": [
         "https://www.livetheresidency.com/residencies"
       ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
+      "lastVerified": "2026-06-13",
+      "verificationStatus": "verified"
     },
     {
       "name": "Founders House — Stockholm",
@@ -1410,8 +1410,8 @@
       "sourceUrls": [
         "https://www.livetheresidency.com/residencies"
       ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
+      "lastVerified": "2026-06-13",
+      "verificationStatus": "verified"
     },
     {
       "name": "The Residency — SF2",
@@ -1440,8 +1440,8 @@
       "sourceUrls": [
         "https://sf2.sh/"
       ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
+      "lastVerified": "2026-06-13",
+      "verificationStatus": "verified"
     },
     {
       "name": "The Residency — Odyssey (SF)",
@@ -1474,8 +1474,8 @@
       "sourceUrls": [
         "https://www.livetheresidency.com/residencies"
       ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
+      "lastVerified": "2026-06-13",
+      "verificationStatus": "verified"
     },
     {
       "name": "The Residency — Biopunk (SF)",
@@ -1506,8 +1506,8 @@
       "sourceUrls": [
         "https://biopunklab.com/"
       ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
+      "lastVerified": "2026-06-13",
+      "verificationStatus": "verified"
     },
     {
       "name": "The Residency — v2 (Vancouver)",
@@ -1972,8 +1972,8 @@
       "sourceUrls": [
         "https://speedrun.a16z.com/"
       ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
+      "lastVerified": "2026-06-13",
+      "verificationStatus": "verified"
     },
     {
       "name": "500 Global (Flagship)",
@@ -3762,6 +3762,1185 @@
         "structure"
       ],
       "format": "unknown"
+    },
+    {
+      "name": "Vinnova — Innovative Startups",
+      "type": "Government Grant (non-dilutive)",
+      "city": "Stockholm",
+      "country": "Sweden",
+      "lat": 59.3293,
+      "lng": 18.0686,
+      "focus": "Knowledge-intensive early-stage startups",
+      "operator": "Vinnova (Sweden's innovation agency)",
+      "stage": "Pre-seed / seed",
+      "status": "opening-soon",
+      "status_detail": "Equity-free grant up to SEK 500,000 to test customer need and business idea. Eligibility: Swedish limited company, max 10 years old, max 10 employees. 2026 call opens 1 Sep 2026, deadline 12 Jan 2027.",
+      "domain": "vinnova.se",
+      "url": "https://www.vinnova.se/en/calls-for-proposals/innovative-startups/innovative-startups-2026",
+      "highlight": "Sweden's innovation agency backs research-based startups with equity-free grants.",
+      "mvp": true,
+      "ecosystem": "finland-nordics",
+      "canonicalType": "government-grant",
+      "supportModes": [
+        "funding",
+        "structure"
+      ],
+      "format": "hybrid",
+      "intakeMethod": "cohort-application",
+      "costFundingModel": "equity-free-grant",
+      "sourceUrls": [
+        "https://www.vinnova.se/en/calls-for-proposals/innovative-startups/innovative-startups-2026"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Innovate UK — Smart Grants",
+      "type": "Government Grant (non-dilutive)",
+      "city": "Swindon",
+      "country": "UK",
+      "lat": 51.5558,
+      "lng": -1.7797,
+      "focus": "Game-changing, disruptive R&D innovation across any sector",
+      "operator": "Innovate UK (UK Research and Innovation)",
+      "stage": "Seed / growth",
+      "status": "rolling",
+      "status_detail": "Equity-free R&D grants £100k–£1M; up to 70% of eligible costs. SMEs can apply solo (6–18 month projects); larger projects must be collaborative. R&D must be carried out in the UK.",
+      "domain": "ukri.org",
+      "url": "https://www.ukri.org/councils/innovate-uk/",
+      "highlight": "The UK's flagship equity-free R&D grant for disruptive innovation, any sector.",
+      "mvp": true,
+      "ecosystem": "uk",
+      "canonicalType": "government-grant",
+      "supportModes": [
+        "funding",
+        "structure"
+      ],
+      "format": "hybrid",
+      "intakeMethod": "cohort-application",
+      "costFundingModel": "equity-free-grant",
+      "sourceUrls": [
+        "https://www.ukri.org/councils/innovate-uk/"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Bpifrance — i-Lab Innovation Competition",
+      "type": "Government Grant (non-dilutive)",
+      "city": "Paris",
+      "country": "France",
+      "lat": 48.8566,
+      "lng": 2.3522,
+      "focus": "Deep-tech / innovative technology business creation",
+      "operator": "Bpifrance (France 2030 plan)",
+      "stage": "Pre-seed / seed",
+      "status": "rolling",
+      "status_detail": "Equity-free grant up to €600,000 over up to three years for the best innovative tech-creation projects. Open to founders who created their company within the last 2 years, or planning to, regardless of nationality.",
+      "domain": "bpifrance.fr",
+      "url": "https://www.bpifrance.fr/nos-appels-a-projets-concours/concours-dinnovation-i-lab",
+      "highlight": "France's storied i-Lab prize: up to €600k equity-free for deep-tech founders.",
+      "mvp": true,
+      "ecosystem": "europe-wide",
+      "canonicalType": "government-grant",
+      "supportModes": [
+        "funding",
+        "structure"
+      ],
+      "format": "hybrid",
+      "intakeMethod": "cohort-application",
+      "costFundingModel": "equity-free-grant",
+      "sourceUrls": [
+        "https://www.bpifrance.fr/nos-appels-a-projets-concours/concours-dinnovation-i-lab"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "EIC Accelerator (European Innovation Council)",
+      "type": "Government Grant (non-dilutive)",
+      "city": "Brussels",
+      "country": "Belgium",
+      "lat": 50.8503,
+      "lng": 4.3517,
+      "focus": "Breakthrough, deep-tech innovations with scale-up potential",
+      "operator": "European Innovation Council (European Commission)",
+      "stage": "Seed / growth",
+      "status": "rolling",
+      "status_detail": "Grant up to €2.5M (lump sum, up to 70% of costs) plus optional blended-finance equity of €1M–€10M via the EIC Fund. Open to single startups/SMEs from EU and Horizon Europe associated countries. Short proposals batched.",
+      "domain": "eic.ec.europa.eu",
+      "url": "https://eic.ec.europa.eu/eic-funding-opportunities/eic-accelerator_en",
+      "highlight": "Europe's biggest deep-tech ticket: up to €2.5M grant plus up to €10M equity.",
+      "mvp": true,
+      "ecosystem": "europe-wide",
+      "canonicalType": "government-grant",
+      "supportModes": [
+        "funding",
+        "investor-access",
+        "structure"
+      ],
+      "format": "hybrid",
+      "intakeMethod": "cohort-application",
+      "costFundingModel": "equity-free-grant",
+      "sourceUrls": [
+        "https://eic.ec.europa.eu/eic-funding-opportunities/eic-accelerator_en"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Enterprise Ireland — Competitive Start Fund",
+      "type": "Government Grant (non-dilutive)",
+      "city": "Dublin",
+      "country": "Ireland",
+      "lat": 53.3498,
+      "lng": -6.2603,
+      "focus": "Early-stage High Potential Start-Ups targeting global markets",
+      "operator": "Enterprise Ireland",
+      "stage": "Pre-seed / seed",
+      "status": "rolling",
+      "status_detail": "Up to €50,000 for early-stage High Potential Start-Ups to reach key commercial/technical milestones. Note: CSF is provided as ordinary-share equity, not a pure grant; includes mentoring and network access.",
+      "domain": "enterprise-ireland.com",
+      "url": "https://www.enterprise-ireland.com/en/news/minister-english-launches-enterprise-ireland-s-1m-competitive-start-fund-for-early-stage-start-ups",
+      "highlight": "Ireland's launchpad for High Potential Start-Ups chasing global markets.",
+      "mvp": true,
+      "ecosystem": "europe-wide",
+      "canonicalType": "government-grant",
+      "supportModes": [
+        "funding",
+        "mentorship",
+        "investor-access",
+        "structure"
+      ],
+      "format": "hybrid",
+      "intakeMethod": "cohort-application",
+      "costFundingModel": "equity-free-grant",
+      "sourceUrls": [
+        "https://www.enterprise-ireland.com/en/news/minister-english-launches-enterprise-ireland-s-1m-competitive-start-fund-for-early-stage-start-ups"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Innosuisse — Start-up Innovation Projects",
+      "type": "Government Grant (non-dilutive)",
+      "city": "Bern",
+      "country": "Switzerland",
+      "lat": 46.948,
+      "lng": 7.4474,
+      "focus": "Science-based startups approaching market entry",
+      "operator": "Innosuisse (Swiss Innovation Agency)",
+      "stage": "Pre-seed / seed",
+      "status": "rolling",
+      "status_detail": "Equity-free subsidy covering up to 70% of direct project costs (startup co-funds ≥30%). Eligibility: Swiss-registered, ≤5 years old, <50 FTE, scalable model. ~16 weeks from submission to decision.",
+      "domain": "innosuisse.admin.ch",
+      "url": "https://www.innosuisse.admin.ch/en/start-up-innovation-projects",
+      "highlight": "Switzerland's federal agency funds 70% of pre-market R&D — no equity taken.",
+      "mvp": true,
+      "ecosystem": "europe-wide",
+      "canonicalType": "government-grant",
+      "supportModes": [
+        "funding",
+        "mentorship",
+        "structure"
+      ],
+      "format": "hybrid",
+      "intakeMethod": "rolling",
+      "costFundingModel": "equity-free-grant",
+      "sourceUrls": [
+        "https://www.innosuisse.admin.ch/en/start-up-innovation-projects"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "RVO — WBSO R&D Tax Credit",
+      "type": "Government Grant (non-dilutive)",
+      "city": "The Hague",
+      "country": "Netherlands",
+      "lat": 52.0705,
+      "lng": 4.3007,
+      "focus": "R&D-performing companies including startups",
+      "operator": "RVO (Netherlands Enterprise Agency)",
+      "stage": "Pre-seed / seed / growth",
+      "status": "rolling",
+      "status_detail": "Non-dilutive R&D tax credit reducing wage tax: 36% on the first bracket of R&D wage costs in 2026; newly self-employed get a 50% rate plus a startup supplement. Requires ≥500 R&D hours/year.",
+      "domain": "rvo.nl",
+      "url": "https://english.rvo.nl/subsidies-financing/wbso",
+      "highlight": "The Netherlands' R&D wage-tax credit — non-dilutive fuel for technical teams.",
+      "mvp": true,
+      "ecosystem": "europe-wide",
+      "canonicalType": "government-grant",
+      "supportModes": [
+        "funding",
+        "structure"
+      ],
+      "format": "remote",
+      "intakeMethod": "rolling",
+      "costFundingModel": "equity-free-grant",
+      "sourceUrls": [
+        "https://english.rvo.nl/subsidies-financing/wbso"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Enterprise Estonia (EIS) — Enterprise Development Programme",
+      "type": "Government Grant (non-dilutive)",
+      "city": "Tallinn",
+      "country": "Estonia",
+      "lat": 59.437,
+      "lng": 24.7536,
+      "focus": "SMEs with international growth, innovation or digitalisation plans",
+      "operator": "Estonian Business and Innovation Agency (EIS, formerly EAS)",
+      "stage": "Seed / growth",
+      "status": "rolling",
+      "status_detail": "Equity-free development grant up to €500,000 for companies with international growth potential; minimum 55% self-financing. Distinct from Prototron (a separate prototyping grant fund). Administered by EIS.",
+      "domain": "eis.ee",
+      "url": "https://eis.ee/en/grow-as-a-business/funding/",
+      "highlight": "Estonia's state agency backs scaling SMEs with up to €500k, equity-free.",
+      "mvp": true,
+      "ecosystem": "estonia",
+      "canonicalType": "government-grant",
+      "supportModes": [
+        "funding",
+        "structure"
+      ],
+      "format": "hybrid",
+      "intakeMethod": "rolling",
+      "costFundingModel": "equity-free-grant",
+      "sourceUrls": [
+        "https://eis.ee/en/grow-as-a-business/funding/"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "America's Seed Fund — NSF SBIR/STTR",
+      "type": "Government Grant (non-dilutive)",
+      "city": "Alexandria",
+      "country": "USA",
+      "lat": 38.8048,
+      "lng": -77.0469,
+      "focus": "Deep-tech startups across nearly all technology sectors",
+      "operator": "U.S. National Science Foundation (NSF)",
+      "stage": "Pre-seed / seed",
+      "status": "rolling",
+      "status_detail": "Non-dilutive R&D grants (NSF takes no equity): Phase I up to ~$305k for proof-of-concept; Phase II up to $1M+ for full R&D. ~400 companies funded annually. US-based small businesses only.",
+      "domain": "seedfund.nsf.gov",
+      "url": "https://seedfund.nsf.gov/",
+      "highlight": "Up to $2M in non-dilutive deep-tech funding — NSF takes no equity, ever.",
+      "mvp": true,
+      "ecosystem": "us-global-remote",
+      "canonicalType": "government-grant",
+      "supportModes": [
+        "funding",
+        "mentorship",
+        "structure"
+      ],
+      "format": "remote",
+      "intakeMethod": "rolling",
+      "costFundingModel": "equity-free-grant",
+      "sourceUrls": [
+        "https://seedfund.nsf.gov/"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Business Finland — Tempo & NIY",
+      "type": "Government Grant (non-dilutive)",
+      "city": "Helsinki",
+      "country": "Finland",
+      "lat": 60.1699,
+      "lng": 24.9384,
+      "focus": "Early-stage innovative startups with global growth ambition",
+      "operator": "Business Finland (Finnish government)",
+      "stage": "Pre-seed / seed",
+      "status": "closed",
+      "status_detail": "Equity-free grants: Tempo for under-5yr startups; NIY (Young Innovative Company) up to €1M in milestone phases. NOTE: both funding calls were closed in Oct 2025 as part of discontinued services — verify reopening before relying on this entry.",
+      "domain": "businessfinland.fi",
+      "url": "https://www.businessfinland.fi/en/for-finnish-customers/services/funding/niy-companies",
+      "highlight": "Up to €1M equity-free to scale Finland's most ambitious startups globally.",
+      "mvp": true,
+      "ecosystem": "finland-nordics",
+      "canonicalType": "government-grant",
+      "supportModes": [
+        "funding",
+        "structure"
+      ],
+      "format": "hybrid",
+      "intakeMethod": "cohort-application",
+      "costFundingModel": "equity-free-grant",
+      "sourceUrls": [
+        "https://www.businessfinland.fi/en/for-finnish-customers/services/funding/niy-companies",
+        "https://www.businessfinland.fi/en/whats-new/news/2025/niy-funding-call-to-be-closed-temporarily/"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "needs-review"
+    },
+    {
+      "name": "UK Innovator Founder visa",
+      "type": "Startup Visa / Soft-landing",
+      "city": "London",
+      "country": "UK",
+      "lat": 51.5072,
+      "lng": -0.1276,
+      "focus": "New, innovative and scalable businesses led by non-UK founders",
+      "operator": "UK Visas and Immigration (Home Office), via approved endorsing bodies",
+      "stage": "Pre-trading (idea must be new)",
+      "status": "rolling",
+      "status_detail": "3-year visa, renewable indefinitely in 3-year blocks; requires endorsement from an approved body (£1,000) plus check-in meetings; visa fee £1,357; must hold £1,270 for 28 days.",
+      "domain": "gov.uk",
+      "url": "https://www.gov.uk/innovator-founder-visa",
+      "highlight": "The UK's flagship route for founders with a genuinely original, scalable idea.",
+      "mvp": true,
+      "ecosystem": "uk",
+      "canonicalType": "startup-visa",
+      "supportModes": [
+        "visa-support",
+        "structure"
+      ],
+      "format": "relocation",
+      "intakeMethod": "rolling",
+      "costFundingModel": "fee",
+      "sourceUrls": [
+        "https://www.gov.uk/innovator-founder-visa"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "UK Global Talent visa (Digital Technology)",
+      "type": "Startup Visa / Soft-landing",
+      "city": "London",
+      "country": "UK",
+      "lat": 51.5072,
+      "lng": -0.1276,
+      "focus": "Leaders or potential leaders in digital technology, including tech founders",
+      "operator": "UK Visas and Immigration (Home Office); endorsed by Tech Nation",
+      "stage": "Any (talent-based)",
+      "status": "rolling",
+      "status_detail": "Unsponsored route: no job offer, no minimum salary, no English requirement. Two stages: endorsement then visa. Endorsement moved to the Home Office GOV.UK form in Aug 2025.",
+      "domain": "gov.uk",
+      "url": "https://www.gov.uk/global-talent-digital-technology",
+      "highlight": "No employer, no salary floor, no English test — just proven tech leadership.",
+      "mvp": true,
+      "ecosystem": "uk",
+      "canonicalType": "startup-visa",
+      "supportModes": [
+        "visa-support",
+        "community"
+      ],
+      "format": "relocation",
+      "intakeMethod": "rolling",
+      "costFundingModel": "fee",
+      "sourceUrls": [
+        "https://www.gov.uk/global-talent-digital-technology"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "French Tech Visa for Founders",
+      "type": "Startup Visa / Soft-landing",
+      "city": "Paris",
+      "country": "France",
+      "lat": 48.8566,
+      "lng": 2.3522,
+      "focus": "Non-EU founders developing an innovative economic project recognised by a public body",
+      "operator": "La French Tech Mission with Business France",
+      "stage": "Any (innovative project)",
+      "status": "rolling",
+      "status_detail": "4-year renewable residence permit ('Passeport Talent'). Founders must show an innovative project endorsed by a recognised public body and income at minimum-wage level. Family included.",
+      "domain": "lafrenchtech.gouv.fr",
+      "url": "https://lafrenchtech.gouv.fr/en/come-work-in-france/french-tech-visa/",
+      "highlight": "A 4-year talent passport for founders, backed by France's own tech mission.",
+      "mvp": true,
+      "ecosystem": "europe-wide",
+      "canonicalType": "startup-visa",
+      "supportModes": [
+        "visa-support",
+        "structure",
+        "community"
+      ],
+      "format": "relocation",
+      "intakeMethod": "rolling",
+      "costFundingModel": "fee",
+      "sourceUrls": [
+        "https://lafrenchtech.gouv.fr/en/come-work-in-france/french-tech-visa/"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Startup Visa Netherlands",
+      "type": "Startup Visa / Soft-landing",
+      "city": "Amsterdam",
+      "country": "Netherlands",
+      "lat": 52.3676,
+      "lng": 4.9041,
+      "focus": "Non-EU founders launching an innovative product or service in the Netherlands",
+      "operator": "Netherlands Enterprise Agency (RVO) and IND",
+      "stage": "Early (facilitator-guided)",
+      "status": "rolling",
+      "status_detail": "Residence permit valid for max 1 year, to scale from startup to operating business. Mandatory guidance from a recognised facilitator; business plan assessed by RVO. Scheme runs until 1 June 2028.",
+      "domain": "business.gov.nl",
+      "url": "https://business.gov.nl/coming-to-the-netherlands/permits-and-visa/residence-permit-for-foreign-startups/",
+      "highlight": "One year, a mandatory facilitator, and a clear path from idea to operating company.",
+      "mvp": true,
+      "ecosystem": "europe-wide",
+      "canonicalType": "startup-visa",
+      "supportModes": [
+        "visa-support",
+        "mentorship",
+        "structure"
+      ],
+      "format": "relocation",
+      "intakeMethod": "rolling",
+      "costFundingModel": "fee",
+      "sourceUrls": [
+        "https://business.gov.nl/coming-to-the-netherlands/permits-and-visa/residence-permit-for-foreign-startups/"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "España Startup Visa (Ley de Startups)",
+      "type": "Startup Visa / Soft-landing",
+      "city": "Madrid",
+      "country": "Spain",
+      "lat": 40.4168,
+      "lng": -3.7038,
+      "focus": "Non-EU founders of innovative, scalable ventures certified under Ley 28/2022",
+      "operator": "ENISA (innovation assessment) and UGE-CE, Spanish government",
+      "stage": "Any (innovation certified by ENISA)",
+      "status": "rolling",
+      "status_detail": "Entrepreneur residence approved within ~10 working days by UGE once ENISA certifies the project as innovative. Unlocks Startup Act regime: 15% corporate tax, founder tax breaks.",
+      "domain": "one.gob.es",
+      "url": "https://www.one.gob.es/en/startups-law",
+      "highlight": "ENISA certifies you as innovative; Spain fast-tracks residence and a 15% tax rate.",
+      "mvp": true,
+      "ecosystem": "europe-wide",
+      "canonicalType": "startup-visa",
+      "supportModes": [
+        "visa-support",
+        "structure"
+      ],
+      "format": "relocation",
+      "intakeMethod": "rolling",
+      "costFundingModel": "fee",
+      "sourceUrls": [
+        "https://www.one.gob.es/en/startups-law"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Start-up Entrepreneur Programme (STEP)",
+      "type": "Startup Visa / Soft-landing",
+      "city": "Dublin",
+      "country": "Ireland",
+      "lat": 53.3498,
+      "lng": -6.2603,
+      "focus": "Non-EEA founders of High Potential Start-Ups in internationally traded sectors",
+      "operator": "Immigration Service Delivery (ISD), Department of Justice",
+      "stage": "Early (HPSU, under 5 years old)",
+      "status": "rolling",
+      "status_detail": "Requires €50,000 funding (additional €30k per extra founder) and an innovative HPSU capable of 10 jobs / €1M sales in 3-4 years. 2-year initial residence, renewable. Application fee €350.",
+      "domain": "irishimmigration.ie",
+      "url": "https://www.irishimmigration.ie/coming-to-work-in-ireland/what-are-my-options-for-working-in-ireland/coming-to-work-for-more-than-90-days/start-up-entrepreneur-programme-step/",
+      "highlight": "€50k and a high-potential idea buys a two-year runway in Ireland's tech hub.",
+      "mvp": true,
+      "ecosystem": "europe-wide",
+      "canonicalType": "startup-visa",
+      "supportModes": [
+        "visa-support",
+        "structure"
+      ],
+      "format": "relocation",
+      "intakeMethod": "rolling",
+      "costFundingModel": "fee",
+      "sourceUrls": [
+        "https://www.irishimmigration.ie/coming-to-work-in-ireland/what-are-my-options-for-working-in-ireland/coming-to-work-for-more-than-90-days/start-up-entrepreneur-programme-step/"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "StartUP Visa Portugal",
+      "type": "Startup Visa / Soft-landing",
+      "city": "Lisbon",
+      "country": "Portugal",
+      "lat": 38.7223,
+      "lng": -9.1393,
+      "focus": "Non-EU founders of innovative, tech/knowledge-based scalable ventures",
+      "operator": "IAPMEI / Startup Portugal",
+      "stage": "Early (up to 5 founders per project)",
+      "status": "rolling",
+      "status_detail": "Founders must contract with an IAPMEI-certified incubator and project turnover/assets over €325,000 within 5 years. Initial 2-year residence permit, renewable, path to permanent residency/citizenship.",
+      "domain": "startupportugal.com",
+      "url": "https://startupportugal.com/startup-visa/",
+      "highlight": "Pair with a certified incubator and Portugal opens a path to residency and citizenship.",
+      "mvp": true,
+      "ecosystem": "europe-wide",
+      "canonicalType": "startup-visa",
+      "supportModes": [
+        "visa-support",
+        "workspace",
+        "mentorship",
+        "structure"
+      ],
+      "format": "relocation",
+      "intakeMethod": "rolling",
+      "costFundingModel": "fee",
+      "sourceUrls": [
+        "https://startupportugal.com/startup-visa/"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Finnish Startup Permit",
+      "type": "Startup Visa / Soft-landing",
+      "city": "Helsinki",
+      "country": "Finland",
+      "lat": 60.1699,
+      "lng": 24.9384,
+      "focus": "Non-EU growth-entrepreneur teams building rapidly internationalising startups",
+      "operator": "Business Finland (eligibility) and Migri (permit)",
+      "stage": "Early (team of 2+ founders)",
+      "status": "rolling",
+      "status_detail": "Requires Business Finland Eligibility Statement then Migri residence permit, issued for max 2 years and renewable. Needs 2+ founders holding 60%+ of the company. Founders must show ~€1,030/month support.",
+      "domain": "businessfinland.com",
+      "url": "https://www.businessfinland.com/establish-your-business/finnish-startup-permit/",
+      "highlight": "Bring a real founding team — Business Finland vets you, then Migri lets you in.",
+      "mvp": true,
+      "ecosystem": "finland-nordics",
+      "canonicalType": "startup-visa",
+      "supportModes": [
+        "visa-support",
+        "structure"
+      ],
+      "format": "relocation",
+      "intakeMethod": "rolling",
+      "costFundingModel": "fee",
+      "sourceUrls": [
+        "https://www.businessfinland.com/establish-your-business/finnish-startup-permit/"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Startup Denmark",
+      "type": "Startup Visa / Soft-landing",
+      "city": "Copenhagen",
+      "country": "Denmark",
+      "lat": 55.6761,
+      "lng": 12.5683,
+      "focus": "Non-EU/EEA self-employed founders of innovative, scalable Danish businesses",
+      "operator": "Startup Denmark Secretariat, Danish Business Authority",
+      "stage": "Early (self-employed founder)",
+      "status": "rolling",
+      "status_detail": "Permit up to 2 years, extendable in 3-year blocks. Expert panel evaluates business idea and founder. Capped at ~75 residence permits per year. Excludes restaurant, retail and small trading businesses.",
+      "domain": "startupdenmarkprogramme.dk",
+      "url": "https://startupdenmarkprogramme.dk/about-startup-denmark-programme",
+      "highlight": "Just 75 founders a year get Denmark's official stamp on their startup.",
+      "mvp": true,
+      "ecosystem": "finland-nordics",
+      "canonicalType": "startup-visa",
+      "supportModes": [
+        "visa-support",
+        "structure"
+      ],
+      "format": "relocation",
+      "intakeMethod": "rolling",
+      "costFundingModel": "fee",
+      "sourceUrls": [
+        "https://startupdenmarkprogramme.dk/about-startup-denmark-programme"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "needs-review"
+    },
+    {
+      "name": "Kiuas Accelerator",
+      "type": "Accelerator",
+      "city": "Helsinki",
+      "country": "Finland",
+      "lat": 60.1699,
+      "lng": 24.9384,
+      "focus": "Early-stage tech startups going from idea to first revenue",
+      "operator": "Kiuas",
+      "stage": "Pre-seed",
+      "status": "rolling",
+      "status_detail": "Non-profit. Kiuas Start (4 weeks) and Kiuas Accelerator (8 weeks), run annually. Equity-free (no fee); 1-on-1 mentoring, investor network and community. 700+ alumni founders, €250M+ raised.",
+      "domain": "kiuas.com",
+      "url": "https://www.kiuas.com",
+      "highlight": "Finland's #1 accelerator, free to join, with €250M+ raised by alumni.",
+      "mvp": true,
+      "ecosystem": "finland-nordics",
+      "canonicalType": "accelerator",
+      "supportModes": [
+        "mentorship",
+        "investor-access",
+        "demo-day",
+        "structure",
+        "community"
+      ],
+      "format": "in-person",
+      "intakeMethod": "cohort-application",
+      "costFundingModel": "free",
+      "sourceUrls": [
+        "https://www.kiuas.com"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "xEdu Accelerator",
+      "type": "Accelerator",
+      "city": "Helsinki",
+      "country": "Finland",
+      "lat": 60.1699,
+      "lng": 24.9384,
+      "focus": "EdTech startups: pedagogy, global market expansion, school pilots",
+      "operator": "xEdu",
+      "stage": "Pre-seed / Seed",
+      "status": "rolling",
+      "status_detail": "3-4 month program, two cohorts per year. Europe's leading EdTech accelerator: 110+ startups from 20+ countries accelerated, €30M+ raised. Provides pedagogy expertise, school pilots and EdTech investor network.",
+      "domain": "xedu.co",
+      "url": "https://www.xedu.co/",
+      "highlight": "Northern Europe's first dedicated EdTech accelerator.",
+      "mvp": true,
+      "ecosystem": "finland-nordics",
+      "canonicalType": "accelerator",
+      "supportModes": [
+        "mentorship",
+        "investor-access",
+        "structure",
+        "community",
+        "demo-day"
+      ],
+      "format": "hybrid",
+      "intakeMethod": "cohort-application",
+      "costFundingModel": "mixed",
+      "sourceUrls": [
+        "https://www.xedu.co/"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Sting Core",
+      "type": "Accelerator",
+      "city": "Stockholm",
+      "country": "Sweden",
+      "lat": 59.3293,
+      "lng": 18.0686,
+      "focus": "Early-stage tech with MVP and traction in Climate, Health, Society and DeepTech",
+      "operator": "Sting (Stockholm Innovation & Growth)",
+      "stage": "Pre-seed / Seed",
+      "status": "rolling",
+      "status_detail": "Flagship program. Up to 18 months; 2 batches/year, up to 12 startups each. SEK 600,000 convertible note plus Sting's 2% warrant; weekly coaching, free office up to 6 months. Requires Swedish AB and team in Stockholm.",
+      "domain": "sting.co",
+      "url": "https://www.sting.co/programs/sting-core",
+      "highlight": "Sweden's leading accelerator since 2002, with 200+ startups and €400M+ raised.",
+      "mvp": true,
+      "ecosystem": "finland-nordics",
+      "canonicalType": "accelerator",
+      "supportModes": [
+        "funding",
+        "mentorship",
+        "investor-access",
+        "workspace",
+        "structure",
+        "demo-day"
+      ],
+      "format": "in-person",
+      "intakeMethod": "cohort-application",
+      "costFundingModel": "mixed",
+      "sourceUrls": [
+        "https://www.sting.co/programs/sting-core"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Antler Stockholm",
+      "type": "Cofounder Matching / Day-zero",
+      "city": "Stockholm",
+      "country": "Sweden",
+      "lat": 59.3293,
+      "lng": 18.0686,
+      "focus": "Day-zero founders building tech companies from scratch; co-founder matching and pre-seed backing",
+      "operator": "Antler",
+      "stage": "Pre-seed",
+      "status": "rolling",
+      "status_detail": "Always-on Nordic residency. ~8 weeks from launch to funding; €100K for equity + convertible, plus matching in first round. Co-founder matching, office space, sparring and global investor network.",
+      "domain": "antler.co",
+      "url": "https://www.antler.co/location/sweden",
+      "highlight": "Find a co-founder and get funded from day zero.",
+      "mvp": true,
+      "ecosystem": "finland-nordics",
+      "canonicalType": "cofounder-matching",
+      "supportModes": [
+        "funding",
+        "co-founder-matching",
+        "investor-access",
+        "workspace",
+        "mentorship",
+        "community"
+      ],
+      "format": "in-person",
+      "intakeMethod": "rolling",
+      "costFundingModel": "equity",
+      "sourceUrls": [
+        "https://www.antler.co/location/sweden"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Antler Oslo",
+      "type": "Cofounder Matching / Day-zero",
+      "city": "Oslo",
+      "country": "Norway",
+      "lat": 59.9139,
+      "lng": 10.7522,
+      "focus": "Day-zero founders building tech companies from scratch; co-founder matching and pre-seed backing",
+      "operator": "Antler",
+      "stage": "Pre-seed",
+      "status": "rolling",
+      "status_detail": "Always-on Nordic residency. ~8 weeks from launch to funding; €100K for equity + convertible, plus matching. Two-interview process; accepts solo founders and teams.",
+      "domain": "antler.co",
+      "url": "https://www.antler.co/residency/norway",
+      "highlight": "Build and get funded in 8 weeks from Oslo.",
+      "mvp": true,
+      "ecosystem": "finland-nordics",
+      "canonicalType": "cofounder-matching",
+      "supportModes": [
+        "funding",
+        "co-founder-matching",
+        "investor-access",
+        "workspace",
+        "mentorship",
+        "community"
+      ],
+      "format": "in-person",
+      "intakeMethod": "rolling",
+      "costFundingModel": "equity",
+      "sourceUrls": [
+        "https://www.antler.co/residency/norway"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Antler Copenhagen",
+      "type": "Cofounder Matching / Day-zero",
+      "city": "Copenhagen",
+      "country": "Denmark",
+      "lat": 55.6761,
+      "lng": 12.5683,
+      "focus": "Day-zero founders building tech companies from scratch; co-founder matching and pre-seed backing",
+      "operator": "Antler",
+      "stage": "Pre-seed",
+      "status": "rolling",
+      "status_detail": "Always-on Nordic residency (replaced biannual cohorts in Feb 2026); investment decisions in 2-6 weeks. €100K for 10% equity; up to €30M follow-on. Full-time commitment, office in Copenhagen.",
+      "domain": "antler.co",
+      "url": "https://www.antler.co/residency/denmark",
+      "highlight": "Always-on Nordic residency with investment decisions in as little as two weeks.",
+      "mvp": true,
+      "ecosystem": "finland-nordics",
+      "canonicalType": "cofounder-matching",
+      "supportModes": [
+        "funding",
+        "co-founder-matching",
+        "investor-access",
+        "workspace",
+        "mentorship",
+        "community"
+      ],
+      "format": "in-person",
+      "intakeMethod": "rolling",
+      "costFundingModel": "equity",
+      "sourceUrls": [
+        "https://www.antler.co/residency/denmark"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Icelandic Startups (KLAK) Accelerators",
+      "type": "Accelerator",
+      "city": "Reykjavik",
+      "country": "Iceland",
+      "lat": 64.1466,
+      "lng": -21.9426,
+      "focus": "Iceland's main open accelerators (Hringiða green/cleantech, Startup SuperNova)",
+      "operator": "KLAK – Icelandic Startups",
+      "stage": "Idea / Pre-seed",
+      "status": "rolling",
+      "status_detail": "Umbrella running Iceland's flagship accelerators (Hringiða, Startup SuperNova, Gulleggið). Largely equity-free support; mentorship, action-planning, connections to investors and hubs abroad.",
+      "domain": "klak.is",
+      "url": "https://www.klak.is/en/",
+      "highlight": "The umbrella behind Iceland's flagship founder accelerators.",
+      "mvp": true,
+      "ecosystem": "finland-nordics",
+      "canonicalType": "accelerator",
+      "supportModes": [
+        "mentorship",
+        "investor-access",
+        "structure",
+        "community",
+        "demo-day"
+      ],
+      "format": "in-person",
+      "intakeMethod": "cohort-application",
+      "costFundingModel": "free",
+      "sourceUrls": [
+        "https://www.klak.is/en/"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Maria 01",
+      "type": "Startup Campus",
+      "city": "Helsinki",
+      "country": "Finland",
+      "lat": 60.1641,
+      "lng": 24.9275,
+      "focus": "Community-driven startup campus for early-stage tech startups, VCs and enterprises",
+      "operator": "Maria 01 (City of Helsinki, Startup Foundation, Helsinki Enterprise Agency)",
+      "stage": "All",
+      "status": "rolling",
+      "status_detail": "Not-for-profit campus founded 2016 in a former hospital; 1,500+ members, 180+ startups, 23 partners. Membership-based workspace and community; not a cohort accelerator.",
+      "domain": "maria.io",
+      "url": "https://maria.io/",
+      "highlight": "The Nordics' leading startup campus, in a converted Helsinki hospital.",
+      "canonicalType": "startup-campus",
+      "supportModes": [
+        "workspace",
+        "community",
+        "investor-access"
+      ],
+      "format": "in-person",
+      "intakeMethod": "rolling",
+      "costFundingModel": "fee",
+      "sourceUrls": [
+        "https://maria.io/"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Norrsken House Stockholm",
+      "type": "Startup Campus",
+      "city": "Stockholm",
+      "country": "Sweden",
+      "lat": 59.3293,
+      "lng": 18.0686,
+      "focus": "Coworking hub and community for impact entrepreneurs",
+      "operator": "Norrsken Foundation",
+      "stage": "All",
+      "status": "rolling",
+      "status_detail": "Award-winning impact coworking space (distinct from the Norrsken Impact Accelerator, which uses it as a venue). Membership includes access to the global Norrsken community of founders and investors.",
+      "domain": "norrsken.org",
+      "url": "https://www.norrsken.org/houses/stockholm",
+      "highlight": "Norrsken's flagship impact hub for entrepreneurs out to fix the world.",
+      "canonicalType": "startup-campus",
+      "supportModes": [
+        "workspace",
+        "community",
+        "investor-access"
+      ],
+      "format": "in-person",
+      "intakeMethod": "rolling",
+      "costFundingModel": "fee",
+      "sourceUrls": [
+        "https://www.norrsken.org/houses/stockholm"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Techstars London",
+      "type": "Accelerator",
+      "city": "London",
+      "country": "UK",
+      "lat": 51.5074,
+      "lng": -0.1278,
+      "focus": "All-vertical, global early-stage startups leveraging London's talent",
+      "operator": "Techstars",
+      "stage": "Pre-seed / seed",
+      "status": "rolling",
+      "status_detail": "$220k investment ($200k uncapped MFN SAFE + $20k for ~5% common stock); 3-month in-person program; Spring 2026 cohort runs Mar 9 - Jun 4 2026.",
+      "domain": "techstars.com",
+      "url": "https://www.techstars.com/programs/london-program/",
+      "highlight": "London's gateway into the global Techstars mentor-and-investor network.",
+      "mvp": true,
+      "ecosystem": "uk",
+      "canonicalType": "accelerator",
+      "supportModes": [
+        "funding",
+        "mentorship",
+        "investor-access",
+        "demo-day",
+        "structure",
+        "community"
+      ],
+      "format": "in-person",
+      "intakeMethod": "cohort-application",
+      "costFundingModel": "equity",
+      "sourceUrls": [
+        "https://www.techstars.com/programs/london-program/"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Carbon13",
+      "type": "Venture Builder (Climate)",
+      "city": "Cambridge",
+      "country": "UK",
+      "lat": 52.2053,
+      "lng": 0.1218,
+      "focus": "Climate tech; building ventures with potential to cut 10M+ tonnes CO2e/year",
+      "operator": "Carbon13",
+      "stage": "Pre-seed",
+      "status": "rolling",
+      "status_detail": "8-month venture-builder; ~80 founders matched into climate-tech teams; Phase 2 teams receive £120k pre-seed for equity; Phase 1 in-person in Cambridge.",
+      "domain": "carbonthirteen.com",
+      "url": "https://carbonthirteen.com/programmes/venture-builder-cambridge/",
+      "highlight": "The venture builder for the climate emergency — cofounders matched, ventures funded.",
+      "mvp": true,
+      "ecosystem": "uk",
+      "canonicalType": "cofounder-matching",
+      "supportModes": [
+        "co-founder-matching",
+        "funding",
+        "mentorship",
+        "investor-access",
+        "structure",
+        "community"
+      ],
+      "format": "hybrid",
+      "intakeMethod": "cohort-application",
+      "costFundingModel": "equity",
+      "sourceUrls": [
+        "https://carbonthirteen.com/programmes/venture-builder-cambridge/"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Zinc",
+      "type": "Founder Fellowship (Mission-led)",
+      "city": "London",
+      "country": "UK",
+      "lat": 51.5074,
+      "lng": -0.1278,
+      "focus": "Mission-led Science-for-Impact ventures (mental health, planetary health)",
+      "operator": "Zinc VC",
+      "stage": "Pre-seed",
+      "status": "rolling",
+      "status_detail": "9-month mission-driven program; recruits aspiring founders, matches cofounders and forms impact companies; visiting fellows, coaching and investor access.",
+      "domain": "zinc.vc",
+      "url": "https://www.zinc.vc/",
+      "highlight": "Each cohort gets a 'mission' — a big societal problem to build a company against.",
+      "mvp": true,
+      "ecosystem": "uk",
+      "canonicalType": "founder-fellowship",
+      "supportModes": [
+        "co-founder-matching",
+        "funding",
+        "mentorship",
+        "investor-access",
+        "structure",
+        "community"
+      ],
+      "format": "in-person",
+      "intakeMethod": "cohort-application",
+      "costFundingModel": "equity",
+      "sourceUrls": [
+        "https://www.zinc.vc/"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Bethnal Green Ventures",
+      "type": "Accelerator (Tech for Good)",
+      "city": "London",
+      "country": "UK",
+      "lat": 51.5074,
+      "lng": -0.1278,
+      "focus": "Tech for good — sustainable planet, inclusive society, healthy lives",
+      "operator": "Bethnal Green Ventures",
+      "stage": "Pre-seed",
+      "status": "rolling",
+      "status_detail": "£60k for 7% equity; 12-week hybrid Tech for Good Programme (6 weeks intensive + 6 weeks coaching); follow-on £250-750k for top ventures.",
+      "domain": "bethnalgreenventures.com",
+      "url": "https://www.bethnalgreenventures.com/our-offer",
+      "highlight": "Europe's first dedicated tech-for-good accelerator — no warm intro needed.",
+      "mvp": true,
+      "ecosystem": "uk",
+      "canonicalType": "accelerator",
+      "supportModes": [
+        "funding",
+        "mentorship",
+        "investor-access",
+        "structure",
+        "community"
+      ],
+      "format": "hybrid",
+      "intakeMethod": "cohort-application",
+      "costFundingModel": "equity",
+      "sourceUrls": [
+        "https://www.bethnalgreenventures.com/our-offer"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "EWOR",
+      "type": "Founder Fellowship",
+      "city": "Berlin",
+      "country": "Germany",
+      "lat": 52.52,
+      "lng": 13.405,
+      "focus": "Backing the top ~0.1% of outlier founders across Europe, any sector or stage",
+      "operator": "EWOR",
+      "stage": "Idea to early traction",
+      "status": "rolling",
+      "status_detail": "Up to €500k investment; virtual-first fellowship with weekly 1:1 coaching by unicorn founders, no fixed batch; ~35 of 35,000+ applicants accepted/year; €300k cloud credits.",
+      "domain": "ewor.com",
+      "url": "https://www.ewor.com/",
+      "highlight": "Harder to get into than Y Combinator — built by founders of SumUp, Adjust and more.",
+      "mvp": true,
+      "ecosystem": "europe-wide",
+      "canonicalType": "founder-fellowship",
+      "supportModes": [
+        "funding",
+        "mentorship",
+        "investor-access",
+        "structure",
+        "community"
+      ],
+      "format": "remote",
+      "intakeMethod": "rolling",
+      "costFundingModel": "equity",
+      "sourceUrls": [
+        "https://www.ewor.com/"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "imec.istart",
+      "type": "Accelerator",
+      "city": "Ghent",
+      "country": "Belgium",
+      "lat": 51.0543,
+      "lng": 3.7174,
+      "focus": "Digital and deep-tech startups (broad verticals) in Belgium",
+      "operator": "imec",
+      "stage": "Pre-seed",
+      "status": "rolling",
+      "status_detail": "Pre-seed funding plus 1 year of industry-specific coaching; open call 3x/year; operates from Ghent, Antwerp, Hasselt and Liege; exact cheque/equity not published on site.",
+      "domain": "imecistart.com",
+      "url": "https://www.imecistart.com/en/our-program",
+      "highlight": "Ranked among the world's best university-linked accelerators by UBI Global.",
+      "mvp": true,
+      "ecosystem": "europe-wide",
+      "canonicalType": "accelerator",
+      "supportModes": [
+        "funding",
+        "mentorship",
+        "investor-access",
+        "workspace",
+        "structure",
+        "community"
+      ],
+      "format": "in-person",
+      "intakeMethod": "rolling",
+      "costFundingModel": "equity",
+      "sourceUrls": [
+        "https://www.imecistart.com/en/our-program"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "needs-review"
+    },
+    {
+      "name": "Startupbootcamp Amsterdam",
+      "type": "Accelerator",
+      "city": "Amsterdam",
+      "country": "Netherlands",
+      "lat": 52.3676,
+      "lng": 4.9041,
+      "focus": "Industry-vertical accelerators — energy & climate, health, deeptech & robotics, agritech, AI",
+      "operator": "Startupbootcamp",
+      "stage": "Seed",
+      "status": "rolling",
+      "status_detail": "3-month hybrid industry-focused programs in Amsterdam; multiple 2026 cohorts currently open; investor and corporate-partner network access.",
+      "domain": "startupbootcamp.org",
+      "url": "https://www.startupbootcamp.org/",
+      "highlight": "Vertical accelerators connecting founders to relevant corporates and investors.",
+      "mvp": true,
+      "ecosystem": "europe-wide",
+      "canonicalType": "accelerator",
+      "supportModes": [
+        "funding",
+        "mentorship",
+        "investor-access",
+        "workspace",
+        "structure",
+        "community"
+      ],
+      "format": "hybrid",
+      "intakeMethod": "cohort-application",
+      "costFundingModel": "equity",
+      "sourceUrls": [
+        "https://www.startupbootcamp.org/"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
+    },
+    {
+      "name": "Techstars Future of Finance (Amsterdam)",
+      "type": "Accelerator (Fintech)",
+      "city": "Amsterdam",
+      "country": "Netherlands",
+      "lat": 52.3676,
+      "lng": 4.9041,
+      "focus": "Fintech — founders building infrastructure for the new financial system in Europe",
+      "operator": "Techstars",
+      "stage": "Pre-seed / seed",
+      "status": "rolling",
+      "status_detail": "ABN AMRO + Techstars Future of Finance Accelerator; $220k investment (~5% + uncapped MFN SAFE); 3-month program; Sept 2026 cohort starts Sep 8, Demo Day Dec 10 2026.",
+      "domain": "techstars.com",
+      "url": "https://www.techstars.com/accelerators/abn-amro-techstars-future-of-finance-accelerator",
+      "highlight": "Techstars' active Amsterdam program — fintech, backed by ABN AMRO.",
+      "mvp": true,
+      "ecosystem": "europe-wide",
+      "canonicalType": "accelerator",
+      "supportModes": [
+        "funding",
+        "mentorship",
+        "investor-access",
+        "demo-day",
+        "structure",
+        "community"
+      ],
+      "format": "in-person",
+      "intakeMethod": "cohort-application",
+      "costFundingModel": "equity",
+      "sourceUrls": [
+        "https://www.techstars.com/accelerators/abn-amro-techstars-future-of-finance-accelerator"
+      ],
+      "lastVerified": "2026-06-12",
+      "verificationStatus": "verified"
     }
   ]
 }
