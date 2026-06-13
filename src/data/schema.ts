@@ -1,6 +1,6 @@
 // Canonical schema description (Stream 2).
 //
-// A documented, machine-readable description of the canonical Founder Atlas
+// A documented, machine-readable description of the canonical Orbital
 // program schema: every field, its meaning, whether it is MVP-required or
 // optional, and whether it is a legacy free-text field or a canonical field.
 //

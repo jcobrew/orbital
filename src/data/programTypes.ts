@@ -10,33 +10,33 @@ export interface ProgramTypeInfo {
 
 export const PROGRAM_TYPES: ProgramTypeInfo[] = [
   {
-    name: 'Accelerator',
-    best: 'Best when you have a product, early traction, or a fundraise coming up.',
-    helps: ['Mentorship', 'Investor access', 'Pitch & demo day', 'Funding', 'Go-to-market pressure'],
-    q: 'accelerator',
-  },
-  {
-    name: 'Incubator',
-    best: 'Best when you are still turning an idea into a company.',
-    helps: ['MVP development', 'Workspace', 'Early mentorship', 'Business model', 'Lab/community resources'],
-    q: 'incubator',
-  },
-  {
-    name: 'Residency',
-    best: 'Best when you need focus and a temporary environment built around building.',
-    helps: ['Housing', 'Coworking', 'Peer accountability', 'Coaching', 'Going full-time'],
+    name: 'Live-in residency',
+    best: 'Best when you want to step out of your old life and live full-time inside a founder cohort.',
+    helps: ['Housing', 'Live-in cohort', 'Deep focus', 'Peer accountability', 'Going full-time'],
     q: 'residency',
   },
   {
     name: 'Hacker house',
-    best: 'Best when you want proximity to other builders and fast daily momentum.',
-    helps: ['Builder density', 'Serendipity', 'Cofounder discovery', 'Hackathons', 'Community'],
+    best: 'Best when you want proximity to other builders and fast daily momentum under one roof.',
+    helps: ['Builder density', 'Serendipity', 'Cofounder discovery', 'Shared space', 'Community'],
     q: 'hacker house',
   },
   {
-    name: 'Fellowship',
-    best: 'Best when you are high-potential but early — often pre-idea or pre-product.',
-    helps: ['Founder-market fit', 'Exploration', 'Mentorship', 'Grants or investment', 'Long-term network'],
-    q: 'fellowship',
+    name: 'Co-living program',
+    best: 'Best when you want to build where you sleep — work and home in the same orbit.',
+    helps: ['Housing', 'Coworking', 'Shared meals', 'Daily momentum', 'Long-term network'],
+    q: 'co-living',
+  },
+  {
+    name: 'Focus retreat',
+    best: 'Best when you need a temporary place built entirely around shipping, away from distraction.',
+    helps: ['Deep focus', 'Housing', 'Small cohort', 'Coaching', 'No noise'],
+    q: 'retreat',
+  },
+  {
+    name: 'Founder community',
+    best: 'Best when you want the gravity of a tight group — people who pull you to build with them.',
+    helps: ['Community', 'Cofounder discovery', 'Belonging', 'Long-term network', 'Serendipity'],
+    q: 'community',
   },
 ];

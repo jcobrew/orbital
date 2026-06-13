@@ -9,6 +9,8 @@ import { passes, defaultSort } from '../lib/filter';
 import { statusMeta, STATUS_ORDER } from '../lib/status';
 import { logoMarkupHTML, installLogoFallback } from '../lib/logo';
 import { $filters, initFiltersFromURL } from '../stores/filters';
+import { openCountry } from '../stores/country';
+import { countrySlug, hasCountryProfile } from '../data/countries';
 import FilterSidebar from '../components/FilterSidebar';
 import Logo from '../components/Logo';
 import StatusBadge from '../components/StatusBadge';
@@ -25,9 +27,26 @@ import worldGeo from '../data/world-110m.geo.json';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const LAND_FEATURES = (worldGeo as any).features as any[];
 
+// Natural-Earth polygon names don't always match the dataset's `country` values
+// (which the country profiles are keyed on). Bridge the handful that differ so a
+// click on the globe resolves to the right country card.
+const GEO_NAME_ALIAS: Record<string, string> = {
+  'United States of America': 'USA',
+  'United Kingdom': 'UK',
+  'United Arab Emirates': 'UAE',
+};
+
+/** Dataset country name for a polygon feature, or null if we have no profile. */
+function countryFromFeature(feat: { properties?: { name?: string } } | undefined): string | null {
+  const geoName = feat?.properties?.name;
+  if (!geoName) return null;
+  const name = GEO_NAME_ALIAS[geoName] ?? geoName;
+  return hasCountryProfile(name) ? name : null;
+}
+
 const TITLE_ALL = {
-  t: 'Where founders build, worldwide',
-  s: 'Spin the globe or pick a program to fly there; dense cities are mapped below. Status as of June 2026 — verify on each site.',
+  t: 'Where founders gather',
+  s: 'Spin the globe or pick a residency to fly there; the houses with the strongest pull are mapped below. Status as of June 2026 — verify on each site.',
 };
 /** Subtitle when a specific canonical program type is selected. */
 function titleFor(typeId: string, label: string): { t: string; s: string } {
@@ -107,6 +126,8 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   const globeWrapEl = useRef<HTMLDivElement>(null);
   const globeEl = useRef<HTMLDivElement>(null);
   const worldRef = useRef<GlobeInstance>(null);
+  // Currently hovered country polygon (for the hover highlight + pointer cursor).
+  const hoverPolyRef = useRef<unknown>(null);
   const [selected, setSelected] = useState<Program | null>(null);
   const [spinning, setSpinning] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -197,12 +218,33 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       .pointRadius(0.24)
       .pointResolution(6)
       .pointsMerge(true)
-      // Country borders (identifiable for future per-country interactivity).
+      // Country borders, clickable: a country with a profile opens its card.
       .polygonsData(LAND_FEATURES)
-      .polygonCapColor(() => 'rgba(0,0,0,0)')
+      .polygonCapColor((feat: unknown) =>
+        feat === hoverPolyRef.current && countryFromFeature(feat as never)
+          ? 'rgba(255,255,255,0.10)'
+          : 'rgba(0,0,0,0)',
+      )
       .polygonSideColor(() => 'rgba(0,0,0,0)')
-      .polygonStrokeColor(() => 'rgba(255,255,255,0.42)')
+      .polygonStrokeColor((feat: unknown) =>
+        feat === hoverPolyRef.current && countryFromFeature(feat as never)
+          ? 'rgba(255,255,255,0.85)'
+          : 'rgba(255,255,255,0.42)',
+      )
       .polygonAltitude(0.006)
+      .onPolygonClick((feat: unknown) => {
+        const name = countryFromFeature(feat as never);
+        if (name) openCountry(countrySlug(name));
+      })
+      .onPolygonHover((feat: unknown) => {
+        hoverPolyRef.current = feat ?? null;
+        if (globeEl.current) {
+          globeEl.current.style.cursor = countryFromFeature(feat as never) ? 'pointer' : '';
+        }
+        // Re-evaluate cap/stroke so the hovered country lights up.
+        world.polygonCapColor(world.polygonCapColor());
+        world.polygonStrokeColor(world.polygonStrokeColor());
+      })
       .showAtmosphere(true)
       .atmosphereColor('#ffffff')
       .atmosphereAltitude(0.13)
@@ -385,7 +427,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   }
 
   const title = titleFor(filters.type, programTypeLabel(filters.type));
-  const tagline = useTypewriter('~/ wherever you land, you can build', { speed: 46, startDelay: 2600, loop: true });
+  const tagline = useTypewriter('~/ some places pull you into orbit', { speed: 46, startDelay: 2600, loop: true });
 
   return (
     // The globe is the homepage: it fills the viewport, and every other surface

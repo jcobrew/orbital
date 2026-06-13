@@ -34,7 +34,7 @@ export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean 
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="About Founder Atlas"
+        aria-label="About Orbital"
         className="relative z-[1] w-full max-w-[680px] rounded-[3px] border border-line2 bg-[#0b0e1c] p-7 shadow-[0_30px_80px_rgba(0,0,0,.7)]"
       >
         <button
@@ -46,14 +46,14 @@ export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean 
         </button>
 
         <div className="mb-1.5 font-display text-[10.5px] font-semibold uppercase tracking-[.22em] text-a2">
-          Founder Atlas
+          Orbital
         </div>
         <h2 className="m-0 mb-2.5 max-w-[520px] font-display text-[22px] font-bold leading-[1.12] text-text">
-          Find the right startup program for your next move.
+          Find where founders gather.
         </h2>
         <p className="m-0 mb-5 max-w-[560px] text-[13.5px] leading-relaxed text-muted">
-          A live map of accelerators, incubators, residencies, hacker houses and fellowships worldwide —
-          filter by stage, sector, funding, location and application status to find what fits where you are now.
+          Orbital maps the residencies, hacker houses and co-living programs where founders live and build together —
+          the places with enough gravity to pull people across the world.
         </p>
 
         <div className="mb-5">

@@ -99,7 +99,7 @@ export const GET: APIRoute = () => {
 
   const body = {
     meta: {
-      title: 'Founder Atlas — founder-needs profile schema',
+      title: 'Orbital — founder-needs profile schema',
       tagline: 'The guided-intake input shape consumed by the deterministic matching engine.',
       compiled: new Date().toISOString().slice(0, 10),
       note:

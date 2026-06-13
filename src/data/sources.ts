@@ -124,7 +124,7 @@ export const PROGRAM_SOURCES: Record<string, ProgramProvenance> = {
       {
         url: 'https://example.com/swg-cohort-note',
         title: 'Illustrative cohort note (sample data)',
-        publisher: 'Founder Atlas (sample)',
+        publisher: 'Orbital (sample)',
         kind: 'sample',
         trust: 'sample',
         note: 'Placeholder — replace with a real citation before launch.',

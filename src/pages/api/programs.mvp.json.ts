@@ -70,9 +70,9 @@ export const GET: APIRoute = () => {
 
   const body = {
     meta: {
-      title: 'Founder Atlas — curated MVP program export',
+      title: 'Orbital — curated MVP program export',
       tagline:
-        'Only curated, launch-ready (mvp:true) programs. The vetted slice of the directory.',
+        'Only curated, launch-ready (mvp:true) co-living programs. The vetted slice of the map.',
       compiled: now.toISOString().slice(0, 10),
       scope:
         'MVP = 100–200 high-trust, curated records across the MVP ecosystems and the 6–8 ' +

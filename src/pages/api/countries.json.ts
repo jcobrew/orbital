@@ -6,7 +6,7 @@ import { COUNTRIES } from '../../data/countries';
 export const GET: APIRoute = () => {
   const body = {
     meta: {
-      title: 'Founder Atlas — country startup-ecosystem profiles',
+      title: 'Orbital — country startup-ecosystem profiles',
       tagline:
         'National startup ecosystems for founders considering relocation: visas, key organizations and links.',
       compiled: new Date().toISOString().slice(0, 10),

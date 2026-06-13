@@ -16,7 +16,7 @@ export const GET: APIRoute = async () => {
 
   const body = {
     meta: {
-      title: 'Founder Atlas — data update report',
+      title: 'Orbital — data update report',
       tagline: 'Freshness, source inventory and MVP-readiness across the dataset (offline-computed).',
       compiled: new Date().toISOString().slice(0, 10),
       note:

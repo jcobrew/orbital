@@ -1,11 +1,11 @@
-# Founder Atlas
+# Orbital
 
-**Find where to build.** Founder Atlas is a relocation & support portal for founders — it maps the
-best places in the world to build a startup and the support waiting there: residencies, hacker
-houses, startup campuses, accelerators and incubators. The way university portals help academics
-choose where to go, Founder Atlas helps founders search programs — and, increasingly, whole
-**country startup ecosystems**. Built with **Astro + Tailwind + React islands**, output as a static
-site and deployed on Vercel.
+**Find where founders gather.** Orbital maps the residencies, hacker houses and co-living programs
+where founders live and build together — the places with enough gravity to pull people across the
+world (e.g. HF0, FR8, The Residency, Arrayah). It is **not** a general directory of accelerators,
+incubators, fellowships, grants or visas: it is a live map of the founder co-living landscape, with
+**country startup ecosystem** context for founders deciding where to land. Built with **Astro +
+Tailwind + React islands**, output as a static site and deployed on Vercel.
 
 **Live site:** https://founder-atlas.vercel.app/
 
@@ -27,8 +27,8 @@ visitors go straight to the data.
 - **Map** (`/map`) — a 2D Leaflet map (no longer in the header toggle; it backs the globe's dense-city
   minimaps). Dense regions (SF Bay Area, NYC, London, Bangalore) get a zoomed-in "off-coast" callout
   so they stay legible at world zoom.
-- **About** (`/about`) — what Founder Atlas is + a guide to the program types (accelerator vs
-  incubator vs residency vs hacker house vs fellowship). Same content as the intro overlay.
+- **About** (`/about`) — what Orbital is + a guide to the co-living program types (founder
+  residency vs hacker house vs co-living program). Same content as the intro overlay.
 - **Countries** (`/countries`, `/country/<slug>`) — profiles of national startup ecosystems for
   founders considering relocation.
 - **Dashboard** (`/dashboard`) — the agent/power-user surface (kept out of the human nav): a

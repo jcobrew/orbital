@@ -11,10 +11,10 @@ const prefersReducedMotion = () =>
  */
 export default function BootSequence({ count }: { count: number }) {
   const lines = [
-    '> founder-atlas v1.0 :: init',
-    '> loading atlas ............ ok',
+    '> orbital v1.0 :: init',
+    '> mapping gravity wells ..... ok',
     `> locating ${count} programs · 6 continents ... ok`,
-    '> you can build anywhere. support is everywhere.',
+    '> some places pull founders into orbit.',
     '> spinning up globe',
   ];
 

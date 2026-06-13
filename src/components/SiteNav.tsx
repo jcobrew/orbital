@@ -30,7 +30,7 @@ export default function SiteNav({ current }: { current?: NavCurrent }) {
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
       <a href="/" className="font-display text-[14px] font-bold tracking-tight text-text no-underline">
-        Founder&nbsp;Atlas
+        Orbital
       </a>
 
       <div

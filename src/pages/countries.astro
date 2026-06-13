@@ -1,12 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
 import SiteNav from '../components/SiteNav.tsx';
+import CountryGridCard from '../components/CountryGridCard.tsx';
 import { COUNTRIES } from '../data/countries';
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: 'Founder Atlas — country startup-ecosystem profiles',
+  name: 'Orbital — country startup-ecosystem directories',
   numberOfItems: COUNTRIES.length,
   itemListElement: COUNTRIES.map((c, i) => ({
     '@type': 'ListItem',
@@ -17,8 +18,8 @@ const jsonLd = {
 ---
 
 <Base
-  title="Founder Atlas — country startup ecosystems"
-  description="Profiles of national startup ecosystems for founders considering relocation: visas, key organizations and links, plus the programs available in each country."
+  title="Orbital — country startup-ecosystem directories"
+  description="Find where founders gather. For each country, Orbital points you to the local startup-ecosystem directories and portals worth knowing — plus the co-living programs pulling founders there."
 >
   <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} slot="head" />
 
@@ -29,33 +30,27 @@ const jsonLd = {
       class="m-0 mb-2 font-display text-[26px] font-bold leading-[1.15]"
       style="color:var(--text)"
     >
-      Where in the world to build
+      Where founders gather
     </h1>
     <p class="mb-1.5 max-w-[680px] text-[13px] leading-normal text-muted">
-      Go one level up from individual programs: each country profile covers the startup ecosystem, visa
-      and residency routes, and the key organizations to know. More countries are being added —
-      eventually you'll open these straight from the map.
+      Every place has its own pull. Rather than re-collect it all, Orbital points you outward — to the
+      local startup-ecosystem directories and portals worth knowing in each country — and shows the
+      co-living programs drawing founders there. Tap a country to open its directories.
     </p>
   </header>
 
   <main class="mx-auto max-w-[1100px] px-7 pb-16 pt-4">
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {COUNTRIES.map((c) => (
-        <a
-          href={`/country/${c.slug}`}
-          class="flex flex-col rounded-2xl border border-line2 bg-[rgba(8,10,22,.5)] p-5 transition hover:border-a1"
-        >
-          <div class="mb-1 flex items-baseline justify-between gap-2">
-            <span class="font-display text-[17px] font-bold text-text">{c.name}</span>
-            <span class="text-[11px] text-muted">{c.region}</span>
-          </div>
-          <p class="mb-3 flex-1 text-[12.5px] leading-relaxed text-muted">{c.summary}</p>
-          <div class="flex flex-wrap gap-1.5 text-[11px] text-muted">
-            <span class="rounded-[3px] border border-line2 px-2 py-0.5 font-semibold text-text">{c.programCount} programs</span>
-            {c.visas.length > 0 && <span class="rounded-[3px] border border-line2 px-2 py-0.5">{c.visas.length} visa routes</span>}
-            {c.organizations.length > 0 && <span class="rounded-[3px] border border-line2 px-2 py-0.5">{c.organizations.length} orgs</span>}
-          </div>
-        </a>
+        <CountryGridCard
+          client:visible
+          slug={c.slug}
+          name={c.name}
+          region={c.region}
+          summary={c.summary}
+          programCount={c.programCount}
+          directoryCount={c.directories.length}
+        />
       ))}
     </div>
   </main>
