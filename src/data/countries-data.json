@@ -1,8 +1,8 @@
 {
   "meta": {
-    "title": "Founder Atlas — country startup-ecosystem profiles",
+    "title": "Orbital — country startup-ecosystem directories",
     "compiled": "2026-06-09",
-    "note": "Human-curated profiles of national startup ecosystems for founders considering relocation. Each entry is a stand-alone record keyed by `slug` so it can later be served from a cloud database without code changes (see src/data/countries.ts for the swap point). Links and visa details change frequently — always confirm on the official source.",
+    "note": "Human-curated profiles of national startup ecosystems for founders considering relocation. Rather than re-collecting every ecosystem detail itself, Orbital points OUT to existing, well-known country-specific startup directories/portals via `directories`. Each entry is a stand-alone record keyed by `slug` so it can later be served from a cloud database without code changes (see src/data/countries.ts for the swap point). Links and visa details change frequently — always confirm on the official source.",
     "schema": {
       "slug": "URL-safe id, also the /country/<slug> route",
       "name": "Display name; MUST match the `country` value used in the program datasets so program counts join",
@@ -14,6 +14,7 @@
       "visas": "Founder/startup-relevant visa or residency routes: { name, description, url }",
       "organizations": "Key ecosystem orgs to know: { name, type, description, url }",
       "links": "Other useful official/portal links: { label, url }",
+      "directories": "External, country-specific startup-ecosystem directories/portals Orbital points founders to: { label, url, description? }",
       "updatedAt": "ISO date this record was last verified",
       "source": "Where the record was curated from (free text)"
     }
@@ -42,7 +43,11 @@
       "links": [
         { "label": "USCIS — working in the US", "url": "https://www.uscis.gov/working-in-the-united-states" }
       ],
-      "updatedAt": "2026-06-09",
+      "directories": [
+        { "label": "Crunchbase", "url": "https://www.crunchbase.com/", "description": "The largest open database of US (and global) startups, funding rounds and investors." },
+        { "label": "Dealroom — United States", "url": "https://dealroom.co/guides/united-states", "description": "Data-driven profile of the US tech ecosystem: unicorns, funding and top companies." }
+      ],
+      "updatedAt": "2026-06-13",
       "source": "Initial scaffold — needs verification pass"
     },
     {
@@ -68,7 +73,11 @@
       "links": [
         { "label": "GOV.UK — set up a business", "url": "https://www.gov.uk/set-up-business" }
       ],
-      "updatedAt": "2026-06-09",
+      "directories": [
+        { "label": "Dealroom — United Kingdom", "url": "https://dealroom.co/guides/united-kingdom", "description": "Data-driven profile of the UK tech ecosystem: funding, unicorns and top startups." },
+        { "label": "Tech Nation", "url": "https://technation.io/", "description": "National growth platform and data hub for UK tech companies." }
+      ],
+      "updatedAt": "2026-06-13",
       "source": "Initial scaffold — needs verification pass"
     },
     {
@@ -93,7 +102,11 @@
       "links": [
         { "label": "EDB — why Singapore", "url": "https://www.edb.gov.sg/" }
       ],
-      "updatedAt": "2026-06-09",
+      "directories": [
+        { "label": "Startup SG", "url": "https://www.startupsg.gov.sg/", "description": "Singapore's national startup portal and directory of programmes, grants and partners." },
+        { "label": "Dealroom — Singapore", "url": "https://dealroom.co/guides/singapore", "description": "Data-driven profile of Singapore's tech ecosystem." }
+      ],
+      "updatedAt": "2026-06-13",
       "source": "Initial scaffold — needs verification pass"
     },
     {
@@ -118,7 +131,10 @@
       "links": [
         { "label": "u.ae — starting a business", "url": "https://u.ae/en/information-and-services/business" }
       ],
-      "updatedAt": "2026-06-09",
+      "directories": [
+        { "label": "Dealroom — United Arab Emirates", "url": "https://dealroom.co/guides/united-arab-emirates", "description": "Data-driven profile of the UAE tech ecosystem." }
+      ],
+      "updatedAt": "2026-06-13",
       "source": "Initial scaffold — needs verification pass"
     },
     {
@@ -143,7 +159,10 @@
       "links": [
         { "label": "Invest in Estonia", "url": "https://investinestonia.com/" }
       ],
-      "updatedAt": "2026-06-09",
+      "directories": [
+        { "label": "Startup Estonia — startup database", "url": "https://startupestonia.ee/startup-database", "description": "Official directory of Estonian startups maintained by Startup Estonia." }
+      ],
+      "updatedAt": "2026-06-13",
       "source": "Initial scaffold — needs verification pass"
     },
     {
@@ -168,7 +187,318 @@
       "links": [
         { "label": "Welcome to France — talent", "url": "https://www.welcometofrance.com/en" }
       ],
-      "updatedAt": "2026-06-09",
+      "directories": [
+        { "label": "La French Tech", "url": "https://lafrenchtech.gouv.fr/en/", "description": "France's national startup movement, support network and ecosystem map." },
+        { "label": "Dealroom — France", "url": "https://dealroom.co/guides/france", "description": "Data-driven profile of the French tech ecosystem." }
+      ],
+      "updatedAt": "2026-06-13",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "germany",
+      "name": "Germany",
+      "region": "Europe",
+      "lat": 51.0,
+      "lng": 10.4,
+      "summary": "Europe's largest economy with a deep startup scene centred on Berlin and Munich, strong in B2B software, mobility and deep tech, backed by substantial public and corporate funding.",
+      "highlights": [
+        "Berlin is one of Europe's top startup hubs; Munich leads in deep tech.",
+        "Strong corporate and public co-investment (e.g. KfW, High-Tech Gründerfonds).",
+        "Large domestic and EU market on the doorstep."
+      ],
+      "visas": [],
+      "organizations": [],
+      "links": [],
+      "directories": [
+        { "label": "Dealroom — Germany", "url": "https://dealroom.co/guides/germany", "description": "Data-driven profile of the German tech ecosystem: funding, unicorns and top startups." },
+        { "label": "Startupdetector", "url": "https://www.startupdetector.de/", "description": "Tracker and directory of newly registered German startups and funding rounds." }
+      ],
+      "updatedAt": "2026-06-13",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "canada",
+      "name": "Canada",
+      "region": "North America",
+      "lat": 56.1,
+      "lng": -106.3,
+      "summary": "A welcoming, immigration-friendly ecosystem with strong AI hubs in Toronto, Montreal and Vancouver, plus a dedicated federal Start-up Visa that grants permanent residency.",
+      "highlights": [
+        "Start-up Visa offers a direct route to permanent residency for founders.",
+        "World-class AI research clusters in Toronto and Montreal.",
+        "Generous SR&ED R&D tax incentives."
+      ],
+      "visas": [
+        { "name": "Start-up Visa Program", "description": "Permanent residency for entrepreneurs with a qualifying business and support from a designated organization.", "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/start-visa.html" }
+      ],
+      "organizations": [],
+      "links": [],
+      "directories": [
+        { "label": "Dealroom — Canada", "url": "https://dealroom.co/guides/canada", "description": "Data-driven profile of the Canadian tech ecosystem." }
+      ],
+      "updatedAt": "2026-06-13",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "australia",
+      "name": "Australia",
+      "region": "Oceania",
+      "lat": -25.3,
+      "lng": 133.8,
+      "summary": "A maturing ecosystem led by Sydney and Melbourne with notable global exits (Atlassian, Canva, SafetyCulture) and a growing base of accelerators and venture capital.",
+      "highlights": [
+        "Major global successes: Atlassian, Canva, Airwallex.",
+        "Sydney and Melbourne are the primary hubs.",
+        "Strong APAC time-zone position and English-language market."
+      ],
+      "visas": [],
+      "organizations": [],
+      "links": [],
+      "directories": [
+        { "label": "Techboard", "url": "https://techboard.com.au/", "description": "Australia's largest directory and funding-data source for startup and tech companies." },
+        { "label": "Dealroom — Australia", "url": "https://dealroom.co/guides/australia", "description": "Data-driven profile of the Australian tech ecosystem." }
+      ],
+      "updatedAt": "2026-06-13",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "austria",
+      "name": "Austria",
+      "region": "Europe",
+      "lat": 47.5,
+      "lng": 14.5,
+      "summary": "A compact, well-funded ecosystem centred on Vienna, strong in deep tech and B2B software, with active public support via the Austria Wirtschaftsservice (aws).",
+      "highlights": [
+        "Vienna is the primary hub and a gateway to Central/Eastern Europe.",
+        "Strong public grant support through aws and FFG.",
+        "Notable scaleups including Bitpanda and GoStudent."
+      ],
+      "visas": [],
+      "organizations": [],
+      "links": [],
+      "directories": [
+        { "label": "Dealroom — Austria", "url": "https://dealroom.co/guides/austria", "description": "Data-driven profile of the Austrian tech ecosystem." }
+      ],
+      "updatedAt": "2026-06-13",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "finland",
+      "name": "Finland",
+      "region": "Europe",
+      "lat": 64.0,
+      "lng": 26.0,
+      "summary": "A small but globally connected ecosystem centred on Helsinki, famous for Slush and a strong gaming and deep-tech scene, with active public support via Business Finland.",
+      "highlights": [
+        "Home of Slush, the world's leading founder-focused startup event.",
+        "Strong gaming heritage (Supercell, Rovio) and deep-tech research.",
+        "Active public funding via Business Finland."
+      ],
+      "visas": [
+        { "name": "Startup permit", "description": "Residence permit for non-EU founders building an innovative startup in Finland, with a Business Finland eligibility statement.", "url": "https://migri.fi/en/startup-entrepreneur" }
+      ],
+      "organizations": [
+        { "name": "Business Finland", "type": "Government", "description": "Public funding and internationalization agency supporting Finnish startups.", "url": "https://www.businessfinland.fi/" }
+      ],
+      "links": [],
+      "directories": [
+        { "label": "Slush", "url": "https://slush.org/", "description": "Founder-focused community and event run by the not-for-profit Startup Foundation, anchoring the Finnish ecosystem." },
+        { "label": "Dealroom — Finland", "url": "https://dealroom.co/guides/finland", "description": "Data-driven profile of the Finnish tech ecosystem." }
+      ],
+      "updatedAt": "2026-06-13",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "sweden",
+      "name": "Sweden",
+      "region": "Europe",
+      "lat": 60.1,
+      "lng": 18.6,
+      "summary": "A highly productive ecosystem centred on Stockholm, which produces an outsized number of unicorns (Spotify, Klarna, Northvolt) per capita.",
+      "highlights": [
+        "Stockholm is one of Europe's most prolific unicorn factories.",
+        "Major successes: Spotify, Klarna, Mojang, Northvolt.",
+        "Strong design, fintech and climate-tech scenes."
+      ],
+      "visas": [],
+      "organizations": [],
+      "links": [],
+      "directories": [
+        { "label": "Dealroom — Sweden", "url": "https://dealroom.co/guides/sweden", "description": "Data-driven profile of the Swedish tech ecosystem." }
+      ],
+      "updatedAt": "2026-06-13",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "switzerland",
+      "name": "Switzerland",
+      "region": "Europe",
+      "lat": 46.8,
+      "lng": 8.2,
+      "summary": "A research-rich, capital-dense ecosystem anchored by ETH Zürich and EPFL, strong in deep tech, biotech, robotics and crypto (the Zug 'Crypto Valley').",
+      "highlights": [
+        "ETH Zürich and EPFL drive world-class deep-tech spinouts.",
+        "Zug's 'Crypto Valley' is a global blockchain hub.",
+        "Stable, high-trust environment with strong access to capital."
+      ],
+      "visas": [],
+      "organizations": [],
+      "links": [],
+      "directories": [
+        { "label": "startup.ch (IFJ)", "url": "https://www.startup.ch/", "description": "Swiss startup support platform and resource directory run by the IFJ Institut für Jungunternehmen." },
+        { "label": "Dealroom — Switzerland", "url": "https://dealroom.co/guides/switzerland", "description": "Data-driven profile of the Swiss tech ecosystem." }
+      ],
+      "updatedAt": "2026-06-13",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "india",
+      "name": "India",
+      "region": "Asia",
+      "lat": 22.0,
+      "lng": 79.0,
+      "summary": "One of the world's largest and fastest-growing startup ecosystems, spanning Bengaluru, Delhi NCR and Mumbai, with a vast domestic market and strong government backing via Startup India.",
+      "highlights": [
+        "Third-largest startup ecosystem globally by number of startups.",
+        "Major hubs: Bengaluru, Delhi NCR, Mumbai, Hyderabad.",
+        "National Startup India programme offers recognition, tax benefits and funding."
+      ],
+      "visas": [],
+      "organizations": [
+        { "name": "Startup India", "type": "Government programme", "description": "Flagship national initiative supporting startup recognition, funding and networking.", "url": "https://www.startupindia.gov.in/" }
+      ],
+      "links": [],
+      "directories": [
+        { "label": "Startup India", "url": "https://www.startupindia.gov.in/", "description": "Official Government of India portal and directory of recognised startups, schemes and investors." },
+        { "label": "Dealroom — India", "url": "https://dealroom.co/guides/india", "description": "Data-driven profile of the Indian tech ecosystem." }
+      ],
+      "updatedAt": "2026-06-13",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "indonesia",
+      "name": "Indonesia",
+      "region": "Asia",
+      "lat": -2.5,
+      "lng": 118.0,
+      "summary": "Southeast Asia's largest economy and consumer market, with a fast-growing Jakarta-centred ecosystem that has produced decacorns like GoTo and unicorns across fintech and e-commerce.",
+      "highlights": [
+        "Largest population and digital consumer market in Southeast Asia.",
+        "Major successes: GoTo (Gojek + Tokopedia), Traveloka, Bukalapak.",
+        "Jakarta is the dominant hub."
+      ],
+      "visas": [],
+      "organizations": [],
+      "links": [],
+      "directories": [
+        { "label": "Dealroom — Indonesia", "url": "https://dealroom.co/guides/indonesia", "description": "Data-driven profile of the Indonesian tech ecosystem." }
+      ],
+      "updatedAt": "2026-06-13",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "malaysia",
+      "name": "Malaysia",
+      "region": "Asia",
+      "lat": 4.2,
+      "lng": 101.9,
+      "summary": "A growing Southeast Asian ecosystem centred on Kuala Lumpur, with strong government backing via MaGIC/Cradle and a strategic position between Singapore and the wider region.",
+      "highlights": [
+        "Kuala Lumpur is the primary hub, supported by national agencies.",
+        "Government support via Cradle Fund and MyStartup.",
+        "Cost-effective base for Southeast Asian expansion."
+      ],
+      "visas": [],
+      "organizations": [],
+      "links": [],
+      "directories": [
+        { "label": "Dealroom — Malaysia", "url": "https://dealroom.co/guides/malaysia", "description": "Data-driven profile of the Malaysian tech ecosystem." }
+      ],
+      "updatedAt": "2026-06-13",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "vietnam",
+      "name": "Vietnam",
+      "region": "Asia",
+      "lat": 14.1,
+      "lng": 108.3,
+      "summary": "A young, fast-rising ecosystem centred on Ho Chi Minh City and Hanoi, strong in fintech and gaming, with a large engineering-talent pool and rising venture interest.",
+      "highlights": [
+        "Ho Chi Minh City and Hanoi are the twin hubs.",
+        "Strong, low-cost engineering talent base.",
+        "Notable successes include VNG, MoMo and Sky Mavis."
+      ],
+      "visas": [],
+      "organizations": [],
+      "links": [],
+      "directories": [
+        { "label": "Dealroom — Vietnam", "url": "https://dealroom.co/guides/vietnam", "description": "Data-driven profile of the Vietnamese tech ecosystem." }
+      ],
+      "updatedAt": "2026-06-13",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "mexico",
+      "name": "Mexico",
+      "region": "North America",
+      "lat": 23.6,
+      "lng": -102.5,
+      "summary": "Latin America's second-largest ecosystem, anchored by Mexico City and Monterrey, strong in fintech and e-commerce and benefiting from proximity to the US market.",
+      "highlights": [
+        "Mexico City and Monterrey are the leading hubs.",
+        "Major fintech successes including Clip, Konfío and Bitso.",
+        "Proximity and trade ties to the US (USMCA)."
+      ],
+      "visas": [],
+      "organizations": [],
+      "links": [],
+      "directories": [
+        { "label": "Dealroom — Mexico", "url": "https://dealroom.co/guides/mexico", "description": "Data-driven profile of the Mexican tech ecosystem." }
+      ],
+      "updatedAt": "2026-06-13",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "colombia",
+      "name": "Colombia",
+      "region": "South America",
+      "lat": 4.6,
+      "lng": -74.1,
+      "summary": "A rising Latin American ecosystem centred on Bogotá and Medellín, strong in fintech and proptech, with national support via iNNpulsa Colombia.",
+      "highlights": [
+        "Bogotá and Medellín are the primary hubs.",
+        "Home to Rappi, one of Latin America's largest startups.",
+        "National entrepreneurship support via iNNpulsa Colombia."
+      ],
+      "visas": [],
+      "organizations": [],
+      "links": [],
+      "directories": [
+        { "label": "Dealroom — Colombia", "url": "https://dealroom.co/guides/colombia", "description": "Data-driven profile of the Colombian tech ecosystem." }
+      ],
+      "updatedAt": "2026-06-13",
+      "source": "Initial scaffold — needs verification pass"
+    },
+    {
+      "slug": "argentina",
+      "name": "Argentina",
+      "region": "South America",
+      "lat": -38.4,
+      "lng": -63.6,
+      "summary": "A talent-rich ecosystem centred on Buenos Aires that has produced an outsized number of unicorns (MercadoLibre, Globant, Auth0, Ualá) despite macroeconomic volatility.",
+      "highlights": [
+        "Buenos Aires is the dominant hub and a Latin American talent magnet.",
+        "Produced unicorns: MercadoLibre, Globant, Auth0, Ualá, OLX.",
+        "Strong, globally competitive engineering talent."
+      ],
+      "visas": [],
+      "organizations": [],
+      "links": [],
+      "directories": [
+        { "label": "Dealroom — Argentina", "url": "https://dealroom.co/guides/argentina", "description": "Data-driven profile of the Argentine tech ecosystem." }
+      ],
+      "updatedAt": "2026-06-13",
       "source": "Initial scaffold — needs verification pass"
     }
   ]

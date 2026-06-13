@@ -13,8 +13,8 @@ import Logo from '../components/Logo';
 import SiteNav from '../components/SiteNav';
 
 const TITLE_ALL = {
-  t: 'Where founders build, worldwide',
-  s: 'Find the best places to relocate and the startup support waiting there — click a pin or list item for details. Status as of June 2026 — verify on each site.',
+  t: 'Where founders gather',
+  s: 'Find the residencies, hacker houses and co-living programs where founders live and build together — click a pin or list item for details. Status as of June 2026 — verify on each site.',
 };
 /** Subtitle when a specific canonical program type is selected. */
 function titleFor(typeId: string, label: string): { t: string; s: string } {

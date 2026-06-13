@@ -5,6 +5,8 @@ import { programTypeLabel } from '../data/programs';
 import { PROGRAM_TYPES, isMvpProgramType } from '../data/taxonomy';
 import { STATUS_ORDER, statusMeta, shortStatusLabel } from '../lib/status';
 import { $filters, setFilters, initFiltersFromURL } from '../stores/filters';
+import { hasCountryProfile, countrySlug } from '../data/countries';
+import { openCountry } from '../stores/country';
 import { livingModelLabel } from '../lib/living';
 import type { ProgramFormat } from '../data/programs';
 
@@ -190,6 +192,15 @@ export default function FilterSidebar({
             </option>
           ))}
         </select>
+        {filters.country && hasCountryProfile(filters.country) && (
+          <button
+            type="button"
+            onClick={() => openCountry(countrySlug(filters.country))}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-line2 bg-[rgba(8,10,22,.6)] px-3 py-2 text-[12.5px] font-semibold text-text transition hover:border-a1"
+          >
+            View {filters.country} →
+          </button>
+        )}
         {stages.length > 0 && (
           <select
             aria-label="Filter by stage"

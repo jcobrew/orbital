@@ -31,7 +31,7 @@ export default function FounderTriggers({
   return (
     <div>
       <div className="mb-2 font-display text-[12px] font-semibold uppercase tracking-wide text-muted">
-        Why are you looking?
+        What pulls you?
       </div>
       <div className="flex flex-wrap gap-1.5">
         {TRIGGERS.map((t) => {

@@ -121,7 +121,7 @@ function renderText(report: UpdateReport): string {
   const h = report.headline;
   const lines: string[] = [];
   lines.push('============================================');
-  lines.push(' Founder Atlas — update report');
+  lines.push(' Orbital — update report');
   lines.push('============================================');
   lines.push(`  generated: ${report.generatedAt}`);
   lines.push(`  stale threshold: ${report.thresholdDays} days`);

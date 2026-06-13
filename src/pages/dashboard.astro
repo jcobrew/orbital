@@ -10,7 +10,7 @@ import { PROGRAMS } from '../data/programs';
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: 'Founder Atlas — founder relocation & support programs',
+  name: 'Orbital — founder residencies, hacker houses & co-living programs',
   numberOfItems: PROGRAMS.length,
   itemListElement: PROGRAMS.map((p, i) => ({
     '@type': 'ListItem',
@@ -31,8 +31,8 @@ const jsonLd = {
 ---
 
 <Base
-  title="Founder Atlas — Dashboard (agent-friendly directory)"
-  description="Searchable, URL-navigable directory of founder relocation & support programs worldwide — residencies, hacker houses, campuses, accelerators & incubators. Optimized for AI agents: JSON API, llms.txt, deep links and structured data."
+  title="Orbital — Dashboard (agent-friendly directory)"
+  description="Searchable, URL-navigable directory of founder residencies, hacker houses and co-living programs worldwide — where founders live and build together. Optimized for AI agents: JSON API, llms.txt, deep links and structured data."
 >
   <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} slot="head" />
 

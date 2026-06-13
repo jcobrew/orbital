@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import IntroOverlay from '../components/IntroOverlay.tsx';
+import CountryDetailDrawer from '../components/CountryDetailDrawer.tsx';
 
 interface Props {
   title: string;
@@ -33,5 +34,6 @@ const autoIntro = ['/', '/explore'].includes(Astro.url.pathname);
   <body class={fullscreen ? 'h-screen overflow-hidden' : 'min-h-screen'}>
     <slot />
     <IntroOverlay autoOpen={autoIntro} client:load />
+    <CountryDetailDrawer client:load />
   </body>
 </html>

@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://founder-atlas.com/schemas/program.schema.json",
-  "title": "Founder Atlas Program",
-  "description": "A founder-support program. Mirrors the canonical Founder Atlas schema (src/data/schema.ts). Legacy free-text fields (type, stage, status) are preserved and rendered; canonical fields (canonicalType, supportModes, …) are derived non-destructively. Every canonical and most legacy founder-schema fields are optional for backward compatibility; the `required` list reflects the always-present identity fields on /api/programs.json records.",
+  "title": "Orbital Program",
+  "description": "A founder co-living / residency program. Mirrors the canonical Orbital schema (src/data/schema.ts). Legacy free-text fields (type, stage, status) are preserved and rendered; canonical fields (canonicalType, supportModes, …) are derived non-destructively. Every canonical and most legacy founder-schema fields are optional for backward compatibility; the `required` list reflects the always-present identity fields on /api/programs.json records.",
   "type": "object",
   "additionalProperties": true,
   "required": ["dataset", "name", "type", "city", "country", "lat", "lng", "focus", "operator", "stage", "status", "status_detail", "domain", "url"],

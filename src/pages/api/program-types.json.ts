@@ -3,7 +3,7 @@ import { TAXONOMY, MVP_PROGRAM_TYPE_IDS } from '../../data/taxonomy';
 
 // Stream 9 — Canonical taxonomy export (ADDITIVE).
 //
-// Publishes the full Founder Atlas taxonomy as machine-readable JSON: every
+// Publishes the full Orbital taxonomy as machine-readable JSON: every
 // dimension (programType, supportMode, founderStage, intakeMethod,
 // intakeFrequency, costFundingModel) with its IDs, human labels, MVP flags and
 // descriptions. The `programType` dimension is the headline; the others are
@@ -30,7 +30,7 @@ export const GET: APIRoute = () => {
 
   const body = {
     meta: {
-      title: 'Founder Atlas — canonical taxonomy',
+      title: 'Orbital — canonical taxonomy',
       tagline:
         'The full program-type taxonomy plus the supporting dimensions, with MVP scope flags and labels.',
       compiled: new Date().toISOString().slice(0, 10),

@@ -1,25 +1,26 @@
 import type { APIRoute } from 'astro';
 
-const BODY = `# Founder Atlas
+const BODY = `# Orbital — find where founders gather
 
-> A relocation & support portal for founders: the best places in the world to build and the
-> startup support waiting there — residencies, hacker houses, startup campuses, accelerators,
-> incubators and talent investors. The way university portals help academics choose where to go,
-> Founder Atlas helps founders search programs and (soon) whole country startup ecosystems.
+> Orbital maps the residencies, hacker houses and co-living programs where founders live and
+> build together — the places with enough gravity to pull people across the world. Not a general
+> directory of accelerators, incubators, fellowships, grants or visas: a focused, live map of the
+> founder co-living landscape (e.g. HF0, FR8, The Residency, Arrayah).
 
-This site is a static, agent-friendly directory. AI agents should prefer the JSON API below
+This site is a static, agent-friendly map. AI agents should prefer the JSON API below
 over scraping the HTML views.
 
-## MVP scope & positioning
+## Scope & positioning
 
-Founder Atlas is in a focused MVP: depth and trust over global completeness. The curated
-launch set targets ~100–200 high-trust records across a few ecosystems (Finland/Nordics,
-Estonia, EU/Europe-wide, UK, US/global-remote) and 6–8 actively-populated program categories:
-founder residencies, hacker/founder houses, accelerators, pre-accelerators, founder
-fellowships, government grants / non-dilutive, startup visas / soft-landing, and co-founder
-matching / online founder communities. The full schema and taxonomy represent the long-term
-landscape, but only values flagged \`mvp:true\` are in active MVP scope. Records NOT yet curated
-still appear in the full dataset; the curated slice is exposed separately (see below).
+Orbital is focused on one thing: founder residencies, hacker houses and co-living programs —
+where founders live and build together. It is NOT a broad directory of accelerators, incubators,
+fellowships, grants or visas; those categories may still appear in the underlying schema/taxonomy
+for back-compat, but the curated focus is co-living programs only. The MVP keeps depth and trust
+over global completeness: a high-trust set of residency / hacker-house / co-living records across
+a handful of ecosystems (Finland/Nordics, Estonia, EU/Europe-wide, UK, US/global-remote). The
+full schema and taxonomy still represent the wider landscape, but only values flagged \`mvp:true\`
+are in active curated scope. Records NOT yet curated still appear in the full dataset; the curated
+slice is exposed separately (see below).
 
 ## Freshness & provenance
 
@@ -85,7 +86,7 @@ Funding/Mentorship/InvestorAccess/DemoDay/VisaSupport), \`applyUrl\`, \`sourceUr
 
 ## Dashboard — navigable by URL (best for agents)
 
-The [Dashboard](/dashboard) renders the full directory as a semantic, sortable table with
+The [Dashboard](/dashboard) renders the full map as a semantic, sortable table with
 schema.org JSON-LD per program. Drive it entirely by query params (filters compose with AND):
 
 - \`type\` = canonical program-type ID (the primary axis; see \`facets.canonicalType\` in the API)
@@ -119,7 +120,7 @@ Every page shares one header: brand · a Globe / List view toggle · Countries �
   panel, dense-city minimaps and the status legend are toggleable overlays.
 - [List](/explore): searchable, filterable card list with a program detail drawer.
 - [Map](/map): 2D interactive Leaflet map of the same data (also powers the globe's city minimaps).
-- [About](/about): what Founder Atlas is + a guide to the program types.
+- [About](/about): what Orbital is + a guide to the co-living program types.
 
 Each program also has a dedicated profile page at \`/programs/<slug>\` (slug = lowercased name,
 non-alphanumerics → hyphens), with schema.org \`EducationalOccupationalProgram\` JSON-LD.

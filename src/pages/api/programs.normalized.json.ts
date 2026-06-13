@@ -88,7 +88,7 @@ export const GET: APIRoute = () => {
 
   const body = {
     meta: {
-      title: 'Founder Atlas — normalized program export',
+      title: 'Orbital — normalized program export',
       tagline:
         'Every program with canonical taxonomy IDs, resolved application status, freshness and provenance.',
       compiled: now.toISOString().slice(0, 10),

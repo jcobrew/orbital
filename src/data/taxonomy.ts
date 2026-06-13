@@ -1,4 +1,4 @@
-// Canonical Founder Atlas taxonomy (Stream 2).
+// Canonical Orbital taxonomy (Stream 2).
 //
 // This module is the single source of truth for the *canonical* ID sets that
 // describe a founder-support program. It exists alongside — not instead of —

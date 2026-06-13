@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://founder-atlas.com/schemas/founder-needs.schema.json",
-  "title": "Founder Atlas FounderNeedsProfile",
-  "description": "A founder's self-described situation, consumed by the deterministic matching engine (Stream 5). Every field is OPTIONAL: an absent field imposes no constraint and contributes no score, so a partial profile is valid. Enum-valued fields reference the canonical Founder Atlas taxonomy (see /api/program-types.json).",
+  "title": "Orbital FounderNeedsProfile",
+  "description": "A founder's self-described situation, consumed by the deterministic matching engine (Stream 5). Every field is OPTIONAL: an absent field imposes no constraint and contributes no score, so a partial profile is valid. Enum-valued fields reference the canonical Orbital taxonomy (see /api/program-types.json).",
   "type": "object",
   "additionalProperties": false,
   "properties": {
