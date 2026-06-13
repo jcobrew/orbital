@@ -15,7 +15,7 @@ import SiteNav from '../components/SiteNav';
 import BootSequence from '../components/BootSequence';
 import AsciiBackdrop from '../components/AsciiBackdrop';
 import { useTypewriter } from '../lib/useTypewriter';
-import { sphereDots, type Dot } from '../lib/globeDots';
+import { sphereGrid, sampleEarth, type Dot } from '../lib/globeDots';
 import worldGeo from '../data/world-110m.geo.json';
 
 // Country polygons (Natural Earth 110m) for the white border outlines; each
@@ -170,19 +170,23 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     }
     const reduceMotion = prefersReducedMotion();
 
+    // Dense dot grid; colors/relief are sampled from earth imagery just below.
+    const dotGrid = sphereGrid(1.4);
+
     // globe.gl's factory call signature isn't well typed; cast to call it.
     const world: GlobeInstance = (Globe as unknown as (cfg?: object) => (el: HTMLElement) => GlobeInstance)({ animateIn: false })(globeEl.current)
-      // Whole-sphere fine dot mesh (land bright, ocean dim) + white country
-      // borders, over a transparent (page-black) backdrop. No photo textures.
+      // Whole-sphere dot mesh sampled from NASA earth imagery (landscape +
+      // ocean color + topology relief) with white country borders, over a
+      // transparent (page-black) backdrop.
       .backgroundColor('rgba(0,0,0,0)')
       .showGlobe(true)
       .showGraticules(false)
-      .pointsData(sphereDots(2))
+      .pointsData(dotGrid)
       .pointLat('lat')
       .pointLng('lng')
-      .pointColor((d: Dot) => (d.land ? '#f2f2f2' : '#242424'))
-      .pointAltitude(0.003)
-      .pointRadius((d: Dot) => (d.land ? 0.34 : 0.28))
+      .pointColor((d: Dot) => d.color)
+      .pointAltitude((d: Dot) => d.alt)
+      .pointRadius(0.24)
       .pointResolution(6)
       .pointsMerge(true)
       // Country borders (identifiable for future per-country interactivity).
@@ -230,6 +234,25 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     // Clamp zoom so the dot grid stays legible — close-up detail lives in the minimaps.
     controls.minDistance = 185;
     controls.maxDistance = 560;
+    // Custom wheel zoom: trackpad pinch arrives as ctrl+wheel — intercept it so
+    // the browser doesn't page-zoom (which "ruins the view"), and dolly the globe
+    // smoothly instead. Pinch gets a finer factor than a plain wheel/scroll.
+    controls.enableZoom = false;
+    const camera = world.camera();
+    const zoomEl = globeEl.current!;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const intensity = e.ctrlKey ? 0.01 : 0.0025;
+      const scale = Math.exp(e.deltaY * intensity);
+      const tgt = controls.target;
+      const off = camera.position.clone().sub(tgt);
+      const len = off.length();
+      const next = Math.max(controls.minDistance, Math.min(controls.maxDistance, len * scale));
+      off.multiplyScalar(next / len);
+      camera.position.copy(tgt).add(off);
+      controls.update();
+    };
+    zoomEl.addEventListener('wheel', onWheel, { passive: false });
     try {
       const gm = world.globeMaterial();
       if (gm?.color?.set) {
@@ -244,6 +267,11 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     worldRef.current = world;
     seedRings(null);
 
+    // Color the dots from earth imagery once it decodes, then re-render the layer.
+    sampleEarth(dotGrid).then((ok) => {
+      if (ok && worldRef.current === world) world.pointsData(dotGrid);
+    });
+
     const fit = () => world.width(globeWrapEl.current!.clientWidth).height(globeWrapEl.current!.clientHeight);
     fit();
     const ro = new ResizeObserver(fit);
@@ -254,6 +282,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     return () => {
       clearTimeout(t);
       ro.disconnect();
+      zoomEl.removeEventListener('wheel', onWheel);
       worldRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,94 +1,100 @@
-// Whole-sphere dot mesh for the ASCII/dot-matrix globe. Generates an evenly
-// spaced lat/lng grid of points and flags each as land or ocean by testing it
-// against the bundled Natural Earth country polygons. Land dots render bright,
-// ocean dots dim, so the entire globe reads as one fine generated grid.
-import worldGeo from '../data/world-110m.geo.json';
+// Dot mesh for the globe. We generate an evenly spaced lat/lng grid, then color
+// each dot by sampling real NASA earth imagery (blue-marble for landscape/ocean
+// color) and lift it slightly by the topology relief map — so the globe reads as
+// a detailed dotted earth with depth and roughness rather than a flat field.
 
 export interface Dot {
   lat: number;
   lng: number;
-  land: boolean;
+  color: string; // sampled rgb, filled in once imagery loads
+  alt: number; // small relief altitude from the topology map
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Ring = number[][];
-interface Feat {
-  bbox: [number, number, number, number]; // minLng, minLat, maxLng, maxLat
-  polys: Ring[][]; // list of polygons, each = [outerRing, ...holes]
-}
-
-function ringContains(lng: number, lat: number, ring: Ring): boolean {
-  let inside = false;
-  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-    const xi = ring[i][0],
-      yi = ring[i][1];
-    const xj = ring[j][0],
-      yj = ring[j][1];
-    const hit = yi > lat !== yj > lat && lng < ((xj - xi) * (lat - yi)) / (yj - yi) + xi;
-    if (hit) inside = !inside;
-  }
-  return inside;
-}
-
-// A point is in a polygon if it's inside the outer ring and not in any hole.
-function polyContains(lng: number, lat: number, poly: Ring[]): boolean {
-  if (!ringContains(lng, lat, poly[0])) return false;
-  for (let h = 1; h < poly.length; h++) if (ringContains(lng, lat, poly[h])) return false;
-  return true;
-}
-
-let FEATS: Feat[] | null = null;
-function features(): Feat[] {
-  if (FEATS) return FEATS;
-  FEATS = [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  for (const f of (worldGeo as any).features as any[]) {
-    const g = f.geometry;
-    if (!g) continue;
-    const polys: Ring[][] = g.type === 'Polygon' ? [g.coordinates] : g.type === 'MultiPolygon' ? g.coordinates : [];
-    if (!polys.length) continue;
-    let minLng = 180,
-      minLat = 90,
-      maxLng = -180,
-      maxLat = -90;
-    for (const poly of polys)
-      for (const pt of poly[0]) {
-        if (pt[0] < minLng) minLng = pt[0];
-        if (pt[0] > maxLng) maxLng = pt[0];
-        if (pt[1] < minLat) minLat = pt[1];
-        if (pt[1] > maxLat) maxLat = pt[1];
-      }
-    FEATS.push({ bbox: [minLng, minLat, maxLng, maxLat], polys });
-  }
-  return FEATS;
-}
-
-function isLand(lng: number, lat: number): boolean {
-  for (const f of features()) {
-    const b = f.bbox;
-    if (lng < b[0] || lng > b[2] || lat < b[1] || lat > b[3]) continue;
-    for (const poly of f.polys) if (polyContains(lng, lat, poly)) return true;
-  }
-  return false;
-}
-
-let DOTS: Dot[] | null = null;
+let GRID: Dot[] | null = null;
+let GRID_STEP = 0;
 /**
  * Build the dot grid once and cache it. `stepDeg` controls density (smaller =
  * finer/denser). Longitude samples scale with latitude so spacing stays roughly
- * even instead of bunching at the poles.
+ * even instead of bunching at the poles. Colors start dim and are replaced when
+ * {@link sampleEarth} resolves.
  */
-export function sphereDots(stepDeg = 2): Dot[] {
-  if (DOTS) return DOTS;
+export function sphereGrid(stepDeg = 1.4): Dot[] {
+  if (GRID && GRID_STEP === stepDeg) return GRID;
   const dots: Dot[] = [];
-  for (let lat = -80; lat <= 80; lat += stepDeg) {
+  for (let lat = -82; lat <= 82; lat += stepDeg) {
     const c = Math.cos((lat * Math.PI) / 180);
     const n = Math.max(1, Math.round((360 * c) / stepDeg));
     for (let i = 0; i < n; i++) {
       const lng = -180 + (360 * i) / n;
-      dots.push({ lat, lng, land: isLand(lng, lat) });
+      dots.push({ lat, lng, color: '#1a1a1a', alt: 0.002 });
     }
   }
-  DOTS = dots;
+  GRID = dots;
+  GRID_STEP = stepDeg;
   return dots;
+}
+
+function loadImageData(src: string, w: number, h: number): Promise<ImageData | null> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      try {
+        const cv = document.createElement('canvas');
+        cv.width = w;
+        cv.height = h;
+        const ctx = cv.getContext('2d', { willReadFrequently: true });
+        if (!ctx) return resolve(null);
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(ctx.getImageData(0, 0, w, h));
+      } catch {
+        resolve(null); // tainted canvas / decode failure — fall back to flat dots
+      }
+    };
+    img.onerror = () => resolve(null);
+    img.src = src;
+  });
+}
+
+const SAMPLE_W = 1024;
+const SAMPLE_H = 512;
+
+// Equirectangular lat/lng -> pixel index in a SAMPLE_W x SAMPLE_H buffer.
+function idx(lat: number, lng: number): number {
+  let x = Math.floor(((lng + 180) / 360) * SAMPLE_W);
+  let y = Math.floor(((90 - lat) / 180) * SAMPLE_H);
+  if (x < 0) x = 0;
+  else if (x >= SAMPLE_W) x = SAMPLE_W - 1;
+  if (y < 0) y = 0;
+  else if (y >= SAMPLE_H) y = SAMPLE_H - 1;
+  return (y * SAMPLE_W + x) * 4;
+}
+
+/**
+ * Sample earth imagery and mutate each dot's `color`/`alt` in place. Returns true
+ * if the color map loaded (caller should refresh the layer). Safe to fail: on any
+ * error the dots keep their dim fallback color.
+ */
+export async function sampleEarth(dots: Dot[], reliefAmount = 0.05): Promise<boolean> {
+  const [color, relief] = await Promise.all([
+    loadImageData('/textures/earth-blue-marble.jpg', SAMPLE_W, SAMPLE_H),
+    loadImageData('/textures/earth-topology.png', SAMPLE_W, SAMPLE_H),
+  ]);
+  if (!color) return false;
+  const cd = color.data;
+  const rd = relief?.data;
+  for (const d of dots) {
+    const i = idx(d.lat, d.lng);
+    // Gentle contrast so land/coast detail pops against the black backdrop.
+    const r = Math.min(255, Math.round(cd[i] * 1.12));
+    const g = Math.min(255, Math.round(cd[i + 1] * 1.12));
+    const b = Math.min(255, Math.round(cd[i + 2] * 1.12));
+    d.color = `rgb(${r},${g},${b})`;
+    if (rd) {
+      // Topology luminance (land elevation) -> a little altitude for relief.
+      const lum = (rd[i] + rd[i + 1] + rd[i + 2]) / 3 / 255;
+      d.alt = 0.002 + lum * reliefAmount;
+    }
+  }
+  return true;
 }
