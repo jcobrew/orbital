@@ -14,11 +14,14 @@ import Logo from '../components/Logo';
 import StatusBadge from '../components/StatusBadge';
 import SiteNav from '../components/SiteNav';
 import BootSequence from '../components/BootSequence';
+import AsciiBackdrop from '../components/AsciiBackdrop';
 import { useTypewriter } from '../lib/useTypewriter';
+import { sphereGrid, sampleEarth, type Dot } from '../lib/globeDots';
 import worldGeo from '../data/world-110m.geo.json';
 
-// Land geometry for the dot-matrix continents (Natural Earth 110m, properties
-// stripped). Cast: the bundled JSON isn't a typed GeoJSON module.
+// Country polygons (Natural Earth 110m) for the white border outlines; each
+// feature keeps { name, iso } so borders can become per-country interactive
+// later. Cast: the bundled JSON isn't a typed GeoJSON module.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const LAND_FEATURES = (worldGeo as any).features as any[];
 
@@ -119,8 +122,6 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   // city dock (Leaflet minimaps, managed imperatively)
   const cityElRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const cityMaps = useRef<Record<string, MiniRec>>({});
-  const cityrowEl = useRef<HTMLDivElement>(null);
-  const dragRef = useRef<{ y: number; h: number } | null>(null);
 
   const data = useMemo(() => {
     const copy = programs.map((p) => ({ ...p }));
@@ -177,19 +178,31 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     }
     const reduceMotion = prefersReducedMotion();
 
+    // Dense dot grid; colors/relief are sampled from earth imagery just below.
+    const dotGrid = sphereGrid(1.4);
+
     // globe.gl's factory call signature isn't well typed; cast to call it.
     const world: GlobeInstance = (Globe as unknown as (cfg?: object) => (el: HTMLElement) => GlobeInstance)({ animateIn: false })(globeEl.current)
-      // Dot-matrix earth: no photo textures — a near-black sphere with white
-      // hex-dot continents over a transparent (page-black) backdrop.
+      // Whole-sphere dot mesh sampled from NASA earth imagery (landscape +
+      // ocean color + topology relief) with white country borders, over a
+      // transparent (page-black) backdrop.
       .backgroundColor('rgba(0,0,0,0)')
       .showGlobe(true)
       .showGraticules(false)
-      .hexPolygonsData(LAND_FEATURES)
-      .hexPolygonResolution(3)
-      .hexPolygonMargin(0.28)
-      .hexPolygonAltitude(0.008)
-      .hexPolygonUseDots(true)
-      .hexPolygonColor(() => 'rgba(255,255,255,0.82)')
+      .pointsData(dotGrid)
+      .pointLat('lat')
+      .pointLng('lng')
+      .pointColor((d: Dot) => d.color)
+      .pointAltitude((d: Dot) => d.alt)
+      .pointRadius(0.24)
+      .pointResolution(6)
+      .pointsMerge(true)
+      // Country borders (identifiable for future per-country interactivity).
+      .polygonsData(LAND_FEATURES)
+      .polygonCapColor(() => 'rgba(0,0,0,0)')
+      .polygonSideColor(() => 'rgba(0,0,0,0)')
+      .polygonStrokeColor(() => 'rgba(255,255,255,0.42)')
+      .polygonAltitude(0.006)
       .showAtmosphere(true)
       .atmosphereColor('#ffffff')
       .atmosphereAltitude(0.13)
@@ -229,6 +242,25 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     // Clamp zoom so the dot grid stays legible — close-up detail lives in the minimaps.
     controls.minDistance = 185;
     controls.maxDistance = 560;
+    // Custom wheel zoom: trackpad pinch arrives as ctrl+wheel — intercept it so
+    // the browser doesn't page-zoom (which "ruins the view"), and dolly the globe
+    // smoothly instead. Pinch gets a finer factor than a plain wheel/scroll.
+    controls.enableZoom = false;
+    const camera = world.camera();
+    const zoomEl = globeEl.current!;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const intensity = e.ctrlKey ? 0.01 : 0.0025;
+      const scale = Math.exp(e.deltaY * intensity);
+      const tgt = controls.target;
+      const off = camera.position.clone().sub(tgt);
+      const len = off.length();
+      const next = Math.max(controls.minDistance, Math.min(controls.maxDistance, len * scale));
+      off.multiplyScalar(next / len);
+      camera.position.copy(tgt).add(off);
+      controls.update();
+    };
+    zoomEl.addEventListener('wheel', onWheel, { passive: false });
     try {
       const gm = world.globeMaterial();
       if (gm?.color?.set) {
@@ -243,6 +275,11 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     worldRef.current = world;
     seedRings(null);
 
+    // Color the dots from earth imagery once it decodes, then re-render the layer.
+    sampleEarth(dotGrid).then((ok) => {
+      if (ok && worldRef.current === world) world.pointsData(dotGrid);
+    });
+
     const fit = () => world.width(globeWrapEl.current!.clientWidth).height(globeWrapEl.current!.clientHeight);
     fit();
     const ro = new ResizeObserver(fit);
@@ -253,6 +290,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     return () => {
       clearTimeout(t);
       ro.disconnect();
+      zoomEl.removeEventListener('wheel', onWheel);
       worldRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -329,25 +367,6 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     [],
   );
 
-  // ---- drag the dock's top edge to resize (capped at half the viewport) ----
-  const cityMaxH = () => Math.round(window.innerHeight * 0.5);
-  function onResizeDown(e: React.PointerEvent) {
-    if (!cityrowEl.current) return;
-    dragRef.current = { y: e.clientY, h: cityrowEl.current.offsetHeight };
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    e.preventDefault();
-  }
-  function onResizeMove(e: React.PointerEvent) {
-    if (!dragRef.current || !cityrowEl.current) return;
-    const h = Math.max(184, Math.min(dragRef.current.h + (dragRef.current.y - e.clientY), cityMaxH()));
-    cityrowEl.current.style.height = h + 'px';
-    cityMaps.current[activeCity]?.map.invalidateSize();
-  }
-  function onResizeUp() {
-    dragRef.current = null;
-    cityMaps.current[activeCity]?.map.invalidateSize();
-  }
-
   function toggleSpin() {
     const world = worldRef.current;
     if (!world) return;
@@ -372,7 +391,9 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     // The globe is the homepage: it fills the viewport, and every other surface
     // (programs panel, minimaps, legend) is a toggleable overlay on top of it.
     <div className="relative h-screen overflow-hidden">
-      <div ref={globeWrapEl} className="absolute inset-0 overflow-hidden">
+      <div ref={globeWrapEl} className="absolute inset-0 overflow-hidden bg-black">
+        {/* Drifting ASCII starfield sits behind the globe (z-0). */}
+        {webgl && <AsciiBackdrop />}
         {/* z-[1] gives the globe its own stacking context so pin z-indexes stay below the overlay UI */}
         <div ref={globeEl} className="absolute inset-0 z-[1]" />
         {/* Terminal boot-up loader, faded out once the globe is ready. */}
@@ -452,9 +473,9 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         drag to rotate · scroll to zoom
       </div>
 
-      {/* Legend (toggle) */}
+      {/* Legend (toggle) — bottom-left, above the hint, clear of the minimap window */}
       {legendOpen && (
-        <div className="legend absolute bottom-4 right-4 z-20">
+        <div className="legend absolute bottom-14 left-4 z-20">
           <b>Recruiting status</b>
           {STATUS_ORDER.map((k) => {
             const s = statusMeta(k);
@@ -507,26 +528,12 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         </div>
       )}
 
-      {/* City minimap dock (toggle) — overlays the bottom of the globe */}
+      {/* City minimap — a bottom-right floating window (so the left programs
+          panel never covers it, and it doesn't swallow the whole bottom edge). */}
       {dockOpen && (
-        <div className="absolute inset-x-0 bottom-0 z-20">
-          <div id="cityrow" ref={cityrowEl}>
-            <div
-              id="cityresize"
-              title="Drag to resize"
-              onPointerDown={onResizeDown}
-              onPointerMove={onResizeMove}
-              onPointerUp={onResizeUp}
-              onPointerCancel={onResizeUp}
-            />
-            <button
-              onClick={() => setDockOpen(false)}
-              aria-label="Close minimaps"
-              className="absolute right-2.5 top-2.5 z-[7] flex h-7 w-7 items-center justify-center rounded-lg border border-line2 bg-[rgba(16,16,16,.78)] text-muted transition hover:border-a1 hover:text-text"
-            >
-              <IconClose />
-            </button>
-            <div id="citytabs">
+        <div className="absolute bottom-4 right-4 z-20 w-[380px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-[3px] border border-line2 bg-[rgba(10,10,10,.92)] shadow-[0_18px_50px_rgba(0,0,0,.6)] backdrop-blur">
+          <div className="flex items-center gap-2 border-b border-line px-2.5 py-2">
+            <div className="flex flex-1 flex-wrap gap-1.5">
               {CLUSTERS.map((c) => (
                 <button key={c.id} className={`citytab ${activeCity === c.id ? 'active' : ''}`} onClick={() => setActiveCity(c.id)}>
                   <span className="led" />
@@ -534,22 +541,29 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
                 </button>
               ))}
             </div>
-            <div id="citystage">
-              {CLUSTERS.map((c) => {
-                const empty = (cityCounts[c.id] ?? 0) === 0;
-                return (
-                  <div
-                    key={c.id}
-                    ref={(el) => {
-                      cityElRefs.current[c.id] = el;
-                    }}
-                    className={`citymap ${activeCity === c.id ? 'active' : ''} ${empty ? 'empty' : ''}`}
-                  >
-                    {empty ? 'No programs in this dataset' : null}
-                  </div>
-                );
-              })}
-            </div>
+            <button
+              onClick={() => setDockOpen(false)}
+              aria-label="Close minimaps"
+              className="flex h-7 w-7 flex-none items-center justify-center rounded-lg border border-line2 text-muted transition hover:border-a1 hover:text-text"
+            >
+              <IconClose />
+            </button>
+          </div>
+          <div className="relative h-[260px]">
+            {CLUSTERS.map((c) => {
+              const empty = (cityCounts[c.id] ?? 0) === 0;
+              return (
+                <div
+                  key={c.id}
+                  ref={(el) => {
+                    cityElRefs.current[c.id] = el;
+                  }}
+                  className={`citymap ${activeCity === c.id ? 'active' : ''} ${empty ? 'empty' : ''}`}
+                >
+                  {empty ? 'No programs in this dataset' : null}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
