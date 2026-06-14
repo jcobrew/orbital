@@ -87,6 +87,11 @@ const IconReset = () => (<svg {...svg}><circle cx="8" cy="8" r="5.3" /><path d="
 const IconMinimap = () => (<svg {...svg}><path d="M2 4.3l4-1.6 4 1.6 4-1.6v9l-4 1.6-4-1.6-4 1.6z" /><path d="M6 2.7v9M10 4.3v9" /></svg>);
 const IconLegend = () => (<svg {...svg}><circle cx="3.3" cy="4" r="1.3" /><circle cx="3.3" cy="8" r="1.3" /><circle cx="3.3" cy="12" r="1.3" /><path d="M6.6 4h7.4M6.6 8h7.4M6.6 12h7.4" /></svg>);
 
+// HTML-string twin of <IconMinimap> for the clickable city markers rendered as
+// globe.gl htmlElements (which take raw DOM, not React).
+const MINIMAP_SVG =
+  '<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.3l4-1.6 4 1.6 4-1.6v9l-4 1.6-4-1.6-4 1.6z"/><path d="M6 2.7v9M10 4.3v9"/></svg>';
+
 const iconBtn =
   'flex h-9 w-9 items-center justify-center rounded-xl border border-line2 bg-[rgba(16,16,16,.78)] text-muted backdrop-blur transition hover:border-a1 hover:text-text';
 
@@ -137,6 +142,24 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     return m;
   }, [cityData]);
 
+  // Clickable minimap markers placed on each dense city; selecting one opens that
+  // city's round minimap. Merged with program pins into one globe htmlElements layer.
+  const cityMarkers = useMemo(
+    () =>
+      CLUSTERS.map((c) => ({
+        marker: true as const,
+        id: c.id,
+        label: c.label,
+        count: cityCounts[c.id] ?? 0,
+        lat: (c.bounds[0][0] + c.bounds[1][0]) / 2,
+        lng: (c.bounds[0][1] + c.bounds[1][1]) / 2,
+      })),
+    [cityCounts],
+  );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const globePins = useMemo(() => [...(shown as any[]), ...cityMarkers], [shown, cityMarkers]);
+  const activeCluster = CLUSTERS.find((c) => c.id === activeCity) ?? CLUSTERS[0];
+
   function seedRings(focus: Program | null) {
     const world = worldRef.current;
     if (!world) return;
@@ -153,6 +176,21 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       setSpinning(false);
       world.pointOfView({ lat: p.lat, lng: p.lng, altitude: 1.7 }, 900);
       seedRings(p);
+    }
+  }
+
+  // Open a city's round minimap (triggered by its globe marker) and fly there.
+  function openCity(id: string) {
+    setActiveCity(id);
+    setDockOpen(true);
+    const world = worldRef.current;
+    const c = CLUSTERS.find((x) => x.id === id);
+    if (world && c) {
+      const lat = (c.bounds[0][0] + c.bounds[1][0]) / 2;
+      const lng = (c.bounds[0][1] + c.bounds[1][1]) / 2;
+      world.controls().autoRotate = false;
+      setSpinning(false);
+      world.pointOfView({ lat, lng, altitude: 1.7 }, 900);
     }
   }
 
@@ -206,7 +244,20 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       .htmlLat('lat')
       .htmlLng('lng')
       .htmlAltitude(0.012)
-      .htmlElement((d: Program) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .htmlElement((d: any) => {
+        // City minimap marker (orbital node) — opens that city's round minimap.
+        if (d.marker) {
+          const el = document.createElement('div');
+          el.className = 'city-pin';
+          el.innerHTML = `<span class="city-pin-ic">${MINIMAP_SVG}</span>${d.count ? `<span class="city-pin-ct">${d.count}</span>` : ''}`;
+          el.title = `${d.label} — open minimap`;
+          el.onclick = (ev) => {
+            ev.stopPropagation();
+            openCity(d.id);
+          };
+          return el;
+        }
         const el = document.createElement('div');
         el.className = 'pin';
         el.style.setProperty('--ring', statusMeta(d.status).color);
@@ -223,7 +274,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         el.style.pointerEvents = isVisible ? 'auto' : 'none';
       });
 
-    world.htmlElementsData(shown);
+    world.htmlElementsData(globePins);
     world.pointOfView({ lat: 22, lng: 8, altitude: 2.4 }, 0);
     const controls = world.controls();
     controls.autoRotate = !reduceMotion;
@@ -288,10 +339,10 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  // react to filter changes (globe pins)
+  // react to filter changes (globe pins + city markers)
   useEffect(() => {
-    if (worldRef.current) worldRef.current.htmlElementsData(shown);
-  }, [shown]);
+    if (worldRef.current) worldRef.current.htmlElementsData(globePins);
+  }, [globePins]);
 
   // ---- city minimaps: build the active one lazily, keep markers in sync ----
   // Only while the dock is open; tear the Leaflet maps down when it closes so
@@ -318,7 +369,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       }
       if (!rec) {
         if (!isActive) return; // build only when its tab is first opened
-        const map = L.map(el, { zoomControl: true, attributionControl: false, fadeAnimation: false });
+        const map = L.map(el, { zoomControl: false, attributionControl: false, fadeAnimation: false });
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { subdomains: 'abcd', maxZoom: 19 }).addTo(map);
         const layer = L.layerGroup().addTo(map);
         rec = { map, layer, fitted: false };
@@ -462,7 +513,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
 
       {/* Bottom-left interaction hint */}
       <div className="term pointer-events-none absolute bottom-4 left-4 z-10 rounded-[3px] border border-line bg-[rgba(16,16,16,.6)] px-2.5 py-1.5 text-[11px] text-muted backdrop-blur">
-        drag to rotate · scroll to zoom
+        drag to rotate · pinch to zoom · click a ◍ to map a city
       </div>
 
       {/* Legend (toggle) — bottom-left, above the hint, clear of the minimap window */}
@@ -482,66 +533,48 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       )}
 
       {selected && (
-        <div className="absolute right-[18px] top-1/2 z-[25] w-[330px] -translate-y-1/2 rounded-[3px] border border-line2 bg-[rgba(10,10,10,.94)] p-[18px] shadow-[0_24px_70px_rgba(0,0,0,.65)] backdrop-blur-[18px]">
-          <button className="absolute right-3.5 top-3 border-none bg-transparent text-[18px] text-muted hover:text-white" onClick={() => setSelected(null)}>
-            ✕
-          </button>
-          <div className="mb-2.5 flex items-center gap-3">
-            <Logo name={selected.name} domain={selected.domain} size={48} />
-            <div>
-              <div className="font-display text-[16px] font-bold leading-tight">{selected.name}</div>
+        <div className="orbit-overlay">
+          <div className="orbit-stage">
+            {/* white ball orbiting the card */}
+            <div className="orbit-ring">
+              <span className="orbit-ball" />
+            </div>
+            <div className="orbit-card">
+              <button className="orbit-close" onClick={() => setSelected(null)} aria-label="Close">
+                ✕
+              </button>
+              <Logo name={selected.name} domain={selected.domain} size={46} />
+              <div className="mt-2 font-display text-[17px] font-bold leading-tight">{selected.name}</div>
               <div className="mt-0.5 text-[11px] font-semibold text-a2">{selected.type}</div>
+              <div className="mt-2.5">
+                <StatusBadge status={selected.status} full />
+              </div>
+              <div className="orbit-meta">
+                <div className="text-text">📍 {selected.city}, {selected.country}</div>
+                <div>🎯 {selected.focus}</div>
+                <div>🧭 {selected.operator || 'Not publicly listed'}</div>
+                <div>🌱 {selected.stage}</div>
+              </div>
+              {selected.highlight && <div className="orbit-highlight">{selected.highlight}</div>}
+              <a
+                href={selected.url}
+                target="_blank"
+                rel="noopener"
+                className="mt-3 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-bold text-[#0a0a0a] no-underline"
+                style={{ background: 'var(--grad)' }}
+              >
+                Visit program →
+              </a>
             </div>
           </div>
-          <div className="mb-3">
-            <StatusBadge status={selected.status} full />
-          </div>
-          <div className="flex flex-col gap-2 text-[12px] leading-snug">
-            <div>📍 <b className="text-muted">Location: </b>{selected.city}, {selected.country}</div>
-            <div>🎯 <b className="text-muted">Focus: </b>{selected.focus}</div>
-            <div>🧭 <b className="text-muted">Run by: </b>{selected.operator || 'Not publicly listed'}</div>
-            <div>🌱 <b className="text-muted">Stage: </b>{selected.stage}</div>
-            {selected.status_detail && (
-              <div>📋 <b className="text-muted">Details: </b>{selected.status_detail}</div>
-            )}
-          </div>
-          {selected.highlight && (
-            <div className="mt-3 border-t border-line pt-3 text-[11.5px] italic leading-normal text-muted">{selected.highlight}</div>
-          )}
-          <a
-            href={selected.url}
-            target="_blank"
-            rel="noopener"
-            className="mt-3.5 inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[12px] font-bold text-[#0a0a0a] no-underline"
-            style={{ background: 'var(--grad)' }}
-          >
-            Visit program →
-          </a>
         </div>
       )}
 
-      {/* City minimap — a bottom-right floating window (so the left programs
-          panel never covers it, and it doesn't swallow the whole bottom edge). */}
+      {/* City minimap — a round, bottom-right "orbital" window. Cities are picked
+          by clicking their markers on the globe; this shows the active one. */}
       {dockOpen && (
-        <div className="absolute bottom-4 right-4 z-20 w-[380px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-[3px] border border-line2 bg-[rgba(10,10,10,.92)] shadow-[0_18px_50px_rgba(0,0,0,.6)] backdrop-blur">
-          <div className="flex items-center gap-2 border-b border-line px-2.5 py-2">
-            <div className="flex flex-1 flex-wrap gap-1.5">
-              {CLUSTERS.map((c) => (
-                <button key={c.id} className={`citytab ${activeCity === c.id ? 'active' : ''}`} onClick={() => setActiveCity(c.id)}>
-                  <span className="led" />
-                  {c.label} <b>{cityCounts[c.id] ?? 0}</b>
-                </button>
-              ))}
-            </div>
-            <button
-              onClick={() => setDockOpen(false)}
-              aria-label="Close minimaps"
-              className="flex h-7 w-7 flex-none items-center justify-center rounded-lg border border-line2 text-muted transition hover:border-a1 hover:text-text"
-            >
-              <IconClose />
-            </button>
-          </div>
-          <div className="relative h-[260px]">
+        <div className="minimap-orb absolute bottom-6 right-6 z-20">
+          <div className="minimap-orb-map">
             {CLUSTERS.map((c) => {
               const empty = (cityCounts[c.id] ?? 0) === 0;
               return (
@@ -557,6 +590,13 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
               );
             })}
           </div>
+          <div className="minimap-orb-label">
+            <span className="led" />
+            {activeCluster.label} <b>{cityCounts[activeCity] ?? 0}</b>
+          </div>
+          <button onClick={() => setDockOpen(false)} aria-label="Close minimap" className="minimap-orb-close">
+            <IconClose />
+          </button>
         </div>
       )}
 
