@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "2026-06-05-techstars-equity-unsourced",
+  "target": { "kind": "update", "name": "Techstars" },
+  "changes": {
+    "equityTaken": "5%",
+    "fundingAmount": "$150K"
+  },
+  "sources": [],
+  "submitter": "anonymous",
+  "submittedAt": "2026-06-05T11:00:00Z",
+  "status": "rejected",
+  "reviewNote": "Rejected: changes equity + funding amount (sensitive fields) with no source URL, and the figures contradict Techstars' published standard deal. Would fail validation; never applied.",
+  "rationale": "Claimed updated standard-deal terms."
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "2026-06-12-hf0-deadline",
+  "target": { "kind": "update", "name": "HF0 (Hacker Fellowship Zero)" },
+  "changes": {
+    "status": "open",
+    "status_detail": "Applications open for the Fall 2026 residency cohort; rolling review until the cohort fills.",
+    "applicationDeadline": "2026-08-15"
+  },
+  "sources": [
+    {
+      "url": "https://www.hf0.com/",
+      "title": "HF0 — official site",
+      "retrievedAt": "2026-06-12"
+    }
+  ],
+  "submitter": "cpt.stix@gmail.com",
+  "submittedAt": "2026-06-12T09:00:00Z",
+  "status": "pending",
+  "rationale": "Saw the Fall cohort go live on the HF0 site; updating application status + deadline. Pending a maintainer's source check before approval."
+}

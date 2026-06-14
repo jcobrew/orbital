@@ -1,0 +1,33 @@
+name: CI
+
+# Run once per change: on PRs (any branch) and on direct pushes to master.
+# Avoids the duplicate run a branch gets when it has an open PR *and* also
+# matches a broad `push` filter.
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test

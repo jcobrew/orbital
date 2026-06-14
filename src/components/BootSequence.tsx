@@ -11,10 +11,10 @@ const prefersReducedMotion = () =>
  */
 export default function BootSequence({ count }: { count: number }) {
   const lines = [
-    '> founder-atlas v1.0 :: init',
-    '> loading atlas ............ ok',
-    `> locating ${count} programs · 6 continents ... ok`,
-    '> you can build anywhere. support is everywhere.',
+    '> orbital v1.0 :: init',
+    '> mapping gravity wells ..... ok',
+    `> locating ${count} houses / residencies · 6 continents ... ok`,
+    '> some places pull founders into orbit.',
     '> spinning up globe',
   ];
 
@@ -37,7 +37,8 @@ export default function BootSequence({ count }: { count: number }) {
   const visible = lines.slice(0, Math.max(shown, 1));
 
   return (
-    <div className="term pointer-events-none select-none text-[12.5px] leading-[1.7] text-text">
+    <div className="term pointer-events-none flex select-none items-start gap-4 text-[12.5px] leading-[1.7] text-text">
+      {!reduce && <span className="orbit-loader mt-0.5 flex-none" aria-hidden="true" />}
       <div className="w-[min(440px,82vw)]">
         {visible.map((ln, i) => (
           <div key={i} className="whitespace-pre-wrap">

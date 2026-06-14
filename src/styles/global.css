@@ -19,13 +19,17 @@
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
 
-  /* Crisp corners everywhere (circles via rounded-full / 50% are unaffected). */
+  /* Panels/cards stay crisp (selective roundness — Orbital keeps surfaces
+     sharp and reserves curves for interactive/orbit elements). Circles via
+     rounded-full / 50% are unaffected. */
   --radius-sm: 3px;
   --radius-md: 3px;
   --radius-lg: 3px;
   --radius-xl: 3px;
   --radius-2xl: 3px;
   --radius-3xl: 3px;
+  /* Pill radius for the round elements: buttons, chips, toggles, avatars. */
+  --radius-pill: 999px;
 }
 
 /* Plain CSS custom properties for imperative code (Leaflet/Globe islands,
@@ -71,7 +75,7 @@ a {
   font-weight: 600;
   font-size: 11px;
   padding: 7px 8px;
-  border-radius: 3px;
+  border-radius: var(--radius-pill);
   border: 1px solid var(--line2);
   color: var(--muted);
   background: rgba(14, 14, 14, 0.5);
@@ -353,7 +357,7 @@ a {
   align-items: center;
   gap: 7px;
   padding: 5px 13px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid var(--line2);
   background: rgba(10, 10, 10, 0.86);
   backdrop-filter: blur(8px);
@@ -496,11 +500,11 @@ a {
   height: min(88vmin, 520px);
   pointer-events: auto;
 }
-.orbit-ring {
+.orbit-card-ring {
   position: absolute;
   inset: -26px;
   border-radius: 50%;
-  animation: orbit 14s linear infinite;
+  animation: orbit-spin 14s linear infinite;
   pointer-events: none;
 }
 .orbit-ball {
@@ -570,13 +574,182 @@ a {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-@keyframes orbit {
+/* ============================================================================
+   ORBITAL MOTIF SYSTEM
+   Monochrome geometry that reads as orbits: dotted/dashed paths, ring nodes and
+   a dot that travels the line. Reusable across dividers, lists, loaders, hover
+   states and decorative rings. All motion respects prefers-reduced-motion.
+   ========================================================================== */
+
+@keyframes orbit-spin {
   to {
     transform: rotate(360deg);
   }
 }
+@keyframes orbit-travel {
+  from {
+    left: -3px;
+  }
+  to {
+    left: calc(100% + 3px);
+  }
+}
+@keyframes orbit-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ---- Orbital divider: a dotted path with a node that travels along it ---- */
+.orbit-divider {
+  position: relative;
+  height: 1px;
+  margin: 28px 0;
+  border: 0;
+  background: repeating-linear-gradient(
+    to right,
+    var(--line2) 0 2px,
+    transparent 2px 9px
+  );
+}
+.orbit-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -3px;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: var(--a2);
+  box-shadow: 0 0 9px var(--a2);
+  animation: orbit-travel 11s linear infinite;
+}
+
+/* ---- Orbital list: each item is a ring node (planet on an orbit) ---- */
+.orbit-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.orbit-list > li {
+  position: relative;
+  padding-left: 22px;
+}
+.orbit-list > li::before {
+  content: '';
+  position: absolute;
+  left: 1px;
+  top: 0.42em;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--line2);
+}
+.orbit-list > li::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: calc(0.42em + 4px);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--a2);
+  box-shadow: 0 0 6px var(--a2);
+}
+
+/* ---- Orbital ring: dotted circle, optionally with an orbiting node ---- */
+.orbit-ring {
+  position: relative;
+  border-radius: 50%;
+  border: 1px dashed var(--line);
+}
+.orbit-ring--node::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: var(--a2);
+  box-shadow: 0 0 9px var(--a2);
+}
+.orbit-ring--spin {
+  animation: orbit-spin 26s linear infinite;
+}
+
+/* ---- Orbital loader: a node circling a ring (boot / loading chrome) ---- */
+.orbit-loader {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line2);
+  position: relative;
+  animation: orbit-spin 1.5s linear infinite;
+}
+.orbit-loader::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: var(--text);
+  box-shadow: 0 0 10px var(--text);
+}
+
+/* ---- Orbital node bullet: standalone inline ring+dot marker ---- */
+.orbit-node {
+  display: inline-block;
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--line2);
+  flex: none;
+}
+.orbit-node::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--a2);
+  box-shadow: 0 0 6px var(--a2);
+}
+
+/* ---- Orbital hover ring: a dotted halo that appears on interactive cards ---- */
+.orbit-hover {
+  position: relative;
+}
+.orbit-hover::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px dashed transparent;
+  pointer-events: none;
+  transition: border-color 0.2s ease;
+}
+.orbit-hover:hover::after {
+  border-color: var(--line2);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .orbit-ring {
+  .orbit-divider::after,
+  .orbit-ring--spin,
+  .orbit-loader,
+  .orbit-card-ring {
     animation: none;
+  }
+  .orbit-divider::after {
+    left: 50%;
   }
 }

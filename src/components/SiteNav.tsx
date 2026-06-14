@@ -29,12 +29,13 @@ export default function SiteNav({ current }: { current?: NavCurrent }) {
 
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-      <a href="/" className="font-display text-[14px] font-bold tracking-tight text-text no-underline">
-        Founder&nbsp;Atlas
+      <a href="/" className="inline-flex items-center gap-1.5 font-display text-[14px] font-bold tracking-tight text-text no-underline">
+        <span className="orbit-node" aria-hidden="true" />
+        Orbital
       </a>
 
       <div
-        className="inline-flex gap-1 rounded-[3px] border border-line2 bg-[rgba(8,10,22,.5)] p-1"
+        className="inline-flex gap-1 rounded-full border border-line2 bg-[rgba(8,10,22,.5)] p-1"
         role="tablist"
         aria-label="View"
       >
@@ -47,7 +48,7 @@ export default function SiteNav({ current }: { current?: NavCurrent }) {
               role="tab"
               aria-selected={active}
               aria-current={active ? 'page' : undefined}
-              className={`rounded-[2px] px-3 py-1 font-display text-[12px] font-semibold no-underline transition ${
+              className={`rounded-full px-3 py-1 font-display text-[12px] font-semibold no-underline transition ${
                 active ? 'text-[#0a0a0a]' : 'text-muted hover:text-text'
               }`}
               style={active ? { background: 'var(--grad)' } : undefined}

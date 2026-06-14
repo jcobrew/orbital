@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://founder-atlas.com/schemas/founder-needs.schema.json",
+  "title": "Orbital FounderNeedsProfile",
+  "description": "A founder's self-described situation, consumed by the deterministic matching engine (Stream 5). Every field is OPTIONAL: an absent field imposes no constraint and contributes no score, so a partial profile is valid. Enum-valued fields reference the canonical Orbital taxonomy (see /api/program-types.json).",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "stage": {
+      "type": "string",
+      "enum": ["pre-idea", "idea", "pre-product", "mvp", "pre-seed", "seed", "series-a-plus", "repeat-founder", "student", "researcher", "unknown"],
+      "description": "Current founder stage (founderStage taxonomy ID). Guided-intake Q1."
+    },
+    "location": { "type": "string", "description": "Where the founder is based today (country string, matched loosely)." },
+    "willingToRelocate": { "type": "boolean", "description": "Willing to physically relocate for a program. Guided-intake Q5." },
+    "preferredRegions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Preferred regions / ecosystems, matched against a program's country, region and ecosystem (case-insensitive substring). Guided-intake Q6."
+    },
+    "sector": { "type": "string", "description": "Sector / industry focus (e.g. \"AI\", \"climate\"), matched against sectorFocus + focus." },
+    "teamStatus": {
+      "type": "string",
+      "enum": ["solo", "team", "seeking-cofounder"],
+      "description": "Solo, in a team, or actively seeking a co-founder. Guided-intake Q2."
+    },
+    "fundingNeed": { "type": "boolean", "description": "Whether the founder needs funding / capital." },
+    "equityTolerance": {
+      "type": "string",
+      "enum": ["equity-free-only", "prefer-equity-free", "open"],
+      "description": "Equity tolerance (Q8). 'equity-free-only' disqualifies equity programs; 'prefer-equity-free' is a soft signal."
+    },
+    "supportNeeds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["funding", "housing", "workspace", "mentorship", "investor-access", "demo-day", "visa-support", "community", "co-founder-matching", "customers", "structure", "compute-credits", "lab-access", "legal-admin"]
+      },
+      "description": "Concrete support modes the founder wants (supportMode taxonomy IDs). Guided-intake Q3/Q4."
+    },
+    "visaNeed": { "type": "boolean", "description": "Whether the founder needs visa / relocation support to participate." },
+    "urgency": {
+      "type": "string",
+      "enum": ["apply-now", "three-months", "this-year", "exploring"],
+      "description": "How soon the founder wants to act (Q7). 'apply-now' makes a closed/unknown status a hard blocker; 'exploring' makes it only a caution."
+    }
+  }
+}

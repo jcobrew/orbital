@@ -4,10 +4,13 @@ import Globe from 'globe.gl';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Program } from '../data/programs';
+import { programTypeLabel } from '../data/programs';
 import { passes, defaultSort } from '../lib/filter';
 import { statusMeta, STATUS_ORDER } from '../lib/status';
 import { logoMarkupHTML, installLogoFallback } from '../lib/logo';
 import { $filters, initFiltersFromURL } from '../stores/filters';
+import { openCountry } from '../stores/country';
+import { countrySlug, hasCountryProfile } from '../data/countries';
 import FilterSidebar from '../components/FilterSidebar';
 import Logo from '../components/Logo';
 import StatusBadge from '../components/StatusBadge';
@@ -24,11 +27,35 @@ import worldGeo from '../data/world-110m.geo.json';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const LAND_FEATURES = (worldGeo as any).features as any[];
 
-const TITLES: Record<string, { t: string; s: string }> = {
-  all: { t: 'Where founders build, worldwide', s: 'Spin the globe or pick a program to fly there; dense cities are mapped below. Status as of June 2026 — verify on each site.' },
-  residential: { t: 'Residencies, Hacker Houses & Startup Campuses', s: 'Programs that house or relocate founders. Spin or pick a program to fly there; dense cities are mapped below.' },
-  traditional: { t: 'Traditional Accelerators & Incubators', s: 'Accelerators, incubators & talent investors — no live-in component. Dense cities are mapped below.' },
+// Natural-Earth polygon names don't always match the dataset's `country` values
+// (which the country profiles are keyed on). Bridge the handful that differ so a
+// click on the globe resolves to the right country card.
+const GEO_NAME_ALIAS: Record<string, string> = {
+  'United States of America': 'USA',
+  'United Kingdom': 'UK',
+  'United Arab Emirates': 'UAE',
 };
+
+/** Dataset country name for a polygon feature, or null if we have no profile. */
+function countryFromFeature(feat: { properties?: { name?: string } } | undefined): string | null {
+  const geoName = feat?.properties?.name;
+  if (!geoName) return null;
+  const name = GEO_NAME_ALIAS[geoName] ?? geoName;
+  return hasCountryProfile(name) ? name : null;
+}
+
+const TITLE_ALL = {
+  t: 'Where founders gather',
+  s: 'Spin the globe or pick a residency to fly there; the houses with the strongest pull are mapped below. Status as of June 2026 — verify on each site.',
+};
+/** Subtitle when a specific canonical program type is selected. */
+function titleFor(typeId: string, label: string): { t: string; s: string } {
+  if (!typeId) return TITLE_ALL;
+  return {
+    t: label,
+    s: `${label} programs worldwide. Spin or pick a program to fly there; dense cities are mapped below.`,
+  };
+}
 
 // Dense regions get their own crisp, interactive minimap in the dock below the
 // globe (one shown at a time, defaulting to SF). Membership is by lat/lng box.
@@ -63,7 +90,7 @@ function jitter(arr: Program[]) {
   });
 }
 
-const keyOf = (p: Program) => p.dataset + '|' + p.name;
+const keyOf = (p: Program) => (p.canonicalType ?? 'other') + '|' + p.name;
 
 /** Best-effort WebGL capability check for the no-WebGL fallback (handoff §19/§28). */
 function hasWebGL(): boolean {
@@ -93,7 +120,7 @@ const MINIMAP_SVG =
   '<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.3l4-1.6 4 1.6 4-1.6v9l-4 1.6-4-1.6-4 1.6z"/><path d="M6 2.7v9M10 4.3v9"/></svg>';
 
 const iconBtn =
-  'flex h-9 w-9 items-center justify-center rounded-xl border border-line2 bg-[rgba(16,16,16,.78)] text-muted backdrop-blur transition hover:border-a1 hover:text-text';
+  'flex h-9 w-9 items-center justify-center rounded-full border border-line2 bg-[rgba(16,16,16,.78)] text-muted backdrop-blur transition hover:border-a1 hover:text-text';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobeInstance = any;
@@ -104,6 +131,8 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   const globeWrapEl = useRef<HTMLDivElement>(null);
   const globeEl = useRef<HTMLDivElement>(null);
   const worldRef = useRef<GlobeInstance>(null);
+  // Currently hovered country polygon (for the hover highlight + pointer cursor).
+  const hoverPolyRef = useRef<unknown>(null);
   const [selected, setSelected] = useState<Program | null>(null);
   const [spinning, setSpinning] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -128,11 +157,11 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
 
   const shown = useMemo(() => defaultSort(data.filter((p) => passes(p, filters))), [data, filters]);
 
-  // Dock membership tracks the dataset toggle only (not search/status), so each
-  // dense-city minimap is a stable overview and doesn't rebuild on every keystroke.
+  // Dock membership tracks the program-type filter only (not search/status), so
+  // each dense-city minimap is a stable overview and doesn't rebuild on every keystroke.
   const cityData = useMemo(
-    () => data.filter((p) => filters.dataset === 'all' || p.dataset === filters.dataset),
-    [data, filters.dataset],
+    () => data.filter((p) => !filters.type || p.canonicalType === filters.type),
+    [data, filters.type],
   );
   const cityCounts = useMemo(() => {
     const m: Record<string, number> = {};
@@ -227,12 +256,33 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       .pointRadius(0.24)
       .pointResolution(6)
       .pointsMerge(true)
-      // Country borders (identifiable for future per-country interactivity).
+      // Country borders, clickable: a country with a profile opens its card.
       .polygonsData(LAND_FEATURES)
-      .polygonCapColor(() => 'rgba(0,0,0,0)')
+      .polygonCapColor((feat: unknown) =>
+        feat === hoverPolyRef.current && countryFromFeature(feat as never)
+          ? 'rgba(255,255,255,0.10)'
+          : 'rgba(0,0,0,0)',
+      )
       .polygonSideColor(() => 'rgba(0,0,0,0)')
-      .polygonStrokeColor(() => 'rgba(255,255,255,0.42)')
+      .polygonStrokeColor((feat: unknown) =>
+        feat === hoverPolyRef.current && countryFromFeature(feat as never)
+          ? 'rgba(255,255,255,0.85)'
+          : 'rgba(255,255,255,0.42)',
+      )
       .polygonAltitude(0.006)
+      .onPolygonClick((feat: unknown) => {
+        const name = countryFromFeature(feat as never);
+        if (name) openCountry(countrySlug(name));
+      })
+      .onPolygonHover((feat: unknown) => {
+        hoverPolyRef.current = feat ?? null;
+        if (globeEl.current) {
+          globeEl.current.style.cursor = countryFromFeature(feat as never) ? 'pointer' : '';
+        }
+        // Re-evaluate cap/stroke so the hovered country lights up.
+        world.polygonCapColor(world.polygonCapColor());
+        world.polygonStrokeColor(world.polygonStrokeColor());
+      })
       .showAtmosphere(true)
       .atmosphereColor('#ffffff')
       .atmosphereAltitude(0.13)
@@ -285,10 +335,14 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     // Clamp zoom so the dot grid stays legible — close-up detail lives in the minimaps.
     controls.minDistance = 185;
     controls.maxDistance = 560;
-    // Custom wheel zoom: trackpad pinch arrives as ctrl+wheel — intercept it so
-    // the browser doesn't page-zoom (which "ruins the view"), and dolly the globe
-    // smoothly instead. Pinch gets a finer factor than a plain wheel/scroll.
-    controls.enableZoom = false;
+    // Touch devices (coarse pointer) get OrbitControls' native two-finger pinch
+    // zoom — still clamped by min/maxDistance. Mice/trackpads keep the custom
+    // wheel zoom below: trackpad pinch arrives as ctrl+wheel, so we intercept it
+    // to stop the browser page-zooming ("ruins the view") and dolly smoothly,
+    // with a finer factor than a plain wheel/scroll.
+    const coarsePointer =
+      typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches;
+    controls.enableZoom = !!coarsePointer;
     const camera = world.camera();
     const zoomEl = globeEl.current!;
     const onWheel = (e: WheelEvent) => {
@@ -303,7 +357,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       camera.position.copy(tgt).add(off);
       controls.update();
     };
-    zoomEl.addEventListener('wheel', onWheel, { passive: false });
+    if (!coarsePointer) zoomEl.addEventListener('wheel', onWheel, { passive: false });
     try {
       const gm = world.globeMaterial();
       if (gm?.color?.set) {
@@ -333,7 +387,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     return () => {
       clearTimeout(t);
       ro.disconnect();
-      zoomEl.removeEventListener('wheel', onWheel);
+      if (!coarsePointer) zoomEl.removeEventListener('wheel', onWheel);
       worldRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -427,13 +481,14 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     seedRings(null);
   }
 
-  const title = TITLES[filters.dataset] ?? TITLES.all;
-  const tagline = useTypewriter('~/ wherever you land, you can build', { speed: 46, startDelay: 2600, loop: true });
+  const title = titleFor(filters.type, programTypeLabel(filters.type));
+  const tagline = useTypewriter('~/ some places pull you into orbit', { speed: 46, startDelay: 2600, loop: true });
 
   return (
     // The globe is the homepage: it fills the viewport, and every other surface
     // (programs panel, minimaps, legend) is a toggleable overlay on top of it.
-    <div className="relative h-screen overflow-hidden">
+    // 100dvh (not 100vh) so mobile browser chrome doesn't crop the controls.
+    <div className="relative h-[100dvh] overflow-hidden">
       <div ref={globeWrapEl} className="absolute inset-0 overflow-hidden bg-black">
         {/* Drifting ASCII starfield sits behind the globe (z-0). */}
         {webgl && <AsciiBackdrop />}
@@ -469,10 +524,11 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         <button
           onClick={() => setPanelOpen(true)}
           aria-label="Open programs panel"
-          className="absolute left-4 top-4 z-20 inline-flex items-center gap-2 rounded-xl border border-line2 bg-[rgba(16,16,16,.78)] px-3 py-2 font-display text-[13px] font-bold text-text backdrop-blur transition hover:border-a1"
+          className="absolute left-4 top-4 z-20 inline-flex items-center gap-2 rounded-full border border-line2 bg-[rgba(16,16,16,.78)] px-3 py-2 font-display text-[13px] font-bold text-text backdrop-blur transition hover:border-a1"
         >
           <IconMenu />
-          <span>Founder&nbsp;Atlas</span>
+          <span className="orbit-node" aria-hidden="true" />
+          <span>Orbital</span>
         </button>
       )}
 
@@ -511,10 +567,24 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         </button>
       </div>
 
-      {/* Bottom-left interaction hint */}
-      <div className="term pointer-events-none absolute bottom-4 left-4 z-10 rounded-[3px] border border-line bg-[rgba(16,16,16,.6)] px-2.5 py-1.5 text-[11px] text-muted backdrop-blur">
+      {/* Bottom-left interaction hint (pointer devices only) */}
+      <div className="term pointer-events-none absolute bottom-4 left-4 z-10 rounded-[3px] border border-line bg-[rgba(16,16,16,.6)] px-2.5 py-1.5 text-[11px] text-muted backdrop-blur max-[760px]:hidden">
         drag to rotate · pinch to zoom · click a ◍ to map a city
       </div>
+
+      {/* Mobile: a clear way into the programs list once the globe has set the
+          orbital tone. Hidden on desktop (the left wordmark opens the panel). */}
+      {!panelOpen && (
+        <button
+          onClick={() => setPanelOpen(true)}
+          aria-label="Open programs panel"
+          className="absolute bottom-5 left-1/2 z-20 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-line2 bg-[rgba(16,16,16,.85)] px-4 py-2.5 font-display text-[13px] font-bold text-text backdrop-blur transition hover:border-a1 max-[760px]:inline-flex"
+        >
+          <span className="orbit-node" aria-hidden="true" />
+          Enter the orbit · {data.length}
+          <span aria-hidden="true">↑</span>
+        </button>
+      )}
 
       {/* Legend (toggle) — bottom-left, above the hint, clear of the minimap window */}
       {legendOpen && (
@@ -536,7 +606,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         <div className="orbit-overlay">
           <div className="orbit-stage">
             {/* white ball orbiting the card */}
-            <div className="orbit-ring">
+            <div className="orbit-card-ring">
               <span className="orbit-ball" />
             </div>
             <div className="orbit-card">
@@ -554,6 +624,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
                 <div>🎯 {selected.focus}</div>
                 <div>🧭 {selected.operator || 'Not publicly listed'}</div>
                 <div>🌱 {selected.stage}</div>
+                {selected.status_detail && <div>📋 {selected.status_detail}</div>}
               </div>
               {selected.highlight && <div className="orbit-highlight">{selected.highlight}</div>}
               <a
@@ -563,7 +634,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
                 className="mt-3 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-bold text-[#0a0a0a] no-underline"
                 style={{ background: 'var(--grad)' }}
               >
-                Visit program →
+                Visit house →
               </a>
             </div>
           </div>
@@ -603,7 +674,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       {/* Programs panel — slides in over the globe from the left */}
       <aside
         aria-hidden={!panelOpen}
-        className={`absolute left-0 top-0 z-30 flex h-full w-[360px] min-w-[360px] flex-col border-r border-line bg-panel backdrop-blur-[18px] transition-transform duration-300 max-[760px]:hidden ${
+        className={`absolute left-0 top-0 z-30 flex h-full w-[360px] min-w-[360px] flex-col border-r border-line bg-panel backdrop-blur-[18px] transition-transform duration-300 max-[760px]:w-full max-[760px]:min-w-0 max-[760px]:border-r-0 ${
           panelOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -612,7 +683,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
             <button
               onClick={() => setPanelOpen(false)}
               aria-label="Close panel"
-              className="flex h-7 w-7 items-center justify-center rounded-lg border border-line2 text-muted transition hover:border-a1 hover:text-text"
+              className="flex h-7 w-7 items-center justify-center rounded-full border border-line2 text-muted transition hover:border-a1 hover:text-text"
             >
               <IconClose />
             </button>
@@ -620,9 +691,19 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
           <div className="mb-3">
             <SiteNav current="globe" />
           </div>
-          <h1 className="m-0 mb-2 font-display text-[19px] font-bold leading-[1.18]" style={{ color: 'var(--text)' }}>
-            {title.t}
-          </h1>
+          <div className="relative mb-2">
+            <span
+              className="orbit-ring orbit-ring--node orbit-ring--spin pointer-events-none absolute -right-2 -top-3 h-12 w-12 opacity-60"
+              aria-hidden="true"
+            />
+            <div className="mb-1 inline-flex items-center gap-1.5 font-display text-[9.5px] font-semibold uppercase tracking-[.22em] text-a2">
+              <span className="orbit-node" aria-hidden="true" />
+              live map
+            </div>
+            <h1 className="relative z-[1] m-0 font-display text-[19px] font-bold leading-[1.18]" style={{ color: 'var(--text)' }}>
+              {title.t}
+            </h1>
+          </div>
           <div className="term mb-1.5 text-[11px] text-a2">
             {tagline}
             <span className="term-cursor" />
@@ -633,7 +714,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
           <FilterSidebar programs={programs} variant="sidebar" />
         </div>
         <div className="term px-5 pb-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted">
-          {shown.length} of {data.length} programs
+          {shown.length} of {data.length} in orbit
         </div>
         <div className="flex-1 overflow-y-auto pb-3.5">
           {shown.map((p) => {
@@ -641,7 +722,12 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
             return (
               <button
                 key={keyOf(p)}
-                onClick={() => openDetail(p)}
+                onClick={() => {
+                  openDetail(p);
+                  // On mobile the panel is full-screen, so close it to reveal the
+                  // globe flight + the bottom-sheet detail card.
+                  if (window.matchMedia('(max-width: 760px)').matches) setPanelOpen(false);
+                }}
                 className="flex w-full items-center gap-3 border-l-2 border-transparent px-5 py-2.5 text-left transition hover:border-a1 hover:bg-[rgba(255,255,255,.06)]"
               >
                 <Logo name={p.name} domain={p.domain} size={38} />

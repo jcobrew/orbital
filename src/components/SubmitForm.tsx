@@ -25,7 +25,7 @@ const empty: SubmitFields = {
 };
 
 const input =
-  'w-full rounded-[3px] border border-line2 bg-[rgba(8,10,22,.6)] px-3 py-2 text-[13px] text-text outline-none transition focus:border-a1';
+  'w-full rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3 py-2 text-[13px] text-text outline-none transition focus:border-a1';
 const labelCls = 'mb-1 block text-[11px] font-semibold uppercase tracking-wide text-muted';
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
@@ -63,13 +63,13 @@ export default function SubmitForm() {
   return (
     <form onSubmit={submit} className="max-w-[680px]">
       {/* mode toggle */}
-      <div className="mb-5 inline-flex gap-1 rounded-[3px] border border-line2 bg-[rgba(8,10,22,.5)] p-1">
+      <div className="mb-5 inline-flex gap-1 rounded-full border border-line2 bg-[rgba(8,10,22,.5)] p-1">
         {(['new', 'update'] as const).map((m) => (
           <button
             key={m}
             type="button"
             onClick={() => setF((prev) => ({ ...prev, mode: m }))}
-            className={`rounded-[2px] px-3.5 py-1.5 font-display text-[12.5px] font-semibold transition ${
+            className={`rounded-full px-3.5 py-1.5 font-display text-[12.5px] font-semibold transition ${
               f.mode === m ? 'text-[#0a0a0a]' : 'text-muted hover:text-text'
             }`}
             style={f.mode === m ? { background: 'var(--grad)' } : undefined}
@@ -106,7 +106,7 @@ export default function SubmitForm() {
         </div>
         <div className="sm:col-span-2">
           <Field label="Notes">
-            <textarea value={f.notes} onChange={set('notes')} rows={3} className={input} placeholder="Anything else worth knowing" />
+            <textarea value={f.notes} onChange={set('notes')} rows={3} className={input + ' !rounded-md'} placeholder="Anything else worth knowing" />
           </Field>
         </div>
         <Field label="Your name / email (optional)"><input value={f.submitter} onChange={set('submitter')} className={input} /></Field>
@@ -119,7 +119,7 @@ export default function SubmitForm() {
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <button
           type="submit"
-          className="rounded-[3px] border border-transparent px-5 py-2.5 font-display text-[13px] font-bold text-[#0a0a0a]"
+          className="rounded-full border border-transparent px-5 py-2.5 font-display text-[13px] font-bold text-[#0a0a0a]"
           style={{ background: 'var(--grad)' }}
         >
           Open prefilled GitHub issue →

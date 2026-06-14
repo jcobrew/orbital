@@ -19,6 +19,13 @@ export interface CountryLink {
   url: string;
 }
 
+/** An external, country-specific startup-ecosystem directory/website we point out to. */
+export interface CountryDirectory {
+  label: string;
+  url: string;
+  description?: string;
+}
+
 export interface CountryVisa {
   name: string;
   description: string;
@@ -44,6 +51,8 @@ export interface CountryRecord {
   visas: CountryVisa[];
   organizations: CountryOrg[];
   links: CountryLink[];
+  /** External, country-specific startup-ecosystem directories we point founders to. */
+  directories: CountryDirectory[];
   updatedAt: string;
   source: string;
 }
@@ -85,6 +94,8 @@ export const COUNTRIES: Country[] = raw.countries
     const n = counts[c.name] ?? { residential: 0, traditional: 0 };
     return {
       ...c,
+      // Never let a consumer hit undefined if an older record omits directories.
+      directories: c.directories ?? [],
       programsByDataset: n,
       programCount: n.residential + n.traditional,
     };

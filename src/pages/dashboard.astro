@@ -10,7 +10,7 @@ import { PROGRAMS } from '../data/programs';
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: 'Founder Atlas — founder relocation & support programs',
+  name: 'Orbital — founder residencies, hacker houses & co-living programs',
   numberOfItems: PROGRAMS.length,
   itemListElement: PROGRAMS.map((p, i) => ({
     '@type': 'ListItem',
@@ -31,24 +31,24 @@ const jsonLd = {
 ---
 
 <Base
-  title="Founder Atlas — Dashboard (agent-friendly directory)"
-  description="Searchable, URL-navigable directory of founder relocation & support programs worldwide — residencies, hacker houses, campuses, accelerators & incubators. Optimized for AI agents: JSON API, llms.txt, deep links and structured data."
+  title="Orbital — Dashboard (agent-friendly directory)"
+  description="Searchable, URL-navigable directory of founder residencies, hacker houses and co-living programs worldwide — where founders live and build together. Optimized for AI agents: JSON API, llms.txt, deep links and structured data."
 >
   <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} slot="head" />
 
   <header class="mx-auto max-w-[1400px] px-7 pt-5">
     <SiteNav current="dashboard" client:load />
     <h1
-      class="m-0 mb-2 mt-5 font-display text-[24px] font-bold leading-[1.15]"
+      class="m-0 mb-2 mt-5 flex items-center gap-2 font-display text-[24px] font-bold leading-[1.15]"
       style="color:var(--text)"
     >
-      Data dashboard
+      <span class="orbit-node" aria-hidden="true"></span>The whole constellation
     </h1>
     <p class="mb-1.5 max-w-[680px] text-[13px] leading-normal text-muted">
-      The full directory as one sortable, URL-navigable table — built for agents and power users.
-      Drive every filter by URL, share deep links, or pull the data straight
-      from the <a href="/api/programs.json" class="font-semibold">JSON API</a> and
-      <a href="/llms.txt" class="font-semibold">llms.txt</a>. Status as of June 2026 — verify on each site.
+      Every residency, hacker house and co-living program in one sortable, URL-navigable table —
+      built for agents and power users. Drive every filter by URL, share deep links, or pull the
+      data straight from the <a href="/api/programs.json" class="font-semibold">JSON API</a> and
+      <a href="/llms.txt" class="font-semibold">llms.txt</a>. Status as of June 2026 — always confirm on each site.
     </p>
   </header>
 
@@ -63,7 +63,7 @@ const jsonLd = {
     <p>
       <strong>For agents:</strong> this page is fully URL-navigable. Compose filters with
       <code class="rounded bg-[rgba(8,10,22,.6)] px-1.5 py-px text-a2"
-        >?dataset=all|residential|traditional&amp;q=…&amp;type=…&amp;country=…&amp;status=…&amp;focus=…&amp;sort=…</code
+        >?type=&lt;canonicalType&gt;&amp;q=…&amp;country=…&amp;status=…&amp;focus=…&amp;sort=…</code
       >. The canonical machine data is
       <code class="rounded bg-[rgba(8,10,22,.6)] px-1.5 py-px text-a2">/api/programs.json</code>; discovery lives at
       <code class="rounded bg-[rgba(8,10,22,.6)] px-1.5 py-px text-a2">/llms.txt</code>. Each program also has schema.org JSON-LD.

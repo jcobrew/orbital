@@ -34,7 +34,7 @@ export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean 
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="About Founder Atlas"
+        aria-label="About Orbital"
         className="relative z-[1] w-full max-w-[680px] rounded-[3px] border border-line2 bg-[#0b0e1c] p-7 shadow-[0_30px_80px_rgba(0,0,0,.7)]"
       >
         <button
@@ -45,15 +45,16 @@ export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean 
           ✕
         </button>
 
-        <div className="mb-1.5 font-display text-[10.5px] font-semibold uppercase tracking-[.22em] text-a2">
-          Founder Atlas
+        <div className="mb-1.5 inline-flex items-center gap-1.5 font-display text-[10.5px] font-semibold uppercase tracking-[.22em] text-a2">
+          <span className="orbit-node" aria-hidden="true" />
+          Orbital
         </div>
         <h2 className="m-0 mb-2.5 max-w-[520px] font-display text-[22px] font-bold leading-[1.12] text-text">
-          Find the right startup program for your next move.
+          Find where founders gather.
         </h2>
         <p className="m-0 mb-5 max-w-[560px] text-[13.5px] leading-relaxed text-muted">
-          A live map of accelerators, incubators, residencies, hacker houses and fellowships worldwide —
-          filter by stage, sector, funding, location and application status to find what fits where you are now.
+          A live map of the residencies, hacker houses and co-living programs where founders live and build together —
+          the places with enough gravity to pull people across the world into orbit.
         </p>
 
         <div className="mb-5">
@@ -69,7 +70,7 @@ export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean 
               key={t.name}
               href={`/explore?q=${encodeURIComponent(t.q)}`}
               onClick={closeIntro}
-              className="rounded-[3px] border border-line bg-[rgba(10,13,28,.55)] p-3 no-underline transition hover:border-a1"
+              className="orbit-hover rounded-[3px] border border-line bg-[rgba(10,13,28,.55)] p-3 no-underline transition hover:border-a1"
             >
               <div className="font-display text-[13px] font-bold text-text">{t.name}</div>
               <div className="mt-0.5 text-[11.5px] leading-snug text-muted">{t.best}</div>
@@ -80,15 +81,15 @@ export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean 
         <div className="flex flex-wrap items-center gap-2.5">
           <button
             onClick={closeIntro}
-            className="rounded-[3px] border border-transparent px-4 py-2.5 font-display text-[13px] font-bold text-[#0a0a0a]"
+            className="rounded-full border border-transparent px-4 py-2.5 font-display text-[13px] font-bold text-[#0a0a0a]"
             style={{ background: 'var(--grad)' }}
           >
-            Start exploring
+            Enter orbit
           </button>
           <a
             href="/explore"
             onClick={closeIntro}
-            className="rounded-[3px] border border-line2 px-4 py-2.5 text-[13px] font-semibold text-text no-underline transition hover:border-a1"
+            className="rounded-full border border-line2 px-4 py-2.5 text-[13px] font-semibold text-text no-underline transition hover:border-a1"
           >
             Browse the list
           </a>

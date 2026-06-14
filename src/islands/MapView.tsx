@@ -3,6 +3,7 @@ import { useStore } from '@nanostores/react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Program } from '../data/programs';
+import { programTypeLabel } from '../data/programs';
 import { passes, defaultSort } from '../lib/filter';
 import { statusMeta, STATUS_ORDER } from '../lib/status';
 import { logoMarkupHTML, installLogoFallback } from '../lib/logo';
@@ -11,20 +12,18 @@ import FilterSidebar from '../components/FilterSidebar';
 import Logo from '../components/Logo';
 import SiteNav from '../components/SiteNav';
 
-const TITLES: Record<string, { t: string; s: string }> = {
-  all: {
-    t: 'Where founders build, worldwide',
-    s: 'Find the best places to relocate and the startup support waiting there — click a pin or list item for details. Status as of June 2026 — verify on each site.',
-  },
-  residential: {
-    t: 'Residencies, Hacker Houses & Startup Campuses',
-    s: 'Programs that house or relocate founders. Click a pin for details. Status as of June 2026 — verify on each site.',
-  },
-  traditional: {
-    t: 'Traditional Accelerators & Incubators',
-    s: 'Accelerators, incubators & talent investors — no live-in component. Status as of June 2026 — verify on each site.',
-  },
+const TITLE_ALL = {
+  t: 'Where founders gather',
+  s: 'Find the residencies, hacker houses and co-living programs where founders live and build together — click a pin or list item for details. Status as of June 2026 — verify on each site.',
 };
+/** Subtitle when a specific canonical program type is selected. */
+function titleFor(typeId: string, label: string): { t: string; s: string } {
+  if (!typeId) return TITLE_ALL;
+  return {
+    t: label,
+    s: `${label} programs worldwide. Click a pin for details. Status as of June 2026 — verify on each site.`,
+  };
+}
 
 // Off-coast cluster callouts for dense regions (ported from index.html).
 // `place` is an open-ocean lat/lng where the card floats; `anchor` is the true
@@ -72,7 +71,7 @@ function popupHTML(p: Program): string {
   </div>`;
 }
 
-const keyOf = (p: Program) => p.dataset + '|' + p.name;
+const keyOf = (p: Program) => (p.canonicalType ?? 'other') + '|' + p.name;
 
 export default function MapView({ programs }: { programs: Program[] }) {
   const filters = useStore($filters);
@@ -313,7 +312,7 @@ export default function MapView({ programs }: { programs: Program[] }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shown]);
 
-  const title = TITLES[filters.dataset] ?? TITLES.all;
+  const title = titleFor(filters.type, programTypeLabel(filters.type));
 
   return (
     <div className="flex h-screen">
@@ -321,6 +320,10 @@ export default function MapView({ programs }: { programs: Program[] }) {
         <div className="border-b border-line px-5 pb-3 pt-[18px]">
           <div className="mb-3">
             <SiteNav current="map" />
+          </div>
+          <div className="mb-1 inline-flex items-center gap-1.5 font-display text-[9.5px] font-semibold uppercase tracking-[.22em] text-a2">
+            <span className="orbit-node" aria-hidden="true" />
+            live map
           </div>
           <h1
             className="m-0 mb-2 font-display text-[19px] font-bold leading-[1.18]"
@@ -334,7 +337,7 @@ export default function MapView({ programs }: { programs: Program[] }) {
           <FilterSidebar programs={programs} variant="sidebar" />
         </div>
         <div className="px-5 pb-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted">
-          {shown.length} of {data.length} programs
+          {shown.length} of {data.length} in orbit
         </div>
         <div className="flex-1 overflow-y-auto pb-3.5">
           {shown.map((p) => {

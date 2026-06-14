@@ -58,7 +58,7 @@ export function buildIssueBody(f: SubmitFields): string {
   lines.push('', '---');
   lines.push(`- Submitted by: ${f.submitter || '(not provided)'}`);
   lines.push(`- Affiliated with this program: ${f.affiliated ? 'Yes' : 'No'}`);
-  lines.push('', '_Submitted via the Founder Atlas /submit form. Please verify against primary sources before merging._');
+  lines.push('', '_Submitted via the Orbital /submit form. Please verify against primary sources before merging._');
   return lines.join('\n');
 }
 
