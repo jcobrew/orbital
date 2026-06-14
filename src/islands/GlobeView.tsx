@@ -284,10 +284,14 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     // Clamp zoom so the dot grid stays legible — close-up detail lives in the minimaps.
     controls.minDistance = 185;
     controls.maxDistance = 560;
-    // Custom wheel zoom: trackpad pinch arrives as ctrl+wheel — intercept it so
-    // the browser doesn't page-zoom (which "ruins the view"), and dolly the globe
-    // smoothly instead. Pinch gets a finer factor than a plain wheel/scroll.
-    controls.enableZoom = false;
+    // Touch devices (coarse pointer) get OrbitControls' native two-finger pinch
+    // zoom — still clamped by min/maxDistance. Mice/trackpads keep the custom
+    // wheel zoom below: trackpad pinch arrives as ctrl+wheel, so we intercept it
+    // to stop the browser page-zooming ("ruins the view") and dolly smoothly,
+    // with a finer factor than a plain wheel/scroll.
+    const coarsePointer =
+      typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches;
+    controls.enableZoom = !!coarsePointer;
     const camera = world.camera();
     const zoomEl = globeEl.current!;
     const onWheel = (e: WheelEvent) => {
@@ -302,7 +306,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       camera.position.copy(tgt).add(off);
       controls.update();
     };
-    zoomEl.addEventListener('wheel', onWheel, { passive: false });
+    if (!coarsePointer) zoomEl.addEventListener('wheel', onWheel, { passive: false });
     try {
       const gm = world.globeMaterial();
       if (gm?.color?.set) {
@@ -332,7 +336,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     return () => {
       clearTimeout(t);
       ro.disconnect();
-      zoomEl.removeEventListener('wheel', onWheel);
+      if (!coarsePointer) zoomEl.removeEventListener('wheel', onWheel);
       worldRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -432,7 +436,8 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   return (
     // The globe is the homepage: it fills the viewport, and every other surface
     // (programs panel, minimaps, legend) is a toggleable overlay on top of it.
-    <div className="relative h-screen overflow-hidden">
+    // 100dvh (not 100vh) so mobile browser chrome doesn't crop the controls.
+    <div className="relative h-[100dvh] overflow-hidden">
       <div ref={globeWrapEl} className="absolute inset-0 overflow-hidden bg-black">
         {/* Drifting ASCII starfield sits behind the globe (z-0). */}
         {webgl && <AsciiBackdrop />}
@@ -511,10 +516,24 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         </button>
       </div>
 
-      {/* Bottom-left interaction hint */}
-      <div className="term pointer-events-none absolute bottom-4 left-4 z-10 rounded-[3px] border border-line bg-[rgba(16,16,16,.6)] px-2.5 py-1.5 text-[11px] text-muted backdrop-blur">
+      {/* Bottom-left interaction hint (pointer devices only) */}
+      <div className="term pointer-events-none absolute bottom-4 left-4 z-10 rounded-[3px] border border-line bg-[rgba(16,16,16,.6)] px-2.5 py-1.5 text-[11px] text-muted backdrop-blur max-[760px]:hidden">
         drag to rotate · scroll to zoom
       </div>
+
+      {/* Mobile: a clear way into the programs list once the globe has set the
+          orbital tone. Hidden on desktop (the left wordmark opens the panel). */}
+      {!panelOpen && (
+        <button
+          onClick={() => setPanelOpen(true)}
+          aria-label="Open programs panel"
+          className="absolute bottom-5 left-1/2 z-20 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-line2 bg-[rgba(16,16,16,.85)] px-4 py-2.5 font-display text-[13px] font-bold text-text backdrop-blur transition hover:border-a1 max-[760px]:inline-flex"
+        >
+          <span className="orbit-node" aria-hidden="true" />
+          Enter the orbit · {data.length}
+          <span aria-hidden="true">↑</span>
+        </button>
+      )}
 
       {/* Legend (toggle) — bottom-left, above the hint, clear of the minimap window */}
       {legendOpen && (
@@ -533,7 +552,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       )}
 
       {selected && (
-        <div className="absolute right-[18px] top-1/2 z-[25] w-[330px] -translate-y-1/2 rounded-[3px] border border-line2 bg-[rgba(10,10,10,.94)] p-[18px] shadow-[0_24px_70px_rgba(0,0,0,.65)] backdrop-blur-[18px]">
+        <div className="absolute right-[18px] top-1/2 z-[25] w-[330px] -translate-y-1/2 rounded-[3px] border border-line2 bg-[rgba(10,10,10,.94)] p-[18px] shadow-[0_24px_70px_rgba(0,0,0,.65)] backdrop-blur-[18px] max-[760px]:inset-x-0 max-[760px]:bottom-0 max-[760px]:right-0 max-[760px]:top-auto max-[760px]:max-h-[70dvh] max-[760px]:w-full max-[760px]:translate-y-0 max-[760px]:overflow-y-auto max-[760px]:rounded-b-none max-[760px]:border-x-0 max-[760px]:border-b-0">
           <button className="absolute right-3.5 top-3 border-none bg-transparent text-[18px] text-muted hover:text-white" onClick={() => setSelected(null)}>
             ✕
           </button>
@@ -617,7 +636,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       {/* Programs panel — slides in over the globe from the left */}
       <aside
         aria-hidden={!panelOpen}
-        className={`absolute left-0 top-0 z-30 flex h-full w-[360px] min-w-[360px] flex-col border-r border-line bg-panel backdrop-blur-[18px] transition-transform duration-300 max-[760px]:hidden ${
+        className={`absolute left-0 top-0 z-30 flex h-full w-[360px] min-w-[360px] flex-col border-r border-line bg-panel backdrop-blur-[18px] transition-transform duration-300 max-[760px]:w-full max-[760px]:min-w-0 max-[760px]:border-r-0 ${
           panelOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -665,7 +684,12 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
             return (
               <button
                 key={keyOf(p)}
-                onClick={() => openDetail(p)}
+                onClick={() => {
+                  openDetail(p);
+                  // On mobile the panel is full-screen, so close it to reveal the
+                  // globe flight + the bottom-sheet detail card.
+                  if (window.matchMedia('(max-width: 760px)').matches) setPanelOpen(false);
+                }}
                 className="flex w-full items-center gap-3 border-l-2 border-transparent px-5 py-2.5 text-left transition hover:border-a1 hover:bg-[rgba(255,255,255,.06)]"
               >
                 <Logo name={p.name} domain={p.domain} size={38} />

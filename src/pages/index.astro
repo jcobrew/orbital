@@ -9,12 +9,10 @@ import { PROGRAMS } from '../data/programs';
   description="A live map of founder residencies, hacker houses and co-living programs worldwide — where founders live and build together. Explore on a 3D globe or a filterable list — by stage, sector, housing, location and application status."
   fullscreen
 >
-  <!-- Small screens go straight to the list; the globe is the desktop entry. -->
-  <script slot="head" is:inline>
-    if (window.matchMedia('(max-width: 760px)').matches) {
-      window.location.replace('/explore' + window.location.search + window.location.hash);
-    }
-  </script>
+  <!-- The globe is the front door on every device — it sets the orbital tone
+       before founders dive into the list. Small screens get a full-screen
+       programs panel and an "enter the orbit" CTA from inside the globe view;
+       browsers without WebGL fall back to a list-view link (see GlobeView). -->
   <!-- Globe.gl (Three.js) needs the DOM; render this island client-only. -->
   <GlobeView programs={PROGRAMS} client:only="react" />
   <div slot="head"></div>
