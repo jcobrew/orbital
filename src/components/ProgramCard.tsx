@@ -12,7 +12,7 @@ export function applyHref(p: Program): string {
 
 function Badge({ children }: { children: React.ReactNode }) {
   return (
-    <span className="rounded-sm border border-line2 px-2 py-0.5 text-[10.5px] font-semibold text-muted">{children}</span>
+    <span className="rounded-full border border-line2 px-2 py-0.5 text-[10.5px] font-semibold text-muted">{children}</span>
   );
 }
 
@@ -23,7 +23,7 @@ function Badge({ children }: { children: React.ReactNode }) {
  */
 export default function ProgramCard({ program: p, onSelect }: { program: Program; onSelect: (p: Program) => void }) {
   return (
-    <article className="flex flex-col rounded-md border border-line bg-[rgba(10,13,28,.55)] p-4 transition hover:border-a1">
+    <article className="orbit-hover flex flex-col rounded-md border border-line bg-[rgba(10,13,28,.55)] p-4 transition hover:border-a1">
       <div className="mb-2.5 flex items-start gap-3">
         <Logo name={p.name} domain={p.domain} size={40} />
         <div className="min-w-0 flex-1">
@@ -60,7 +60,7 @@ export default function ProgramCard({ program: p, onSelect }: { program: Program
         <div className="flex gap-2">
           <button
             onClick={() => onSelect(p)}
-            className="rounded-sm border border-line2 px-2.5 py-1.5 text-[11.5px] font-semibold text-text transition hover:border-a1"
+            className="rounded-full border border-line2 px-2.5 py-1.5 text-[11.5px] font-semibold text-text transition hover:border-a1"
           >
             View details
           </button>
@@ -68,7 +68,7 @@ export default function ProgramCard({ program: p, onSelect }: { program: Program
             href={applyHref(p)}
             target="_blank"
             rel="noopener"
-            className="rounded-sm border border-transparent px-2.5 py-1.5 text-[11.5px] font-bold text-[#0a0a0a] no-underline"
+            className="rounded-full border border-transparent px-2.5 py-1.5 text-[11.5px] font-bold text-[#0a0a0a] no-underline"
             style={{ background: 'var(--grad)' }}
           >
             {p.applyUrl ? 'Apply' : 'Visit'}

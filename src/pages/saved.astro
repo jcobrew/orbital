@@ -7,13 +7,15 @@ import { PROGRAMS } from '../data/programs';
 
 <Base
   title="Saved programs — Orbital"
-  description="Your shortlist of founder residencies, hacker houses and co-living programs, saved on this device."
+  description="Your shortlist of founder residencies, hacker houses and co-living programs — the places pulling you in, saved on this device."
 >
   <header class="mx-auto max-w-[1400px] px-7 pt-5">
     <SiteNav current="saved" client:load />
-    <h1 class="m-0 mb-1.5 mt-5 font-display text-[24px] font-bold leading-[1.15] text-text">Saved programs</h1>
+    <h1 class="m-0 mb-1.5 mt-5 flex items-center gap-2 font-display text-[24px] font-bold leading-[1.15] text-text">
+      <span class="orbit-node" aria-hidden="true"></span>Your shortlist
+    </h1>
     <p class="m-0 mb-4 max-w-[640px] text-[13px] leading-normal text-muted">
-      Your shortlist, stored in this browser only — nothing leaves your device. Tap the
+      The places pulling you in, stored in this browser only — nothing leaves your device. Tap the
       <span class="text-a2">☆</span> on any program to add or remove it.
     </p>
   </header>

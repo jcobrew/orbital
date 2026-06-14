@@ -3,7 +3,7 @@
 *Compiled June 1, 2026.*
 
 > **⚠️ Legacy source material — not the operating model.** This file is preserved
-> research from when Founder Atlas split programs into a "residential" vs "traditional"
+> research from when Orbital split programs into a "residential" vs "traditional"
 > binary across two datasets. **That split is retired.** There is now **one unified
 > dataset** (`src/data/programs-data.json`) and programs are classified by their
 > **`canonicalType`** plus `supportModes` / `format` / `mvp` / `ecosystem`, defined in

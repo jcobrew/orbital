@@ -19,20 +19,24 @@ export default function ExploreResults({ programs }: { programs: Program[] }) {
   return (
     <div>
       <div className="mb-3 text-[12px] font-semibold text-muted" aria-live="polite">
-        {shown.length} of {programs.length} programs
+        {shown.length} of {programs.length} houses & residencies
       </div>
 
       {shown.length === 0 ? (
-        <div className="rounded-md border border-line bg-[rgba(10,13,28,.55)] p-10 text-center">
-          <h2 className="m-0 mb-1.5 font-display text-[16px] font-bold text-text">No matching programs yet</h2>
-          <p className="m-0 mb-4 text-[13px] text-muted">
-            Try removing a filter, searching a nearby city, or submitting a program we missed.
+        <div className="relative overflow-hidden rounded-md border border-line bg-[rgba(10,13,28,.55)] p-10 text-center">
+          <span
+            className="orbit-ring orbit-ring--node orbit-ring--spin pointer-events-none absolute left-1/2 top-6 h-16 w-16 -translate-x-1/2 opacity-30"
+            aria-hidden="true"
+          />
+          <h2 className="relative m-0 mb-1.5 mt-12 font-display text-[16px] font-bold text-text">Nothing in this orbit yet</h2>
+          <p className="relative m-0 mb-4 text-[13px] text-muted">
+            Loosen a filter, search a nearby city, or point us at a house we haven't mapped.
           </p>
           <a
             href="/submit"
-            className="inline-block rounded-md border border-line2 px-4 py-2.5 text-[13px] font-semibold text-text no-underline transition hover:border-a1"
+            className="relative inline-block rounded-full border border-line2 px-4 py-2.5 text-[13px] font-semibold text-text no-underline transition hover:border-a1"
           >
-            Submit a program
+            Add a house
           </a>
         </div>
       ) : (

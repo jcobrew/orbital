@@ -1,6 +1,6 @@
-# Founder Atlas — MVP Data Scope
+# Orbital — MVP Data Scope
 
-This document defines the **MVP data scope** for Founder Atlas: which existing records are
+This document defines the **MVP data scope** for Orbital: which existing records are
 curated, launch-ready MVP records, the controlled vocabulary used to tag them, the current
 tagging counts, and the seed-expansion plan to reach the 100–200-record target.
 

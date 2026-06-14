@@ -39,7 +39,7 @@ export default function MatchCard({
 
   return (
     <article
-      className={`flex flex-col rounded-md border bg-[rgba(10,13,28,.55)] p-4 transition ${
+      className={`orbit-hover flex flex-col rounded-md border bg-[rgba(10,13,28,.55)] p-4 transition ${
         disqualified ? 'border-line opacity-70' : 'border-line hover:border-a1'
       }`}
     >
@@ -59,12 +59,12 @@ export default function MatchCard({
         </div>
         <div className="flex flex-none flex-col items-end gap-1.5">
           {disqualified ? (
-            <span className="rounded-[3px] border border-[#ff7a7a] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#ff7a7a]">
+            <span className="rounded-full border border-[#ff7a7a] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#ff7a7a]">
               Not a fit
             </span>
           ) : (
             <span
-              className="rounded-[3px] px-2 py-0.5 text-[11px] font-bold text-[#0a0a0a]"
+              className="rounded-full px-2 py-0.5 text-[11px] font-bold text-[#0a0a0a]"
               style={{ background: 'var(--grad)' }}
               title="Deterministic fit score (0–100)"
             >
@@ -131,7 +131,7 @@ export default function MatchCard({
         <div className="flex gap-2">
           <button
             onClick={() => onSelect(p)}
-            className="rounded-sm border border-line2 px-2.5 py-1.5 text-[11.5px] font-semibold text-text transition hover:border-a1"
+            className="rounded-full border border-line2 px-2.5 py-1.5 text-[11.5px] font-semibold text-text transition hover:border-a1"
           >
             View details
           </button>
@@ -139,7 +139,7 @@ export default function MatchCard({
             href={applyHref(p)}
             target="_blank"
             rel="noopener"
-            className="rounded-sm border border-transparent px-2.5 py-1.5 text-[11.5px] font-bold text-[#0a0a0a] no-underline"
+            className="rounded-full border border-transparent px-2.5 py-1.5 text-[11.5px] font-bold text-[#0a0a0a] no-underline"
             style={{ background: 'var(--grad)' }}
           >
             {p.applyUrl ? 'Apply' : 'Visit'}

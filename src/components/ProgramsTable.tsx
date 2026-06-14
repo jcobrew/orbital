@@ -77,7 +77,7 @@ export default function ProgramsTable({ programs }: { programs: Program[] }) {
         )}
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-line bg-[rgba(10,13,28,.55)]">
+      <div className="overflow-x-auto rounded-md border border-line bg-[rgba(10,13,28,.55)]">
         <table className="w-full border-collapse text-[12.5px]">
           <thead>
             <tr>
@@ -103,7 +103,7 @@ export default function ProgramsTable({ programs }: { programs: Program[] }) {
               {rows.length === 0 ? (
                 <tr>
                   <td colSpan={COLUMNS.length} className="p-10 text-center text-muted">
-                    No programs match these filters.
+                    No houses match these filters.
                   </td>
                 </tr>
               ) : (
@@ -136,7 +136,7 @@ export default function ProgramsTable({ programs }: { programs: Program[] }) {
                     <td className="px-3.5 py-2.5 align-top text-muted">{p.type}</td>
                     <td className="px-3.5 py-2.5 align-top">
                       <span
-                        className="rounded-md border px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide"
+                        className="rounded-full border px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide"
                         style={
                           p.canonicalType === 'founder-residency' || p.canonicalType === 'hacker-house'
                             ? { color: '#9be9ff', borderColor: 'rgba(155,233,255,.4)' }

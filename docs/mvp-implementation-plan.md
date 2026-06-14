@@ -1,19 +1,19 @@
-# Founder Atlas — MVP-Scoped Implementation Plan & Orchestration Handoff
+# Orbital — MVP-Scoped Implementation Plan & Orchestration Handoff
 
-> **Purpose of this document.** Convert the current working Founder Atlas directory into a narrow,
+> **Purpose of this document.** Convert the current working Orbital directory into a narrow,
 > high-signal **MVP** — a "founder-support compass" that proves the core experience (*founder
 > describes situation → gets a small set of relevant, trustworthy, explained matches*) — while
 > keeping the schema future-ready for the full landscape taxonomy. It is split into ten
 > independent **handoff streams**, each pasteable into its own coding-agent session.
 >
 > **This is not** a plan to build a complete global database of every founder-support program.
-> Optimize for a trustworthy, useful matching experience that can later grow into the full Atlas.
+> Optimize for a trustworthy, useful matching experience that can later grow into the full map.
 
 ---
 
 ## Context
 
-Founder Atlas is a working, fully-static Astro site that maps ~123 founder-support programs on a
+Orbital is a working, fully-static Astro site that maps ~123 founder-support programs on a
 globe/list/map and exposes them via `/api/programs.json`, `/api/countries.json`, and `/llms.txt`.
 The data already carries a rich optional schema (`Program` interface in `src/data/programs.ts`),
 provenance fields (`lastVerified`, `verificationStatus`, `sourceUrls`), and a draft-PR-gated update
@@ -176,7 +176,7 @@ scripts (append-only; S7/S10 coordinate); the two `*-programs-data.json` files (
 
 ## 10. First MVP milestone definition
 
-> Founder Atlas has a curated MVP-ready founder-support discovery system covering ~100–200
+> Orbital has a curated MVP-ready founder-support discovery system covering ~100–200
 > high-quality records across the selected ecosystems and program types, with normalized taxonomy,
 > backward-compatible schema, basic provenance/freshness status, deterministic founder-needs
 > matching, a guided discovery UI, and machine-readable exports — while still building and deploying
@@ -352,7 +352,7 @@ streams below.
 - **Not yet:** no auto-approval; don't replace the issue flow.
 
 ### Stream 9 — Public API, Static Exports & Agent Surfaces · `feat/agent-api-exports`
-- **Focus:** Make Founder Atlas consumable by users, agents, and tools without scraping HTML.
+- **Focus:** Make Orbital consumable by users, agents, and tools without scraping HTML.
 - **Background:** `/api/programs.json`, `/api/countries.json`, `/llms.txt` already exist — keep them stable.
 - **Inspect:** `src/pages/api/programs.json.ts`, `src/pages/api/countries.json.ts`,
   `src/pages/llms.txt.ts`, `src/data/programs.ts`, taxonomy from Stream 2.

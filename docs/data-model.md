@@ -1,4 +1,4 @@
-# Founder Atlas — Canonical Data Model
+# Orbital — Canonical Data Model
 
 This document describes the canonical program schema: every field, its meaning, whether it
 is **MVP-required** or **optional**, and whether it is a **legacy** or **canonical** field.

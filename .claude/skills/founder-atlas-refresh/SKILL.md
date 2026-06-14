@@ -1,14 +1,14 @@
 ---
 name: founder-atlas-refresh
 description: >-
-  Refresh the Founder Atlas program dataset. Use when asked to update, refresh,
+  Refresh the Orbital program dataset. Use when asked to update, refresh,
   re-verify, or add to the founder-program data (src/data/programs-data.json) —
   whether run interactively or from a scheduled routine. Gathers via web research,
   verifies, dedupes against existing entries, edits the JSON, and opens a DRAFT PR.
   Never pushes data straight to the live site.
 ---
 
-# Founder Atlas — data refresh
+# Orbital — data refresh
 
 You are maintaining the data behind a public, auto-deploying map of founder programs.
 The JSON file is the **single source of truth** and Vercel deploys `master` on push —
@@ -227,7 +227,7 @@ Optionally update `meta.compiled` (the date) when you change data.
 Commit to the working branch and open a **draft** PR. Body template:
 
 ```
-## Founder Atlas data refresh — <date>
+## Orbital data refresh — <date>
 
 ### Updated (<n>)
 - <Program> — <what changed> — <source URL>

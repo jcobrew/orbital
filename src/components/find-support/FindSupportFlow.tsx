@@ -199,7 +199,7 @@ export default function FindSupportFlow({ programs }: { programs: Program[] }) {
         <div className="mt-4 flex items-center justify-between gap-2">
           <button
             onClick={() => (step === 0 ? setPath('choose') : setStep((s) => s - 1))}
-            className="rounded-md border border-line2 px-4 py-2.5 text-[12.5px] font-semibold text-text transition hover:border-a1"
+            className="rounded-full border border-line2 px-4 py-2.5 text-[12.5px] font-semibold text-text transition hover:border-a1"
           >
             ← Back
           </button>
@@ -207,14 +207,14 @@ export default function FindSupportFlow({ programs }: { programs: Program[] }) {
             {!isLast && (
               <button
                 onClick={() => setStep((s) => s + 1)}
-                className="rounded-md border border-line2 px-4 py-2.5 text-[12.5px] font-semibold text-muted transition hover:border-a1 hover:text-text"
+                className="rounded-full border border-line2 px-4 py-2.5 text-[12.5px] font-semibold text-muted transition hover:border-a1 hover:text-text"
               >
                 Skip
               </button>
             )}
             <button
               onClick={() => (isLast ? setPath('results') : setStep((s) => s + 1))}
-              className="rounded-md border border-transparent px-5 py-2.5 text-[12.5px] font-bold text-[#0a0a0a]"
+              className="rounded-full border border-transparent px-5 py-2.5 text-[12.5px] font-bold text-[#0a0a0a]"
               style={{ background: 'var(--grad)' }}
             >
               {isLast ? 'See my matches →' : 'Next →'}
@@ -242,7 +242,7 @@ export default function FindSupportFlow({ programs }: { programs: Program[] }) {
         <div className="flex flex-wrap gap-2">
           <button
             onClick={copyLink}
-            className="rounded-md border border-line2 bg-[rgba(8,10,22,.6)] px-3.5 py-2 text-[12.5px] font-semibold text-text transition hover:border-a1"
+            className="rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3.5 py-2 text-[12.5px] font-semibold text-text transition hover:border-a1"
           >
             🔗 Copy results link
           </button>
@@ -251,13 +251,13 @@ export default function FindSupportFlow({ programs }: { programs: Program[] }) {
               setPath('guided');
               setStep(0);
             }}
-            className="rounded-md border border-line2 bg-[rgba(8,10,22,.6)] px-3.5 py-2 text-[12.5px] font-semibold text-text transition hover:border-a1"
+            className="rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3.5 py-2 text-[12.5px] font-semibold text-text transition hover:border-a1"
           >
             Edit answers
           </button>
           <button
             onClick={restart}
-            className="rounded-md border border-line2 bg-[rgba(8,10,22,.6)] px-3.5 py-2 text-[12.5px] font-semibold text-muted transition hover:border-a1 hover:text-text"
+            className="rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3.5 py-2 text-[12.5px] font-semibold text-muted transition hover:border-a1 hover:text-text"
           >
             Start over
           </button>
@@ -301,7 +301,7 @@ export default function FindSupportFlow({ programs }: { programs: Program[] }) {
               setPath('guided');
               setStep(0);
             }}
-            className="rounded-md border border-transparent px-5 py-2.5 text-[12.5px] font-bold text-[#0a0a0a]"
+            className="rounded-full border border-transparent px-5 py-2.5 text-[12.5px] font-bold text-[#0a0a0a]"
             style={{ background: 'var(--grad)' }}
           >
             Adjust my answers
@@ -329,7 +329,7 @@ export default function FindSupportFlow({ programs }: { programs: Program[] }) {
 
       {copied && (
         <div
-          className="fixed bottom-6 left-1/2 z-[1100] -translate-x-1/2 rounded-xl px-4 py-2.5 text-[12.5px] font-bold text-[#0a0a0a]"
+          className="fixed bottom-6 left-1/2 z-[1100] -translate-x-1/2 rounded-full px-4 py-2.5 text-[12.5px] font-bold text-[#0a0a0a]"
           style={{ background: 'var(--grad)' }}
         >
           Link copied

@@ -1,4 +1,4 @@
-# Founder Atlas — Program Data Quality Standard
+# Orbital — Program Data Quality Standard
 
 This document is the **data-quality contract** for MVP program records: the required-vs-optional
 field checklist, the quality standards every record must meet, and the **per-record

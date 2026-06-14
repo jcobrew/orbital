@@ -115,7 +115,7 @@ const IconMinimap = () => (<svg {...svg}><path d="M2 4.3l4-1.6 4 1.6 4-1.6v9l-4 
 const IconLegend = () => (<svg {...svg}><circle cx="3.3" cy="4" r="1.3" /><circle cx="3.3" cy="8" r="1.3" /><circle cx="3.3" cy="12" r="1.3" /><path d="M6.6 4h7.4M6.6 8h7.4M6.6 12h7.4" /></svg>);
 
 const iconBtn =
-  'flex h-9 w-9 items-center justify-center rounded-xl border border-line2 bg-[rgba(16,16,16,.78)] text-muted backdrop-blur transition hover:border-a1 hover:text-text';
+  'flex h-9 w-9 items-center justify-center rounded-full border border-line2 bg-[rgba(16,16,16,.78)] text-muted backdrop-blur transition hover:border-a1 hover:text-text';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobeInstance = any;
@@ -468,10 +468,11 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         <button
           onClick={() => setPanelOpen(true)}
           aria-label="Open programs panel"
-          className="absolute left-4 top-4 z-20 inline-flex items-center gap-2 rounded-xl border border-line2 bg-[rgba(16,16,16,.78)] px-3 py-2 font-display text-[13px] font-bold text-text backdrop-blur transition hover:border-a1"
+          className="absolute left-4 top-4 z-20 inline-flex items-center gap-2 rounded-full border border-line2 bg-[rgba(16,16,16,.78)] px-3 py-2 font-display text-[13px] font-bold text-text backdrop-blur transition hover:border-a1"
         >
           <IconMenu />
-          <span>Founder&nbsp;Atlas</span>
+          <span className="orbit-node" aria-hidden="true" />
+          <span>Orbital</span>
         </button>
       )}
 
@@ -556,16 +557,19 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
             )}
           </div>
           {selected.highlight && (
-            <div className="mt-3 border-t border-line pt-3 text-[11.5px] italic leading-normal text-muted">{selected.highlight}</div>
+            <>
+              <div className="orbit-divider my-3" aria-hidden="true" />
+              <div className="text-[11.5px] italic leading-normal text-muted">{selected.highlight}</div>
+            </>
           )}
           <a
             href={selected.url}
             target="_blank"
             rel="noopener"
-            className="mt-3.5 inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[12px] font-bold text-[#0a0a0a] no-underline"
+            className="mt-3.5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[12px] font-bold text-[#0a0a0a] no-underline"
             style={{ background: 'var(--grad)' }}
           >
-            Visit program →
+            Visit house →
           </a>
         </div>
       )}
@@ -586,7 +590,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
             <button
               onClick={() => setDockOpen(false)}
               aria-label="Close minimaps"
-              className="flex h-7 w-7 flex-none items-center justify-center rounded-lg border border-line2 text-muted transition hover:border-a1 hover:text-text"
+              className="flex h-7 w-7 flex-none items-center justify-center rounded-full border border-line2 text-muted transition hover:border-a1 hover:text-text"
             >
               <IconClose />
             </button>
@@ -622,7 +626,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
             <button
               onClick={() => setPanelOpen(false)}
               aria-label="Close panel"
-              className="flex h-7 w-7 items-center justify-center rounded-lg border border-line2 text-muted transition hover:border-a1 hover:text-text"
+              className="flex h-7 w-7 items-center justify-center rounded-full border border-line2 text-muted transition hover:border-a1 hover:text-text"
             >
               <IconClose />
             </button>
@@ -630,9 +634,19 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
           <div className="mb-3">
             <SiteNav current="globe" />
           </div>
-          <h1 className="m-0 mb-2 font-display text-[19px] font-bold leading-[1.18]" style={{ color: 'var(--text)' }}>
-            {title.t}
-          </h1>
+          <div className="relative mb-2">
+            <span
+              className="orbit-ring orbit-ring--node orbit-ring--spin pointer-events-none absolute -right-2 -top-3 h-12 w-12 opacity-60"
+              aria-hidden="true"
+            />
+            <div className="mb-1 inline-flex items-center gap-1.5 font-display text-[9.5px] font-semibold uppercase tracking-[.22em] text-a2">
+              <span className="orbit-node" aria-hidden="true" />
+              live map
+            </div>
+            <h1 className="relative z-[1] m-0 font-display text-[19px] font-bold leading-[1.18]" style={{ color: 'var(--text)' }}>
+              {title.t}
+            </h1>
+          </div>
           <div className="term mb-1.5 text-[11px] text-a2">
             {tagline}
             <span className="term-cursor" />
@@ -643,7 +657,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
           <FilterSidebar programs={programs} variant="sidebar" />
         </div>
         <div className="term px-5 pb-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted">
-          {shown.length} of {data.length} programs
+          {shown.length} of {data.length} in orbit
         </div>
         <div className="flex-1 overflow-y-auto pb-3.5">
           {shown.map((p) => {

@@ -1,4 +1,4 @@
-# Founder Atlas — Repo Architecture & MVP Boundaries Map
+# Orbital — Repo Architecture & MVP Boundaries Map
 
 > **Stream 1 deliverable.** Navigation reference for future agents — a map, not a spec. Verified
 > against the actual source files on 2026-06-11. Do not edit source/schema/data without first reading
@@ -283,7 +283,7 @@ User on /submit
 
 **No backend.** The form composes and opens a GitHub issue URL in the user's browser. The maintainer reviews the issue and, if valid, runs the `founder-atlas-refresh` skill to create a draft PR updating the data JSON files.
 
-`buildIssueBody()` includes: program name, type, website URL, apply URL, city, country, living model, stage fit, sector, application status, deadline, funding, equity, housing, duration, source URL. Sensitive note at the bottom: "Submitted via the Founder Atlas /submit form. Please verify against primary sources before merging."
+`buildIssueBody()` includes: program name, type, website URL, apply URL, city, country, living model, stage fit, sector, application status, deadline, funding, equity, housing, duration, source URL. Sensitive note at the bottom: "Submitted via the Orbital /submit form. Please verify against primary sources before merging."
 
 **Program update flow:** on program detail pages (`/programs/<slug>`), a "Report update" link pre-fills `/submit?program=<name>&mode=update`, setting `mode: 'update'` which prepends `[Update]` to the issue title and changes the label to `data-update`.
 

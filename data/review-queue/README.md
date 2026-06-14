@@ -1,6 +1,6 @@
 # Review Queue — Proposed Program Updates (Stream 8)
 
-This directory is a **staging area** for proposed changes to the Founder Atlas
+This directory is a **staging area** for proposed changes to the Orbital
 program datasets. It sits **beside** the existing prefilled-GitHub-issue
 submission flow (`/submit` → `src/lib/submit.ts`) — it does **not** replace it.
 Issues are how a human or agent *suggests* a change; this queue is how a

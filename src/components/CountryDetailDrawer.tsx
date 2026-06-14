@@ -46,7 +46,7 @@ export default function CountryDetailDrawer() {
           <div className="min-w-0 flex-1">
             <h2 className="m-0 font-display text-[17px] font-bold leading-tight text-text">{country.name}</h2>
             <div className="mt-1.5">
-              <span className="rounded-[3px] border border-line2 px-2.5 py-1 text-[11.5px] text-muted">{country.region}</span>
+              <span className="rounded-full border border-line2 px-2.5 py-1 text-[11.5px] text-muted">{country.region}</span>
             </div>
           </div>
           <button
@@ -73,7 +73,7 @@ export default function CountryDetailDrawer() {
                   href={d.url}
                   target="_blank"
                   rel="noopener"
-                  className="rounded-2xl border border-line2 bg-[rgba(8,10,22,.5)] p-4 transition hover:border-a1"
+                  className="orbit-hover rounded-md border border-line2 bg-[rgba(8,10,22,.5)] p-4 transition hover:border-a1"
                 >
                   <div className="mb-0.5 text-[13.5px] font-semibold text-text">{d.label} ↗</div>
                   {d.description && <div className="text-[12.5px] leading-relaxed text-muted">{d.description}</div>}
@@ -81,7 +81,7 @@ export default function CountryDetailDrawer() {
               ))}
             </div>
           ) : (
-            <p className="m-0 mb-5 rounded-2xl border border-line2 bg-[rgba(8,10,22,.5)] p-4 text-[12px] italic leading-relaxed text-muted">
+            <p className="m-0 mb-5 rounded-md border border-line2 bg-[rgba(8,10,22,.5)] p-4 text-[12px] italic leading-relaxed text-muted">
               No external directories curated yet — help us add one.
             </p>
           )}
@@ -89,7 +89,7 @@ export default function CountryDetailDrawer() {
           {/* Compact link row */}
           <div className="mb-5 flex flex-col gap-1.5 text-[12.5px]">
             <a href={`/country/${country.slug}`} className="font-semibold text-a2 hover:text-text">
-              {count} co-living program{count === 1 ? '' : 's'} here →
+              {count} house{count === 1 ? '' : 's'} & residenc{count === 1 ? 'y' : 'ies'} here →
             </a>
             <a href={dashboardHref} className="font-semibold text-a2 hover:text-text">
               Filter the map →
@@ -99,8 +99,9 @@ export default function CountryDetailDrawer() {
           {/* SECONDARY: visas & organizations, condensed */}
           {country.visas.length > 0 && (
             <>
-              <h3 className="m-0 mb-2 mt-3 font-display text-[12px] font-bold uppercase tracking-wide text-muted">Visa & residency routes</h3>
-              <ul className="m-0 mb-4 list-none p-0 text-[12px]">
+              <div className="orbit-divider my-4" aria-hidden="true" />
+              <h3 className="m-0 mb-2 font-display text-[12px] font-bold uppercase tracking-wide text-muted">Visa & residency routes</h3>
+              <ul className="orbit-list m-0 mb-4 list-none p-0 text-[12px]">
                 {country.visas.map((v) => (
                   <li key={v.url} className="mt-1">
                     <a href={v.url} target="_blank" rel="noopener" className="text-a2">{v.name} ↗</a>
@@ -112,8 +113,9 @@ export default function CountryDetailDrawer() {
 
           {country.organizations.length > 0 && (
             <>
-              <h3 className="m-0 mb-2 mt-3 font-display text-[12px] font-bold uppercase tracking-wide text-muted">Key organizations</h3>
-              <ul className="m-0 mb-2 list-none p-0 text-[12px]">
+              <div className="orbit-divider my-4" aria-hidden="true" />
+              <h3 className="m-0 mb-2 font-display text-[12px] font-bold uppercase tracking-wide text-muted">Key organizations</h3>
+              <ul className="orbit-list m-0 mb-2 list-none p-0 text-[12px]">
                 {country.organizations.map((o) => (
                   <li key={o.url} className="mt-1">
                     <a href={o.url} target="_blank" rel="noopener" className="text-a2">{o.name} ↗</a>

@@ -18,9 +18,9 @@ const PROGRAM_TYPE_ORDER = [...PROGRAM_TYPES]
   .sort((a, b) => (isMvpProgramType(a) === isMvpProgramType(b) ? 0 : isMvpProgramType(a) ? -1 : 1));
 
 const inputCls =
-  'w-full rounded-xl border border-line2 bg-[rgba(8,10,22,.6)] px-3 py-2.5 text-[13px] text-text outline-none transition focus:border-a1';
+  'w-full rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3 py-2.5 text-[13px] text-text outline-none transition focus:border-a1';
 const selectCls =
-  'rounded-xl border border-line2 bg-[rgba(8,10,22,.6)] px-3 py-2 text-[12.5px] text-text outline-none cursor-pointer';
+  'rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3 py-2 text-[12.5px] text-text outline-none cursor-pointer';
 
 export default function FilterSidebar({
   programs,
@@ -86,7 +86,7 @@ export default function FilterSidebar({
     <div className={wrap}>
       {/* Program-type filter (canonical taxonomy — the primary axis) */}
       <div
-        className="inline-flex flex-wrap gap-1 rounded-xl border border-line2 bg-[rgba(8,10,22,.5)] p-1"
+        className="inline-flex flex-wrap gap-1 rounded-full border border-line2 bg-[rgba(8,10,22,.5)] p-1"
         role="tablist"
         aria-label="Program type"
       >
@@ -97,7 +97,7 @@ export default function FilterSidebar({
               role="tab"
               aria-selected={allActive}
               onClick={() => setFilters({ type: '', status: '' })}
-              className={`rounded-[3px] px-3 py-2 font-display text-[12.5px] font-semibold transition ${
+              className={`rounded-full px-3 py-2 font-display text-[12.5px] font-semibold transition ${
                 allActive ? 'text-[#0a0a0a]' : 'text-muted hover:text-text'
               }`}
               style={allActive ? { background: 'var(--grad)' } : undefined}
@@ -116,7 +116,7 @@ export default function FilterSidebar({
                 role="tab"
                 aria-selected={active}
                 onClick={() => setFilters({ type: active ? '' : t.id, status: '' })}
-                className={`rounded-[3px] px-3 py-2 font-display text-[12.5px] font-semibold transition ${
+                className={`rounded-full px-3 py-2 font-display text-[12.5px] font-semibold transition ${
                   active ? 'text-[#0a0a0a]' : 'text-muted hover:text-text'
                 }`}
                 style={active ? { background: 'var(--grad)' } : undefined}
@@ -196,7 +196,7 @@ export default function FilterSidebar({
           <button
             type="button"
             onClick={() => openCountry(countrySlug(filters.country))}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-line2 bg-[rgba(8,10,22,.6)] px-3 py-2 text-[12.5px] font-semibold text-text transition hover:border-a1"
+            className="inline-flex items-center gap-1.5 rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3 py-2 text-[12.5px] font-semibold text-text transition hover:border-a1"
           >
             View {filters.country} →
           </button>
@@ -263,13 +263,13 @@ export default function FilterSidebar({
             <button
               onClick={copyLink}
               title="Copy a link to this exact filtered view"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-line2 bg-[rgba(8,10,22,.6)] px-3.5 py-2.5 text-[12.5px] font-semibold text-text transition hover:border-a1"
+              className="inline-flex items-center gap-1.5 rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3.5 py-2.5 text-[12.5px] font-semibold text-text transition hover:border-a1"
             >
               🔗 Copy link
             </button>
             <a
               href="/api/programs.json"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-line2 bg-[rgba(8,10,22,.6)] px-3.5 py-2.5 text-[12.5px] font-semibold text-text transition hover:border-a1"
+              className="inline-flex items-center gap-1.5 rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3.5 py-2.5 text-[12.5px] font-semibold text-text transition hover:border-a1"
             >
               {'{ }'} API
             </a>
@@ -290,7 +290,7 @@ export default function FilterSidebar({
               <button
                 key={k}
                 onClick={() => setFilters({ status: active ? '' : k })}
-                className={`inline-flex select-none items-center gap-1.5 rounded-[3px] border px-2.5 py-[5px] text-[11.5px] font-semibold transition ${
+                className={`inline-flex select-none items-center gap-1.5 rounded-full border px-2.5 py-[5px] text-[11.5px] font-semibold transition ${
                   active ? 'border-transparent text-[#0a0a0a]' : 'border-line2 text-muted hover:text-text'
                 }`}
                 style={active ? { background: s.color } : { background: 'rgba(8,10,22,.4)' }}
@@ -304,7 +304,7 @@ export default function FilterSidebar({
       )}
 
       {toast && (
-        <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-xl px-4 py-2.5 text-[12.5px] font-bold text-[#0a0a0a]" style={{ background: 'var(--grad)' }}>
+        <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full px-4 py-2.5 text-[12.5px] font-bold text-[#0a0a0a]" style={{ background: 'var(--grad)' }}>
           Link copied
         </div>
       )}
