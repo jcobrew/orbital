@@ -3,7 +3,7 @@
     "title": "Founder Support Programs — Global Database",
     "compiled": "2026-06-13",
     "scope": "The full founder-support landscape: accelerators, fellowships, talent investors, government programs and startup visas alongside founder residencies, hacker houses, coliving and startup campuses. Categorized by the canonical program taxonomy (see src/data/taxonomy.ts) rather than a residential/traditional split.",
-    "note": "Recruiting status reflects best-available public info as of June 2026 and changes frequently. Always confirm on the program's own site. Logos load via a multi-source loader (Clearbit → DuckDuckGo → Google favicon) with an initials fallback.",
+    "note": "Recruiting status reflects best-available public info as of June 2026 and changes frequently. Always confirm on the program's own site. Logos are self-hosted (collected by scripts/fetch-logos.ts into public/logos/, indexed by src/lib/logoManifest.json) and served local-first, falling back to live DuckDuckGo → Google favicon services and finally an initials placeholder.",
     "status_legend": {
       "rolling": "Accepts applications on a rolling/always-open basis",
       "open": "A specific cohort window is currently open",

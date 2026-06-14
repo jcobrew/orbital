@@ -2,6 +2,18 @@
 // The React <Logo> uses logoSources()+initials(); the imperative Leaflet/Globe
 // islands use logoMarkupHTML() because L.divIcon expects an HTML string.
 
+// Self-hosted logos collected by scripts/fetch-logos.ts. When a domain has a
+// local icon we serve that first (fast, reliable, no third-party round-trip),
+// then fall back to the live favicon services and finally to initials.
+import logoManifest from './logoManifest.json';
+
+const manifest = logoManifest as Record<string, string>;
+
+/** Local self-hosted logo path for a domain, if one was collected. */
+export function localLogo(domain?: string): string | undefined {
+  return domain ? manifest[domain] : undefined;
+}
+
 export function initials(name: string): string {
   return name
     .replace(/\(.*?\)/g, '')
@@ -18,8 +30,11 @@ export function initials(name: string): string {
 /** Ordered favicon/logo sources to try before falling back to initials. */
 export function logoSources(domain?: string): string[] {
   if (!domain) return [];
+  const local = manifest[domain];
   return [
-    'https://logo.clearbit.com/' + domain,
+    // Prefer the self-hosted logo; the remote services are runtime fallbacks
+    // for domains we couldn't collect (and Clearbit is now retired).
+    ...(local ? [local] : []),
     'https://icons.duckduckgo.com/ip3/' + domain + '.ico',
     'https://www.google.com/s2/favicons?domain=' + domain + '&sz=128',
   ];
