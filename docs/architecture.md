@@ -101,7 +101,7 @@
 | `ProgramTypeExplainer.astro` | Astro component: editorial type explainer cards from `PROGRAM_TYPES` |
 | `IntroOverlay.tsx` | First-visit intro modal (auto-opens once on `/` and `/explore`) |
 | `BootSequence.tsx` | Typewriter boot animation component |
-| `Logo.tsx` | React favicon/logo component with Clearbit → DuckDuckGo → Google → initials fallback chain |
+| `Logo.tsx` | React favicon/logo component with self-hosted `/logos` → DuckDuckGo → Google → initials fallback chain (logos collected by `scripts/fetch-logos.ts`) |
 
 ### Islands (`src/islands/`)
 
