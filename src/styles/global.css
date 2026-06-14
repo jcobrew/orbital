@@ -330,44 +330,76 @@ a {
   vertical-align: middle;
 }
 
-/* ---- City minimap tabs + map (bottom-right floating window, globe page) ---- */
-.citytab {
+/* ---- City minimap — round "orbital" window (globe page) ---- */
+.minimap-orb {
+  width: min(82vmin, 440px);
+  height: min(82vmin, 440px);
+}
+.minimap-orb-map {
+  /* Square element clipped to a circle; Leaflet renders inside it. */
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #000000;
+  border: 2px solid rgba(255, 255, 255, 0.82);
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.65),
+    0 0 0 6px rgba(255, 255, 255, 0.04);
+}
+.minimap-orb-label {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 7px 12px;
+  padding: 5px 13px;
   border-radius: var(--radius-pill);
   border: 1px solid var(--line2);
-  background: rgba(16, 16, 16, 0.6);
-  color: var(--muted);
+  background: rgba(10, 10, 10, 0.86);
+  backdrop-filter: blur(8px);
+  color: var(--text);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 600;
-  cursor: pointer;
-  font-family: var(--font-mono);
-  transition: 0.15s;
+  white-space: nowrap;
 }
-.citytab:hover {
-  color: var(--text);
-  border-color: var(--a1);
-}
-.citytab.active {
-  color: var(--text);
-  border-color: var(--a1);
-  background: rgba(28, 28, 28, 0.9);
-}
-.citytab .led {
+.minimap-orb-label .led {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: var(--a2);
   box-shadow: 0 0 8px var(--a2);
 }
-.citytab b {
+.minimap-orb-label b {
   color: var(--a2);
   font-weight: 700;
 }
+.minimap-orb-close {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--line2);
+  background: rgba(10, 10, 10, 0.88);
+  color: var(--muted);
+  cursor: pointer;
+  transition: 0.15s;
+}
+.minimap-orb-close:hover {
+  border-color: var(--a1);
+  color: var(--text);
+}
 .citymap {
-  /* Fills the floating window's map area (the window supplies the border/shadow). */
   position: absolute;
   inset: 0;
   background: #000000;
@@ -382,6 +414,8 @@ a {
   justify-content: center;
   color: var(--muted);
   font-size: 12px;
+  text-align: center;
+  padding: 0 16%;
 }
 .citymap.empty.active {
   display: flex;
@@ -402,6 +436,144 @@ a {
   font-size: 9px;
 }
 
+/* ---- Clickable city minimap markers on the globe ---- */
+.city-pin {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(8, 8, 10, 0.9);
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, 0.1),
+    0 0 14px rgba(255, 255, 255, 0.25),
+    0 4px 14px rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+.city-pin:hover {
+  transform: scale(1.14);
+  box-shadow:
+    0 0 0 5px rgba(255, 255, 255, 0.16),
+    0 0 20px rgba(255, 255, 255, 0.42),
+    0 4px 16px rgba(0, 0, 0, 0.6);
+}
+.city-pin-ic {
+  display: flex;
+}
+.city-pin-ct {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--a2);
+  color: #07120e;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 17px;
+  text-align: center;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+/* ---- Centered circular detail card with an orbiting node ---- */
+.orbit-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  pointer-events: none; /* globe stays draggable around the card */
+}
+.orbit-stage {
+  position: relative;
+  width: min(88vmin, 520px);
+  height: min(88vmin, 520px);
+  pointer-events: auto;
+}
+.orbit-card-ring {
+  position: absolute;
+  inset: -26px;
+  border-radius: 50%;
+  animation: orbit-spin 14s linear infinite;
+  pointer-events: none;
+}
+.orbit-ball {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  width: 15px;
+  height: 15px;
+  margin-left: -7.5px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 0 16px 3px rgba(255, 255, 255, 0.75),
+    0 0 5px #fff;
+}
+.orbit-card {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.92);
+  background: radial-gradient(circle at 50% 38%, rgba(20, 20, 23, 0.96), rgba(8, 8, 9, 0.97));
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.72),
+    inset 0 0 60px rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 13% 15%;
+  overflow: hidden;
+}
+.orbit-close {
+  position: absolute;
+  top: 13%;
+  right: 16%;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+}
+.orbit-close:hover {
+  color: #ffffff;
+}
+.orbit-meta {
+  margin-top: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-width: 300px;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.orbit-highlight {
+  margin-top: 10px;
+  max-width: 290px;
+  font-size: 11px;
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 /* ============================================================================
    ORBITAL MOTIF SYSTEM
    Monochrome geometry that reads as orbits: dotted/dashed paths, ring nodes and
@@ -573,7 +745,8 @@ a {
 @media (prefers-reduced-motion: reduce) {
   .orbit-divider::after,
   .orbit-ring--spin,
-  .orbit-loader {
+  .orbit-loader,
+  .orbit-card-ring {
     animation: none;
   }
   .orbit-divider::after {
