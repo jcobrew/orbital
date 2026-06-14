@@ -77,7 +77,7 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
               href={applyHref(p)}
               target="_blank"
               rel="noopener"
-              className="rounded-md border border-transparent px-4 py-2.5 font-display text-[13px] font-bold text-[#0a0a0a] no-underline"
+              className="rounded-full border border-transparent px-4 py-2.5 font-display text-[13px] font-bold text-[#0a0a0a] no-underline"
               style={{ background: 'var(--grad)' }}
             >
               {p.applyUrl ? 'Apply' : 'Visit site'} →
@@ -87,24 +87,26 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
                 href={p.url}
                 target="_blank"
                 rel="noopener"
-                className="rounded-md border border-line2 px-4 py-2.5 text-[13px] font-semibold text-text no-underline transition hover:border-a1"
+                className="rounded-full border border-line2 px-4 py-2.5 text-[13px] font-semibold text-text no-underline transition hover:border-a1"
               >
                 Visit site
               </a>
             )}
             <a
               href={`/programs/${programSlug(p.name)}`}
-              className="rounded-md border border-line2 px-4 py-2.5 text-[13px] font-semibold text-text no-underline transition hover:border-a1"
+              className="rounded-full border border-line2 px-4 py-2.5 text-[13px] font-semibold text-text no-underline transition hover:border-a1"
             >
               Open full page ↗
             </a>
             <a
               href={`/submit?program=${encodeURIComponent(p.name)}&mode=update`}
-              className="rounded-md border border-line2 px-4 py-2.5 text-[13px] font-semibold text-muted no-underline transition hover:border-a1 hover:text-text"
+              className="rounded-full border border-line2 px-4 py-2.5 text-[13px] font-semibold text-muted no-underline transition hover:border-a1 hover:text-text"
             >
               Report update
             </a>
           </div>
+
+          <div className="orbit-divider my-5" aria-hidden="true" />
 
           {/* Quick facts */}
           <h3 className="m-0 mb-2 font-display text-[13px] font-bold text-text">Quick facts</h3>
@@ -123,6 +125,8 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
             <Fact label="Last verified" value={val(p.lastVerified)} />
           </dl>
 
+          <div className="orbit-divider my-5" aria-hidden="true" />
+
           {/* Best for */}
           <h3 className="m-0 mb-2 font-display text-[13px] font-bold text-text">Best for</h3>
           <p className="m-0 mb-5 text-[12.5px] leading-normal text-muted">
@@ -139,9 +143,11 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
             </>
           )}
 
+          <div className="orbit-divider my-5" aria-hidden="true" />
+
           {/* Sources */}
-          <h3 className="m-0 mb-2 mt-3 font-display text-[13px] font-bold text-text">Sources</h3>
-          <ul className="m-0 mb-2 list-none p-0 text-[12px]">
+          <h3 className="m-0 mb-2 font-display text-[13px] font-bold text-text">Sources</h3>
+          <ul className="orbit-list m-0 mb-2 list-none p-0 text-[12px]">
             <li>
               <a href={p.url} target="_blank" rel="noopener" className="text-a2">Official site</a>
             </li>

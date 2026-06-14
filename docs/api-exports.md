@@ -1,6 +1,6 @@
 # Public API, static exports & agent surfaces (Stream 9)
 
-Founder Atlas is a **static Astro site (no server adapter)**: every endpoint below is
+Orbital is a **static Astro site (no server adapter)**: every endpoint below is
 pre-rendered to a static file at build time and served from `dist/`. CORS
 (`Access-Control-Allow-Origin: *`) and content-type headers for `*.json` / `llms.txt` are
 applied by `vercel.json` on deploy. No backend, no auth, no scraping required — agents,

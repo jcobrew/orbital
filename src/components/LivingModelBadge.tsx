@@ -11,7 +11,7 @@ export default function LivingModelBadge({ format }: { format?: ProgramFormat | 
   const strong = !!(format && STRONG[format]);
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-[3px] border px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide ${
+      className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide ${
         strong ? 'border-a2 text-a2' : 'border-line2 text-muted'
       }`}
       title="Living model"

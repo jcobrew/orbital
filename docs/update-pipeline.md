@@ -1,7 +1,7 @@
 # Update Pipeline — Freshness & Reporting (Stream 7)
 
 A set of **report-only**, **safe-by-default** scripts that surface data-quality and
-freshness gaps in the Founder Atlas program datasets. They are deliberately
+freshness gaps in the Orbital program datasets. They are deliberately
 *read-only*: nothing here ever edits the JSON data, opens a PR, or publishes
 anything. Network access is **opt-in**. Every script always exits `0` so it can
 run in CI without ever failing a build.

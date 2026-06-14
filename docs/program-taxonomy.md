@@ -1,4 +1,4 @@
-# Founder Atlas — Program Taxonomy
+# Orbital — Program Taxonomy
 
 This document describes the **canonical taxonomy** for founder-support programs and which
 parts are **in MVP scope** vs. **future**. The taxonomy lives in code at

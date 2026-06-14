@@ -23,21 +23,25 @@ export default function SavedList({ programs }: { programs: Program[] }) {
   return (
     <div>
       <div className="mb-3 text-[12px] font-semibold text-muted" aria-live="polite">
-        {shown.length} saved program{shown.length === 1 ? '' : 's'}
+        {shown.length} saved place{shown.length === 1 ? '' : 's'}
       </div>
 
       {shown.length === 0 ? (
-        <div className="rounded-md border border-line bg-[rgba(10,13,28,.55)] p-10 text-center">
-          <h2 className="m-0 mb-1.5 font-display text-[16px] font-bold text-text">Nothing saved yet</h2>
-          <p className="m-0 mb-4 text-[13px] text-muted">
-            Browse programs and tap the <span className="text-a2">☆</span> to build a shortlist. It's stored on this
+        <div className="relative overflow-hidden rounded-md border border-line bg-[rgba(10,13,28,.55)] p-10 text-center">
+          <span
+            className="orbit-ring orbit-ring--node orbit-ring--spin pointer-events-none absolute left-1/2 top-6 h-16 w-16 -translate-x-1/2 opacity-30"
+            aria-hidden="true"
+          />
+          <h2 className="relative m-0 mb-1.5 mt-12 font-display text-[16px] font-bold text-text">Your constellation is empty</h2>
+          <p className="relative m-0 mb-4 text-[13px] text-muted">
+            Browse the houses and tap the <span className="text-a2">☆</span> to pull a few into your shortlist. Kept on this
             device only.
           </p>
           <a
             href="/explore"
-            className="inline-block rounded-md border border-line2 px-4 py-2.5 text-[13px] font-semibold text-text no-underline transition hover:border-a1"
+            className="relative inline-block rounded-full border border-line2 px-4 py-2.5 text-[13px] font-semibold text-text no-underline transition hover:border-a1"
           >
-            Browse programs
+            Browse houses
           </a>
         </div>
       ) : (

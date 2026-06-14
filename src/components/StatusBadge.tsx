@@ -14,7 +14,7 @@ export default function StatusBadge({ status, full = false }: Props) {
   const s = statusMeta(status);
   return (
     <span
-      className="inline-flex items-center gap-1.5 rounded-[3px] px-2.5 py-[3px] text-[10px] font-bold uppercase tracking-wide whitespace-nowrap"
+      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px] text-[10px] font-bold uppercase tracking-wide whitespace-nowrap"
       style={{ background: s.color, color: '#0a0a0a' }}
       title={s.label}
     >
@@ -38,7 +38,7 @@ export function ApplicationStatusBadge({ status, label }: ApplicationStatusBadge
   const meta = applicationStatusMeta(status);
   return (
     <span
-      className="inline-flex items-center gap-1.5 rounded-[3px] px-2.5 py-[3px] text-[10px] font-bold uppercase tracking-wide whitespace-nowrap"
+      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px] text-[10px] font-bold uppercase tracking-wide whitespace-nowrap"
       style={{ background: meta.color, color: '#0a0a0a' }}
       title={meta.label}
     >
@@ -63,7 +63,7 @@ export function StaleBadge({ ageDays, unknown = false }: StaleBadgeProps) {
       : 'Stale data';
   return (
     <span
-      className="inline-flex items-center gap-1.5 rounded-[3px] border border-[#ffc24b] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide whitespace-nowrap text-[#ffc24b]"
+      className="inline-flex items-center gap-1.5 rounded-full border border-[#ffc24b] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide whitespace-nowrap text-[#ffc24b]"
       title="This record may be out of date — confirm on the official site."
     >
       {label}

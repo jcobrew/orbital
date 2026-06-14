@@ -1,6 +1,6 @@
 # Contributing Program Data
 
-Founder Atlas is a curated, human-verified directory. All data changes go through a
+Orbital is a curated, human-verified map of founder residencies, hacker houses and co-living programs. All data changes go through a
 lightweight review cycle before reaching the live site. There is no backend or
 auto-publish path — quality and trust are maintained by keeping humans in the loop.
 
@@ -75,7 +75,7 @@ improve the matching experience — include them if you have reliable sources.
 
 ## Data quality standards
 
-Founder Atlas favors **accuracy over completeness**. When in doubt:
+Orbital favors **accuracy over completeness**. When in doubt:
 
 - Use `"unknown"` or omit optional fields rather than guessing.
 - Set `verificationStatus: "needs-review"` if you are unsure.

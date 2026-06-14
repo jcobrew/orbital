@@ -321,6 +321,10 @@ export default function MapView({ programs }: { programs: Program[] }) {
           <div className="mb-3">
             <SiteNav current="map" />
           </div>
+          <div className="mb-1 inline-flex items-center gap-1.5 font-display text-[9.5px] font-semibold uppercase tracking-[.22em] text-a2">
+            <span className="orbit-node" aria-hidden="true" />
+            live map
+          </div>
           <h1
             className="m-0 mb-2 font-display text-[19px] font-bold leading-[1.18]"
             style={{ color: 'var(--text)' }}
@@ -333,7 +337,7 @@ export default function MapView({ programs }: { programs: Program[] }) {
           <FilterSidebar programs={programs} variant="sidebar" />
         </div>
         <div className="px-5 pb-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted">
-          {shown.length} of {data.length} programs
+          {shown.length} of {data.length} in orbit
         </div>
         <div className="flex-1 overflow-y-auto pb-3.5">
           {shown.map((p) => {
