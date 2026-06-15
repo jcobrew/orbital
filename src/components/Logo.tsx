@@ -10,9 +10,9 @@ interface Props {
 }
 
 /**
- * Logo with the multi-source fallback (Clearbit → DuckDuckGo → Google favicon)
- * and a graceful initials fallback. Adds a subtle loaded fade the old
- * string-templated version couldn't do.
+ * Logo with the multi-source fallback (self-hosted /logos → DuckDuckGo →
+ * Google favicon) and a graceful initials fallback. Adds a subtle loaded fade
+ * the old string-templated version couldn't do.
  */
 export default function Logo({ name, domain, size = 38, className = '' }: Props) {
   const sources = logoSources(domain);
