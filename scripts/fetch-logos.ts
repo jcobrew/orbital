@@ -58,22 +58,62 @@ async function tryFetch(url: string): Promise<{ buf: Buffer; ext: string } | nul
   }
 }
 
-const sources = (domain: string) => [
-  `https://icons.duckduckgo.com/ip3/${domain}.ico`,
-  `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
-  `https://logo.clearbit.com/${domain}`,
-  // Last resort: the site's own well-known icon locations.
-  `https://${domain}/favicon.ico`,
-  `https://${domain}/favicon.png`,
-  `https://${domain}/apple-touch-icon.png`,
-];
+/**
+ * Discover icon URLs declared in a site's own HTML (<link rel="icon">,
+ * apple-touch-icon, etc.). Catches branded favicons served from non-standard
+ * paths that the favicon services miss — common for hacker-house / residency
+ * sites built on Framer, Notion or Carrd. Skips og:image on purpose: those are
+ * wide social cards that crop badly into the round globe markers.
+ */
+async function discoverFromHtml(domain: string): Promise<string[]> {
+  try {
+    const res = await fetch(`https://${domain}/`, {
+      redirect: 'follow',
+      signal: AbortSignal.timeout(20000),
+      headers: { 'user-agent': 'Mozilla/5.0 (compatible; founder-atlas-logos)' },
+    });
+    if (!res.ok) return [];
+    const html = await res.text();
+    const base = new URL(res.url || `https://${domain}/`);
+    const out: string[] = [];
+    const linkRe = /<link\b[^>]*>/gi;
+    for (const tag of html.match(linkRe) ?? []) {
+      const rel = /\brel=["']([^"']+)["']/i.exec(tag)?.[1]?.toLowerCase() ?? '';
+      const href = /\bhref=["']([^"']+)["']/i.exec(tag)?.[1];
+      if (!href || !/icon/.test(rel)) continue;
+      try {
+        out.push(new URL(href, base).href);
+      } catch {
+        /* ignore malformed href */
+      }
+    }
+    // apple-touch-icon (often the highest-res square) first.
+    return out.sort((a, b) => Number(b.includes('apple-touch')) - Number(a.includes('apple-touch')));
+  } catch {
+    return [];
+  }
+}
+
+async function sources(domain: string): Promise<string[]> {
+  return [
+    `https://icons.duckduckgo.com/ip3/${domain}.ico`,
+    `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+    `https://logo.clearbit.com/${domain}`,
+    // Icons declared in the site's own HTML (non-standard favicon paths).
+    ...(await discoverFromHtml(domain)),
+    // Last resort: the site's well-known icon locations.
+    `https://${domain}/favicon.ico`,
+    `https://${domain}/favicon.png`,
+    `https://${domain}/apple-touch-icon.png`,
+  ];
+}
 
 const manifest: Record<string, string> = {};
 const failed: string[] = [];
 
 for (const domain of domains) {
   let saved = false;
-  for (const url of sources(domain)) {
+  for (const url of await sources(domain)) {
     const got = await tryFetch(url);
     if (!got) continue;
     const file = `${domain}.${got.ext}`;
