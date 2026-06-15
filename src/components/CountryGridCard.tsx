@@ -30,7 +30,7 @@ export default function CountryGridCard({
         e.preventDefault();
         openCountry(slug);
       }}
-      className="orbit-hover flex flex-col rounded-md border border-line2 bg-[rgba(8,10,22,.5)] p-5 transition hover:border-a1"
+      className="orbit-hover flex flex-col rounded-md border border-line2 bg-[rgba(16,16,16,.5)] p-5 transition hover:border-a1"
     >
       <div className="mb-1 flex items-center justify-between gap-2">
         <span className="flex min-w-0 items-center gap-2">

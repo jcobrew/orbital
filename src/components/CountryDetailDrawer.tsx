@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useStore } from '@nanostores/react';
-import { $selectedCountrySlug, closeCountry } from '../stores/country';
-import { getCountry } from '../data/countries';
+import { $selectedCountrySlug, closeCountry, openCountry } from '../stores/country';
+import { getCountry, COUNTRIES } from '../data/countries';
 import { flagSrc } from '../lib/flag';
 
 /**
@@ -42,7 +42,7 @@ export default function CountryDetailDrawer() {
         role="dialog"
         aria-modal="true"
         aria-label={`${country.name} startup ecosystem`}
-        className="absolute right-0 top-0 flex h-full w-full max-w-[440px] flex-col border-l border-line2 bg-[#0b0e1c] shadow-[0_24px_70px_rgba(0,0,0,.65)] max-[480px]:max-w-full"
+        className="absolute right-0 top-0 flex h-full w-full max-w-[440px] flex-col border-l border-line2 bg-[#0c0c0c] shadow-[0_24px_70px_rgba(0,0,0,.65)] max-[480px]:max-w-full"
       >
         {/* Header */}
         <div className="flex items-start gap-3 border-b border-line p-5">
@@ -84,7 +84,7 @@ export default function CountryDetailDrawer() {
                   href={country.business.url}
                   target="_blank"
                   rel="noopener"
-                  className="orbit-hover rounded-md border border-line2 bg-[rgba(8,10,22,.5)] p-4 transition hover:border-a1"
+                  className="orbit-hover rounded-md border border-line2 bg-[rgba(16,16,16,.5)] p-4 transition hover:border-a1"
                 >
                   <div className="mb-0.5 text-[10.5px] font-semibold uppercase tracking-wide text-a2">Business & ecosystem</div>
                   <div className="mb-0.5 text-[13.5px] font-semibold text-text">{country.business.label} ↗</div>
@@ -98,7 +98,7 @@ export default function CountryDetailDrawer() {
                   href={country.relocation.url}
                   target="_blank"
                   rel="noopener"
-                  className="orbit-hover rounded-md border border-line2 bg-[rgba(8,10,22,.5)] p-4 transition hover:border-a1"
+                  className="orbit-hover rounded-md border border-line2 bg-[rgba(16,16,16,.5)] p-4 transition hover:border-a1"
                 >
                   <div className="mb-0.5 text-[10.5px] font-semibold uppercase tracking-wide text-a2">Moving in</div>
                   <div className="mb-0.5 text-[13.5px] font-semibold text-text">{country.relocation.label} ↗</div>
@@ -109,7 +109,7 @@ export default function CountryDetailDrawer() {
               )}
             </div>
           ) : (
-            <p className="m-0 mb-5 rounded-md border border-line2 bg-[rgba(8,10,22,.5)] p-4 text-[12px] italic leading-relaxed text-muted">
+            <p className="m-0 mb-5 rounded-md border border-line2 bg-[rgba(16,16,16,.5)] p-4 text-[12px] italic leading-relaxed text-muted">
               Local guides coming soon.
             </p>
           )}
@@ -122,6 +122,21 @@ export default function CountryDetailDrawer() {
             <a href={dashboardHref} className="font-semibold text-a2 hover:text-text">
               Filter the map →
             </a>
+          </div>
+
+          {/* Jump to another country without leaving the drawer */}
+          <div className="orbit-divider my-4" aria-hidden="true" />
+          <h3 className="m-0 mb-2 font-display text-[12px] font-bold uppercase tracking-wide text-muted">Other countries</h3>
+          <div className="mb-4 flex flex-wrap gap-1.5">
+            {COUNTRIES.filter((c) => c.slug !== country.slug).map((c) => (
+              <button
+                key={c.slug}
+                onClick={() => openCountry(c.slug)}
+                className="rounded-full border border-line2 px-2.5 py-1 text-[11.5px] font-semibold text-a2 transition hover:border-a1 hover:text-text active:scale-95"
+              >
+                {c.name}
+              </button>
+            ))}
           </div>
 
           <p className="m-0 mt-4 text-[11px] italic text-muted">

@@ -1,14 +1,12 @@
 import { useEffect } from 'react';
 import { useStore } from '@nanostores/react';
 import { $introOpen, autoOpenIntro, closeIntro } from '../stores/ui';
-import { PROGRAM_TYPES } from '../data/programTypes';
-import FounderTriggers from './FounderTriggers';
 
 /**
- * Dismissible intro overlay (mounted once via the layout). Auto-opens on a
- * visitor's first arrival on an entry page, reopens from the nav's About button,
- * and is always available in full at /about. Keeps the globe/list as the actual
- * front door instead of a separate landing page.
+ * Dismissible About / intro overlay (mounted once via the layout). Auto-opens on
+ * a visitor's first arrival, reopens from the nav's About button. Intentionally
+ * simple — just what Orbital is and why it exists — since all the real
+ * interaction lives on the globe itself.
  */
 export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean }) {
   const open = useStore($introOpen);
@@ -35,12 +33,12 @@ export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean 
         role="dialog"
         aria-modal="true"
         aria-label="About Orbital"
-        className="relative z-[1] w-full max-w-[680px] rounded-[3px] border border-line2 bg-[#0b0e1c] p-7 shadow-[0_30px_80px_rgba(0,0,0,.7)]"
+        className="relative z-[1] w-full max-w-[520px] rounded-[3px] border border-line2 bg-[#0c0c0c] p-7 shadow-[0_30px_80px_rgba(0,0,0,.7)]"
       >
         <button
           onClick={closeIntro}
           aria-label="Close"
-          className="absolute right-4 top-4 rounded-[3px] border border-line2 px-2 py-1 text-[14px] leading-none text-muted hover:text-text"
+          className="absolute right-4 top-4 rounded-[3px] border border-line2 px-2 py-1 text-[14px] leading-none text-muted transition hover:text-text"
         >
           ✕
         </button>
@@ -49,53 +47,34 @@ export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean 
           <span className="orbit-node" aria-hidden="true" />
           Orbital
         </div>
-        <h2 className="m-0 mb-2.5 max-w-[520px] font-display text-[22px] font-bold leading-[1.12] text-text">
-          Find where founders gather.
+        <h2 className="m-0 mb-3 max-w-[440px] font-display text-[22px] font-bold leading-[1.12] text-text">
+          Where founders gather.
         </h2>
-        <p className="m-0 mb-5 max-w-[560px] text-[13.5px] leading-relaxed text-muted">
-          A live map of the residencies, hacker houses and co-living programs where founders live and build together —
-          the places with enough gravity to pull people across the world into orbit.
-        </p>
 
-        <div className="mb-5">
-          <FounderTriggers mode="link" onNavigate={closeIntro} />
+        <div className="flex flex-col gap-3 text-[13.5px] leading-relaxed text-muted">
+          <p className="m-0">
+            Orbital is a live map of the residencies, hacker houses and co-living programs where founders
+            actually live and build together — the places with enough gravity to pull people across the world.
+          </p>
+          <p className="m-0">
+            Spin the globe to see where these communities cluster, click a point to read what it is and how to
+            join, and open a dense city's minimap to zoom in. Switch to <span className="text-text">List</span> any
+            time to search and filter every program.
+          </p>
+          <p className="m-0">
+            It exists because this information is scattered across group chats, threads and dead links. Orbital
+            keeps it in one place, verified and current, so you can find your people and go build.
+          </p>
         </div>
 
-        <div className="mb-2 font-display text-[12px] font-semibold uppercase tracking-wide text-muted">
-          …or by program type
-        </div>
-        <div className="mb-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
-          {PROGRAM_TYPES.map((t) => (
-            <a
-              key={t.name}
-              href={`/explore?q=${encodeURIComponent(t.q)}`}
-              onClick={closeIntro}
-              className="orbit-hover rounded-[3px] border border-line bg-[rgba(10,13,28,.55)] p-3 no-underline transition hover:border-a1"
-            >
-              <div className="font-display text-[13px] font-bold text-text">{t.name}</div>
-              <div className="mt-0.5 text-[11.5px] leading-snug text-muted">{t.best}</div>
-            </a>
-          ))}
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="mt-6">
           <button
             onClick={closeIntro}
-            className="rounded-full border border-transparent px-4 py-2.5 font-display text-[13px] font-bold text-[#0a0a0a]"
+            className="rounded-full border border-transparent px-4 py-2.5 font-display text-[13px] font-bold text-[#0a0a0a] transition active:scale-95"
             style={{ background: 'var(--grad)' }}
           >
             Enter orbit
           </button>
-          <a
-            href="/explore"
-            onClick={closeIntro}
-            className="rounded-full border border-line2 px-4 py-2.5 text-[13px] font-semibold text-text no-underline transition hover:border-a1"
-          >
-            Browse the list
-          </a>
-          <a href="/about" className="text-[12.5px] font-semibold text-a2 no-underline hover:underline">
-            Full guide →
-          </a>
         </div>
       </div>
     </div>

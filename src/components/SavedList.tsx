@@ -27,7 +27,7 @@ export default function SavedList({ programs }: { programs: Program[] }) {
       </div>
 
       {shown.length === 0 ? (
-        <div className="relative overflow-hidden rounded-md border border-line bg-[rgba(10,13,28,.55)] p-10 text-center">
+        <div className="relative overflow-hidden rounded-md border border-line bg-[rgba(16,16,16,.55)] p-10 text-center">
           <span
             className="orbit-ring orbit-ring--node orbit-ring--spin pointer-events-none absolute left-1/2 top-6 h-16 w-16 -translate-x-1/2 opacity-30"
             aria-hidden="true"

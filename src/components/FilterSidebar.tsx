@@ -18,7 +18,7 @@ const MODELS: { id: WorkLiveModel; label: string }[] = [
 ];
 
 const inputCls =
-  'w-full rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3 py-2.5 text-[13px] text-text outline-none transition focus:border-a1';
+  'w-full rounded-full border border-line2 bg-[rgba(16,16,16,.6)] px-3 py-2.5 text-[13px] text-text outline-none transition focus:border-a1';
 
 export default function FilterSidebar({
   programs,
@@ -74,7 +74,7 @@ export default function FilterSidebar({
     <div className={wrap}>
       {/* The one program filter: co-living / co-working / both. */}
       <div
-        className="inline-flex flex-wrap gap-1 rounded-full border border-line2 bg-[rgba(8,10,22,.5)] p-1"
+        className="inline-flex flex-wrap gap-1 rounded-full border border-line2 bg-[rgba(16,16,16,.5)] p-1"
         role="tablist"
         aria-label="Living / working model"
       >
@@ -121,7 +121,7 @@ export default function FilterSidebar({
             height="15"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#9aa3c8"
+            stroke="#8a8a8a"
             strokeWidth="2"
           >
             <circle cx="11" cy="11" r="7" />
@@ -146,7 +146,7 @@ export default function FilterSidebar({
           <button
             type="button"
             onClick={() => openCountry(countrySlug(single))}
-            className="inline-flex items-center gap-1.5 rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3 py-2 text-[12.5px] font-semibold text-text transition hover:border-a1"
+            className="inline-flex items-center gap-1.5 rounded-full border border-line2 bg-[rgba(16,16,16,.6)] px-3 py-2 text-[12.5px] font-semibold text-text transition hover:border-a1"
           >
             View {single} →
           </button>
@@ -156,13 +156,13 @@ export default function FilterSidebar({
             <button
               onClick={copyLink}
               title="Copy a link to this exact filtered view"
-              className="inline-flex items-center gap-1.5 rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3.5 py-2.5 text-[12.5px] font-semibold text-text transition hover:border-a1"
+              className="inline-flex items-center gap-1.5 rounded-full border border-line2 bg-[rgba(16,16,16,.6)] px-3.5 py-2.5 text-[12.5px] font-semibold text-text transition hover:border-a1"
             >
               🔗 Copy link
             </button>
             <a
               href="/api/programs.json"
-              className="inline-flex items-center gap-1.5 rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3.5 py-2.5 text-[12.5px] font-semibold text-text transition hover:border-a1"
+              className="inline-flex items-center gap-1.5 rounded-full border border-line2 bg-[rgba(16,16,16,.6)] px-3.5 py-2.5 text-[12.5px] font-semibold text-text transition hover:border-a1"
             >
               {'{ }'} API
             </a>
@@ -186,7 +186,7 @@ export default function FilterSidebar({
                 className={`inline-flex select-none items-center gap-1.5 rounded-full border px-2.5 py-[5px] text-[11.5px] font-semibold transition ${
                   active ? 'border-transparent text-[#0a0a0a]' : 'border-line2 text-muted hover:text-text'
                 }`}
-                style={active ? { background: s.color } : { background: 'rgba(8,10,22,.4)' }}
+                style={active ? { background: s.color } : { background: 'rgba(16,16,16,.4)' }}
               >
                 <span className="h-2 w-2 rounded-full" style={{ background: s.color }} />
                 {shortStatusLabel(k)} <span className="opacity-60">{n}</span>

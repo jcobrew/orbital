@@ -16,7 +16,7 @@ import { PROGRAM_TYPES as CARDS } from '../data/programTypes';
       CARDS.map((c) => (
         <a
           href={`/explore?q=${encodeURIComponent(c.q)}`}
-          class="group flex flex-col rounded-md border border-line bg-[rgba(10,13,28,.55)] p-5 no-underline transition hover:border-a1"
+          class="group flex flex-col rounded-md border border-line bg-[rgba(16,16,16,.55)] p-5 no-underline transition hover:border-a1"
         >
           <h3 class="m-0 mb-1.5 font-display text-[15px] font-bold text-text">{c.name}</h3>
           <p class="m-0 mb-3 text-[12px] leading-normal text-muted">{c.best}</p>

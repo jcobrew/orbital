@@ -88,7 +88,7 @@ export default function CountryMultiSelect({
 
   return (
     <div ref={rootRef} className={'relative ' + (fullWidth ? 'w-full' : 'min-w-[220px] flex-1')}>
-      <div className="flex flex-wrap items-center gap-1.5 rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-2 py-1.5 transition focus-within:border-a1">
+      <div className="flex flex-wrap items-center gap-1.5 rounded-full border border-line2 bg-[rgba(16,16,16,.6)] px-2 py-1.5 transition focus-within:border-a1">
         {selected.map((c) => (
           <span
             key={c}
@@ -126,7 +126,7 @@ export default function CountryMultiSelect({
       {open && suggestions.length > 0 && (
         <ul
           role="listbox"
-          className="absolute left-0 right-0 z-50 mt-1 max-h-[244px] overflow-y-auto rounded-[3px] border border-line2 bg-[#0b0e1c] py-1 shadow-[0_18px_50px_rgba(0,0,0,.6)]"
+          className="absolute left-0 right-0 z-50 mt-1 max-h-[244px] overflow-y-auto rounded-[3px] border border-line2 bg-[#0c0c0c] py-1 shadow-[0_18px_50px_rgba(0,0,0,.6)]"
         >
           {suggestions.map((c, i) => (
             <li key={c} role="option" aria-selected={i === active}>
