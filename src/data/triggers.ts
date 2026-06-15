@@ -30,13 +30,18 @@ export const TRIGGERS: Trigger[] = [
   },
   {
     label: 'I need a place to live & build',
-    preset: { format: 'live-in' },
+    preset: { model: 'both' },
     needs: { willingToRelocate: true, supportNeeds: ['housing', 'workspace', 'structure'] },
   },
   {
-    label: 'I need deep focus',
-    preset: { q: 'residency' },
-    needs: { supportNeeds: ['structure', 'community'] },
+    label: 'I want a live-in residency',
+    preset: { model: 'co-living' },
+    needs: { supportNeeds: ['housing', 'structure', 'community'] },
+  },
+  {
+    label: 'I just need a place to work',
+    preset: { model: 'co-working' },
+    needs: { supportNeeds: ['workspace', 'community'] },
   },
   {
     label: 'I need a cofounder or community',
@@ -44,18 +49,13 @@ export const TRIGGERS: Trigger[] = [
     needs: { teamStatus: 'seeking-cofounder', supportNeeds: ['co-founder-matching', 'community'] },
   },
   {
-    label: 'I need to go from idea to MVP',
-    preset: { q: 'incubator' },
-    needs: { stage: 'idea', supportNeeds: ['mentorship', 'workspace', 'structure'] },
-  },
-  {
-    label: "I'm very early (pre-idea)",
-    preset: { q: 'fellowship' },
-    needs: { stage: 'pre-idea', supportNeeds: ['community', 'mentorship'] },
+    label: 'I need deep focus',
+    preset: { q: 'residency' },
+    needs: { stage: 'idea', supportNeeds: ['structure', 'community'] },
   },
   {
     label: 'I need to move to a startup hub',
-    preset: { format: 'relocation' },
+    preset: { model: 'both' },
     needs: { willingToRelocate: true, supportNeeds: ['visa-support', 'community'] },
   },
 ];

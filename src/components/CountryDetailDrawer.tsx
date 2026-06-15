@@ -9,8 +9,9 @@ import { flagSrc } from '../lib/flag';
  * country (countries grid) or selects one in the filter sidebar. Mirrors
  * ProgramDetailDrawer's shell (scrim, right panel, Esc-to-close, focus-on-open).
  *
- * Orbital points OUT: the PRIMARY section here is external startup directories
- * we curate per country, not data we re-collect ourselves.
+ * Orbital points OUT: the PRIMARY section here is the two official portals we
+ * curate per country (business/ecosystem + relocation), not data we re-collect
+ * ourselves.
  */
 export default function CountryDetailDrawer() {
   const slug = useStore($selectedCountrySlug);
@@ -74,26 +75,42 @@ export default function CountryDetailDrawer() {
           {/* Summary */}
           <p className="m-0 mb-5 text-[12.5px] leading-normal text-muted">{country.summary}</p>
 
-          {/* PRIMARY: external startup directories */}
-          <h3 className="m-0 mb-2 font-display text-[13px] font-bold text-text">Startup directories</h3>
-          {country.directories.length > 0 ? (
+          {/* PRIMARY: the two official portals worth knowing */}
+          <h3 className="m-0 mb-2 font-display text-[13px] font-bold text-text">Start here</h3>
+          {country.business || country.relocation ? (
             <div className="mb-5 flex flex-col gap-2.5">
-              {country.directories.map((d) => (
+              {country.business && (
                 <a
-                  key={d.url}
-                  href={d.url}
+                  href={country.business.url}
                   target="_blank"
                   rel="noopener"
                   className="orbit-hover rounded-md border border-line2 bg-[rgba(8,10,22,.5)] p-4 transition hover:border-a1"
                 >
-                  <div className="mb-0.5 text-[13.5px] font-semibold text-text">{d.label} ↗</div>
-                  {d.description && <div className="text-[12.5px] leading-relaxed text-muted">{d.description}</div>}
+                  <div className="mb-0.5 text-[10.5px] font-semibold uppercase tracking-wide text-a2">Business & ecosystem</div>
+                  <div className="mb-0.5 text-[13.5px] font-semibold text-text">{country.business.label} ↗</div>
+                  {country.business.description && (
+                    <div className="text-[12.5px] leading-relaxed text-muted">{country.business.description}</div>
+                  )}
                 </a>
-              ))}
+              )}
+              {country.relocation && (
+                <a
+                  href={country.relocation.url}
+                  target="_blank"
+                  rel="noopener"
+                  className="orbit-hover rounded-md border border-line2 bg-[rgba(8,10,22,.5)] p-4 transition hover:border-a1"
+                >
+                  <div className="mb-0.5 text-[10.5px] font-semibold uppercase tracking-wide text-a2">Moving in</div>
+                  <div className="mb-0.5 text-[13.5px] font-semibold text-text">{country.relocation.label} ↗</div>
+                  {country.relocation.description && (
+                    <div className="text-[12.5px] leading-relaxed text-muted">{country.relocation.description}</div>
+                  )}
+                </a>
+              )}
             </div>
           ) : (
             <p className="m-0 mb-5 rounded-md border border-line2 bg-[rgba(8,10,22,.5)] p-4 text-[12px] italic leading-relaxed text-muted">
-              No external directories curated yet — help us add one.
+              Local guides coming soon.
             </p>
           )}
 
@@ -107,37 +124,8 @@ export default function CountryDetailDrawer() {
             </a>
           </div>
 
-          {/* SECONDARY: visas & organizations, condensed */}
-          {country.visas.length > 0 && (
-            <>
-              <div className="orbit-divider my-4" aria-hidden="true" />
-              <h3 className="m-0 mb-2 font-display text-[12px] font-bold uppercase tracking-wide text-muted">Visa & residency routes</h3>
-              <ul className="orbit-list m-0 mb-4 list-none p-0 text-[12px]">
-                {country.visas.map((v) => (
-                  <li key={v.url} className="mt-1">
-                    <a href={v.url} target="_blank" rel="noopener" className="text-a2">{v.name} ↗</a>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-
-          {country.organizations.length > 0 && (
-            <>
-              <div className="orbit-divider my-4" aria-hidden="true" />
-              <h3 className="m-0 mb-2 font-display text-[12px] font-bold uppercase tracking-wide text-muted">Key organizations</h3>
-              <ul className="orbit-list m-0 mb-2 list-none p-0 text-[12px]">
-                {country.organizations.map((o) => (
-                  <li key={o.url} className="mt-1">
-                    <a href={o.url} target="_blank" rel="noopener" className="text-a2">{o.name} ↗</a>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-
           <p className="m-0 mt-4 text-[11px] italic text-muted">
-            Last verified {country.updatedAt}. Directories and visa rules change often — confirm on the official source.
+            Last verified {country.updatedAt}. Links and visa rules change often — confirm on the official source.
           </p>
         </div>
       </div>

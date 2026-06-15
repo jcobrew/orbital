@@ -3,7 +3,6 @@ import { useStore } from '@nanostores/react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Program } from '../data/programs';
-import { programTypeLabel } from '../data/programs';
 import { passes, defaultSort } from '../lib/filter';
 import { statusMeta, STATUS_ORDER } from '../lib/status';
 import { logoMarkupHTML, installLogoFallback } from '../lib/logo';
@@ -16,13 +15,16 @@ const TITLE_ALL = {
   t: 'Where founders gather',
   s: 'Find the residencies, hacker houses and co-living programs where founders live and build together — click a pin or list item for details. Status as of June 2026 — verify on each site.',
 };
-/** Subtitle when a specific canonical program type is selected. */
-function titleFor(typeId: string, label: string): { t: string; s: string } {
-  if (!typeId) return TITLE_ALL;
-  return {
-    t: label,
-    s: `${label} programs worldwide. Click a pin for details. Status as of June 2026 — verify on each site.`,
-  };
+const MODEL_TITLES: Record<string, string> = {
+  'co-living': 'Live-in residencies',
+  'co-working': 'Co-working bases',
+  both: 'Live & build together',
+};
+/** Heading when a living/working model is selected. */
+function titleFor(model: string): { t: string; s: string } {
+  if (!model || !MODEL_TITLES[model]) return TITLE_ALL;
+  const t = MODEL_TITLES[model];
+  return { t, s: `${t} — click a pin for details. Status as of June 2026 — verify on each site.` };
 }
 
 // Off-coast cluster callouts for dense regions (ported from index.html).
@@ -316,7 +318,7 @@ export default function MapView({ programs }: { programs: Program[] }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shown]);
 
-  const title = titleFor(filters.type, programTypeLabel(filters.type));
+  const title = titleFor(filters.model);
 
   return (
     <div className="flex h-screen">

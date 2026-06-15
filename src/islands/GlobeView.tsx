@@ -4,7 +4,7 @@ import Globe from 'globe.gl';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Program } from '../data/programs';
-import { programTypeLabel } from '../data/programs';
+import { programModel } from '../data/programs';
 import { passes, defaultSort } from '../lib/filter';
 import { statusMeta, STATUS_ORDER } from '../lib/status';
 import { logoMarkupHTML, installLogoFallback } from '../lib/logo';
@@ -48,13 +48,16 @@ const TITLE_ALL = {
   t: 'Where founders gather',
   s: 'Spin the globe or pick a residency to fly there; the houses with the strongest pull are mapped below. Status as of June 2026 — verify on each site.',
 };
-/** Subtitle when a specific canonical program type is selected. */
-function titleFor(typeId: string, label: string): { t: string; s: string } {
-  if (!typeId) return TITLE_ALL;
-  return {
-    t: label,
-    s: `${label} programs worldwide. Spin or pick a program to fly there; dense cities are mapped below.`,
-  };
+const MODEL_TITLES: Record<string, string> = {
+  'co-living': 'Live-in residencies',
+  'co-working': 'Co-working bases',
+  both: 'Live & build together',
+};
+/** Heading when a living/working model is selected. */
+function titleFor(model: string): { t: string; s: string } {
+  if (!model || !MODEL_TITLES[model]) return TITLE_ALL;
+  const t = MODEL_TITLES[model];
+  return { t, s: `${t} — spin or pick a place to fly there; dense cities are mapped below.` };
 }
 
 // Dense regions get their own crisp, interactive minimap in the dock below the
@@ -168,8 +171,8 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   // Dock membership tracks the program-type filter only (not search/status), so
   // each dense-city minimap is a stable overview and doesn't rebuild on every keystroke.
   const cityData = useMemo(
-    () => data.filter((p) => !filters.type || p.canonicalType === filters.type),
-    [data, filters.type],
+    () => data.filter((p) => !filters.model || programModel(p) === filters.model),
+    [data, filters.model],
   );
   const cityCounts = useMemo(() => {
     const m: Record<string, number> = {};
@@ -511,7 +514,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     seedRings(null);
   }
 
-  const title = titleFor(filters.type, programTypeLabel(filters.type));
+  const title = titleFor(filters.model);
   const tagline = useTypewriter('~/ some places pull you into orbit', { speed: 46, startDelay: 2600, loop: true });
 
   return (
