@@ -25,7 +25,7 @@ const empty: SubmitFields = {
 };
 
 const input =
-  'w-full rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3 py-2 text-[13px] text-text outline-none transition focus:border-a1';
+  'w-full rounded-full border border-line2 bg-[rgba(16,16,16,.6)] px-3 py-2 text-[13px] text-text outline-none transition focus:border-a1';
 const labelCls = 'mb-1 block text-[11px] font-semibold uppercase tracking-wide text-muted';
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
@@ -63,7 +63,7 @@ export default function SubmitForm() {
   return (
     <form onSubmit={submit} className="max-w-[680px]">
       {/* mode toggle */}
-      <div className="mb-5 inline-flex gap-1 rounded-full border border-line2 bg-[rgba(8,10,22,.5)] p-1">
+      <div className="mb-5 inline-flex gap-1 rounded-full border border-line2 bg-[rgba(16,16,16,.5)] p-1">
         {(['new', 'update'] as const).map((m) => (
           <button
             key={m}

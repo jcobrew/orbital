@@ -39,7 +39,7 @@ export default function MatchCard({
 
   return (
     <article
-      className={`orbit-hover flex flex-col rounded-md border bg-[rgba(10,13,28,.55)] p-4 transition ${
+      className={`orbit-hover flex flex-col rounded-md border bg-[rgba(16,16,16,.55)] p-4 transition ${
         disqualified ? 'border-line opacity-70' : 'border-line hover:border-a1'
       }`}
     >
@@ -118,7 +118,7 @@ export default function MatchCard({
       )}
 
       {/* Next step */}
-      <p className="m-0 mb-3 rounded-sm border border-line2 bg-[rgba(8,10,22,.5)] px-2.5 py-2 text-[11.5px] leading-snug text-muted">
+      <p className="m-0 mb-3 rounded-sm border border-line2 bg-[rgba(16,16,16,.5)] px-2.5 py-2 text-[11.5px] leading-snug text-muted">
         <span className="font-semibold text-text">Next step: </span>
         {m.suggestedNextStep}
       </p>

@@ -14,7 +14,7 @@ import {
 
 type Path = 'choose' | 'guided' | 'results';
 
-const cardBase = 'rounded-md border bg-[rgba(10,13,28,.55)]';
+const cardBase = 'rounded-md border bg-[rgba(16,16,16,.55)]';
 const chipBase = 'select-none rounded-full border px-3.5 py-2 text-[12.5px] font-semibold transition text-left';
 
 /** Tri-state ("yes"/"no"/"either") <-> boolean|undefined for the relocate question. */
@@ -146,7 +146,7 @@ export default function FindSupportFlow({ programs }: { programs: Program[] }) {
             <span>Question {step + 1} of {QUESTIONS.length}</span>
             <button onClick={restart} className="font-semibold text-muted hover:text-text">Start over</button>
           </div>
-          <div className="h-1.5 overflow-hidden rounded-full bg-[rgba(8,10,22,.7)]">
+          <div className="h-1.5 overflow-hidden rounded-full bg-[rgba(16,16,16,.7)]">
             <div
               className="h-full rounded-full transition-all"
               style={{ width: `${((step + 1) / QUESTIONS.length) * 100}%`, background: 'var(--grad)' }}
@@ -242,7 +242,7 @@ export default function FindSupportFlow({ programs }: { programs: Program[] }) {
         <div className="flex flex-wrap gap-2">
           <button
             onClick={copyLink}
-            className="rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3.5 py-2 text-[12.5px] font-semibold text-text transition hover:border-a1"
+            className="rounded-full border border-line2 bg-[rgba(16,16,16,.6)] px-3.5 py-2 text-[12.5px] font-semibold text-text transition hover:border-a1"
           >
             🔗 Copy results link
           </button>
@@ -251,13 +251,13 @@ export default function FindSupportFlow({ programs }: { programs: Program[] }) {
               setPath('guided');
               setStep(0);
             }}
-            className="rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3.5 py-2 text-[12.5px] font-semibold text-text transition hover:border-a1"
+            className="rounded-full border border-line2 bg-[rgba(16,16,16,.6)] px-3.5 py-2 text-[12.5px] font-semibold text-text transition hover:border-a1"
           >
             Edit answers
           </button>
           <button
             onClick={restart}
-            className="rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3.5 py-2 text-[12.5px] font-semibold text-muted transition hover:border-a1 hover:text-text"
+            className="rounded-full border border-line2 bg-[rgba(16,16,16,.6)] px-3.5 py-2 text-[12.5px] font-semibold text-muted transition hover:border-a1 hover:text-text"
           >
             Start over
           </button>
@@ -311,7 +311,7 @@ export default function FindSupportFlow({ programs }: { programs: Program[] }) {
 
       {/* Ruled-out programs — shown so founders learn *why* (transparency). */}
       {blocked.length > 0 && (
-        <details className="mt-7 rounded-md border border-line bg-[rgba(8,10,22,.4)] p-4">
+        <details className="mt-7 rounded-md border border-line bg-[rgba(16,16,16,.4)] p-4">
           <summary className="cursor-pointer text-[13px] font-semibold text-text">
             {blocked.length} program{blocked.length === 1 ? '' : 's'} ruled out — see why
           </summary>

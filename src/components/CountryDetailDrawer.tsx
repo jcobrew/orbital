@@ -41,7 +41,7 @@ export default function CountryDetailDrawer() {
         role="dialog"
         aria-modal="true"
         aria-label={`${country.name} startup ecosystem`}
-        className="absolute right-0 top-0 flex h-full w-full max-w-[440px] flex-col border-l border-line2 bg-[#0b0e1c] shadow-[0_24px_70px_rgba(0,0,0,.65)] max-[480px]:max-w-full"
+        className="absolute right-0 top-0 flex h-full w-full max-w-[440px] flex-col border-l border-line2 bg-[#0c0c0c] shadow-[0_24px_70px_rgba(0,0,0,.65)] max-[480px]:max-w-full"
       >
         {/* Header */}
         <div className="flex items-start gap-3 border-b border-line p-5">
@@ -84,7 +84,7 @@ export default function CountryDetailDrawer() {
                   href={d.url}
                   target="_blank"
                   rel="noopener"
-                  className="orbit-hover rounded-md border border-line2 bg-[rgba(8,10,22,.5)] p-4 transition hover:border-a1"
+                  className="orbit-hover rounded-md border border-line2 bg-[rgba(16,16,16,.5)] p-4 transition hover:border-a1"
                 >
                   <div className="mb-0.5 text-[13.5px] font-semibold text-text">{d.label} ↗</div>
                   {d.description && <div className="text-[12.5px] leading-relaxed text-muted">{d.description}</div>}
@@ -92,7 +92,7 @@ export default function CountryDetailDrawer() {
               ))}
             </div>
           ) : (
-            <p className="m-0 mb-5 rounded-md border border-line2 bg-[rgba(8,10,22,.5)] p-4 text-[12px] italic leading-relaxed text-muted">
+            <p className="m-0 mb-5 rounded-md border border-line2 bg-[rgba(16,16,16,.5)] p-4 text-[12px] italic leading-relaxed text-muted">
               No external directories curated yet — help us add one.
             </p>
           )}

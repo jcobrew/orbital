@@ -68,16 +68,16 @@ export default function ProgramsTable({ programs }: { programs: Program[] }) {
   return (
     <div>
       <div className="mb-2.5 text-[11.5px] font-semibold tracking-wide text-muted">
-        Showing <code className="rounded bg-[rgba(8,10,22,.6)] px-1.5 py-px text-[11px] text-a2">{rows.length}</code> of{' '}
-        <code className="rounded bg-[rgba(8,10,22,.6)] px-1.5 py-px text-[11px] text-a2">{total}</code> programs
+        Showing <code className="rounded bg-[rgba(16,16,16,.6)] px-1.5 py-px text-[11px] text-a2">{rows.length}</code> of{' '}
+        <code className="rounded bg-[rgba(16,16,16,.6)] px-1.5 py-px text-[11px] text-a2">{total}</code> programs
         {filters.type && (
           <>
-            {' '}in <code className="rounded bg-[rgba(8,10,22,.6)] px-1.5 py-px text-[11px] text-a2">{programTypeLabel(filters.type)}</code>
+            {' '}in <code className="rounded bg-[rgba(16,16,16,.6)] px-1.5 py-px text-[11px] text-a2">{programTypeLabel(filters.type)}</code>
           </>
         )}
       </div>
 
-      <div className="overflow-x-auto rounded-md border border-line bg-[rgba(10,13,28,.55)]">
+      <div className="overflow-x-auto rounded-md border border-line bg-[rgba(16,16,16,.55)]">
         <table className="w-full border-collapse text-[12.5px]">
           <thead>
             <tr>

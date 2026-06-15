@@ -42,7 +42,7 @@ export default function Logo({ name, domain, size = 38, className = '' }: Props)
             fontWeight: 700,
             fontSize: Math.round(size * 0.34),
             color: '#fff',
-            background: '#1a2036',
+            background: '#1a1a1a',
             width: '100%',
             height: '100%',
             display: 'flex',

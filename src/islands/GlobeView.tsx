@@ -184,12 +184,18 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     return m;
   }, [cityData]);
 
-  // Clickable minimap markers — only for regions dense enough to need one, placed
-  // off-coast (via `pin`) where defined so they're not buried under program pins.
-  // Merged with program pins into one globe htmlElements layer.
+  // Regions dense enough to be represented by a single minimap button instead
+  // of a cluster of overlapping program pins.
+  const denseClusters = useMemo(
+    () => CLUSTERS.filter((c) => (cityCounts[c.id] ?? 0) > MIN_DENSITY),
+    [cityCounts],
+  );
+
+  // Clickable minimap markers — one per dense region, placed off-coast (via
+  // `pin`) where defined so they're not buried under the pins they replace.
   const cityMarkers = useMemo(
     () =>
-      CLUSTERS.filter((c) => (cityCounts[c.id] ?? 0) > MIN_DENSITY).map((c) => {
+      denseClusters.map((c) => {
         const at: readonly [number, number] =
           'pin' in c
             ? (c.pin as readonly [number, number])
@@ -203,10 +209,15 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
           lng: at[1],
         };
       }),
-    [cityCounts],
+    [denseClusters, cityCounts],
   );
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const globePins = useMemo(() => [...(shown as any[]), ...cityMarkers], [shown, cityMarkers]);
+  // Globe pins = individual programs NOT inside a dense cluster (those collapse
+  // into the cluster's minimap button), plus the city markers themselves.
+  const globePins = useMemo(() => {
+    const loose = shown.filter((p) => !denseClusters.some((c) => inBounds(p, c.bounds)));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return [...(loose as any[]), ...cityMarkers];
+  }, [shown, denseClusters, cityMarkers]);
   const activeCluster = CLUSTERS.find((c) => c.id === activeCity) ?? CLUSTERS[0];
 
   function seedRings(focus: Program | null) {

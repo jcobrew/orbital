@@ -28,7 +28,7 @@ export default function SiteNav({ current }: { current?: NavCurrent }) {
       </a>
 
       <div
-        className="inline-flex gap-1 rounded-full border border-line2 bg-[rgba(8,10,22,.5)] p-1"
+        className="inline-flex gap-1 rounded-full border border-line2 bg-[rgba(16,16,16,.5)] p-1"
         role="tablist"
         aria-label="View"
       >

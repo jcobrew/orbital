@@ -33,7 +33,7 @@ export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean 
         role="dialog"
         aria-modal="true"
         aria-label="About Orbital"
-        className="relative z-[1] w-full max-w-[520px] rounded-[3px] border border-line2 bg-[#0b0e1c] p-7 shadow-[0_30px_80px_rgba(0,0,0,.7)]"
+        className="relative z-[1] w-full max-w-[520px] rounded-[3px] border border-line2 bg-[#0c0c0c] p-7 shadow-[0_30px_80px_rgba(0,0,0,.7)]"
       >
         <button
           onClick={closeIntro}

@@ -23,7 +23,7 @@ function Badge({ children }: { children: React.ReactNode }) {
  */
 export default function ProgramCard({ program: p, onSelect }: { program: Program; onSelect: (p: Program) => void }) {
   return (
-    <article className="orbit-hover flex flex-col rounded-md border border-line bg-[rgba(10,13,28,.55)] p-4 transition hover:border-a1">
+    <article className="orbit-hover flex flex-col rounded-md border border-line bg-[rgba(16,16,16,.55)] p-4 transition hover:border-a1">
       <div className="mb-2.5 flex items-start gap-3">
         <Logo name={p.name} domain={p.domain} size={40} />
         <div className="min-w-0 flex-1">

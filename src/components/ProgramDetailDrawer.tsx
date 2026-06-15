@@ -45,7 +45,7 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
         role="dialog"
         aria-modal="true"
         aria-label={`${p.name} details`}
-        className="absolute right-0 top-0 flex h-full w-full max-w-[440px] flex-col border-l border-line2 bg-[#0b0e1c] shadow-[0_24px_70px_rgba(0,0,0,.65)] max-[480px]:max-w-full"
+        className="absolute right-0 top-0 flex h-full w-full max-w-[440px] flex-col border-l border-line2 bg-[#0c0c0c] shadow-[0_24px_70px_rgba(0,0,0,.65)] max-[480px]:max-w-full"
       >
         {/* Header */}
         <div className="flex items-start gap-3 border-b border-line p-5">
