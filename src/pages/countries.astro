@@ -49,7 +49,7 @@ const jsonLd = {
           region={c.region}
           summary={c.summary}
           programCount={c.programCount}
-          directoryCount={c.directories.length}
+          hasGuides={Boolean(c.business || c.relocation)}
         />
       ))}
     </div>

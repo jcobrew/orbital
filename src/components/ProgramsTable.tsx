@@ -2,8 +2,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { useStore } from '@nanostores/react';
 import { motion, AnimatePresence } from 'motion/react';
 import type { Program } from '../data/programs';
-import { programTypeLabel } from '../data/programs';
+import { programTypeLabel, programModel } from '../data/programs';
 import { passes, sortPrograms, type SortKey } from '../lib/filter';
+
+const MODEL_LABEL: Record<string, string> = {
+  'co-living': 'Co-living',
+  'co-working': 'Co-working',
+  both: 'Both',
+};
 import { $filters, initFiltersFromURL } from '../stores/filters';
 import Logo from './Logo';
 import StatusBadge from './StatusBadge';
@@ -63,16 +69,16 @@ export default function ProgramsTable({ programs }: { programs: Program[] }) {
     syncSortToURL(nextSort, nextDir);
   }
 
-  const total = !filters.type ? programs.length : programs.filter((p) => p.canonicalType === filters.type).length;
+  const total = !filters.model ? programs.length : programs.filter((p) => programModel(p) === filters.model).length;
 
   return (
     <div>
       <div className="mb-2.5 text-[11.5px] font-semibold tracking-wide text-muted">
         Showing <code className="rounded bg-[rgba(8,10,22,.6)] px-1.5 py-px text-[11px] text-a2">{rows.length}</code> of{' '}
         <code className="rounded bg-[rgba(8,10,22,.6)] px-1.5 py-px text-[11px] text-a2">{total}</code> programs
-        {filters.type && (
+        {filters.model && (
           <>
-            {' '}in <code className="rounded bg-[rgba(8,10,22,.6)] px-1.5 py-px text-[11px] text-a2">{programTypeLabel(filters.type)}</code>
+            {' '}in <code className="rounded bg-[rgba(8,10,22,.6)] px-1.5 py-px text-[11px] text-a2">{MODEL_LABEL[filters.model]}</code>
           </>
         )}
       </div>

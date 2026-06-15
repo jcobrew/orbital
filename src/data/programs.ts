@@ -173,6 +173,25 @@ export function isCoLiving(p: Pick<Program, 'canonicalType' | 'format'>): boolea
 }
 
 /**
+ * The single program-facing filter axis Orbital exposes: does a place give you
+ * somewhere to live, somewhere to work, or both? Derived from the populated
+ * `supportModes` (housing/workspace) with the explicit booleans as a stronger
+ * signal when present. Co-living houses that report neither default to `both`
+ * (they're live-and-build spaces by definition).
+ */
+export type WorkLiveModel = 'co-living' | 'co-working' | 'both';
+export function programModel(
+  p: Pick<Program, 'providesHousing' | 'providesWorkspace' | 'supportModes'>,
+): WorkLiveModel {
+  const housing = p.providesHousing === true || !!p.supportModes?.includes('housing');
+  const workspace = p.providesWorkspace === true || !!p.supportModes?.includes('workspace');
+  if (housing && workspace) return 'both';
+  if (housing) return 'co-living';
+  if (workspace) return 'co-working';
+  return 'both';
+}
+
+/**
  * The full source corpus (all records), with the derived `dataset` field. This
  * is the escape hatch for tooling/tests that need every record; the live site
  * and the public APIs all go through the co-living-filtered {@link PROGRAMS}.

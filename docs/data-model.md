@@ -101,3 +101,32 @@ Across the full record set there are **0 type warnings and 0 stage warnings**.
 
 See [`program-taxonomy.md`](./program-taxonomy.md) for the taxonomy dimensions and MVP-vs-
 future category breakdown.
+
+## Country ecosystem profiles
+
+Separate from the program schema, each **country profile** (one level up from individual
+programs — "what is it like to build here") lives in
+[`src/data/countries-data.json`](../src/data/countries-data.json) and is typed by
+`CountryRecord` in [`src/data/countries.ts`](../src/data/countries.ts).
+
+Orbital deliberately does **not** re-collect every ecosystem detail. Instead of the old
+`visas[]` / `organizations[]` / `links[]` / `directories[]` arrays (now removed), each
+country points OUT to at most **two** optional categorized links, both shaped as
+`CountryGuideLink` (`{ label, url, description? }`):
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `slug` | string | URL-safe id, also the `/country/<slug>` route |
+| `name` | string | Display name; MUST match the program datasets' `country` value so counts join |
+| `region` | string | Coarse world region |
+| `lat` / `lng` | number | Approximate centroid for map centering |
+| `summary` | string | 1–2 sentence ecosystem overview |
+| `highlights` | string[] | Short bullet facts (strengths, hubs, notable wins) |
+| `business` | `CountryGuideLink?` | The national business/ecosystem portal that links out to the wider ecosystem |
+| `relocation` | `CountryGuideLink?` | The official "how to move / get in" immigration site |
+| `updatedAt` | string | ISO date the record was last verified |
+| `source` | string | Where the record was curated from (free text) |
+
+Either of `business` / `relocation` may be omitted when no canonical source exists — the UI
+shows a graceful "Local guides coming soon." placeholder. Program counts are joined at build
+time (`programCount`, `programsByDataset`) and are not stored in the JSON.

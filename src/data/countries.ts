@@ -1,6 +1,7 @@
 // Country startup-ecosystem profiles — the data behind /country/<slug> and
-// /api/countries.json. These let a founder go one level up from individual
-// programs to "what is it actually like to build here": visas, key orgs, links.
+// /api/countries.json. Orbital points OUT rather than re-collecting ecosystems:
+// each profile hands founders two canonical links — the country's business /
+// ecosystem portal and its official relocation / immigration site.
 //
 // ────────────────────────────────────────────────────────────────────────────
 // CLOUD-DB SWAP POINT
@@ -14,29 +15,11 @@
 import countriesRaw from './countries-data.json';
 import { PROGRAMS } from './programs';
 
-export interface CountryLink {
-  label: string;
-  url: string;
-}
-
-/** An external, country-specific startup-ecosystem directory/website we point out to. */
-export interface CountryDirectory {
+/** A single categorized outward link (business/ecosystem portal or relocation portal). */
+export interface CountryGuideLink {
   label: string;
   url: string;
   description?: string;
-}
-
-export interface CountryVisa {
-  name: string;
-  description: string;
-  url: string;
-}
-
-export interface CountryOrg {
-  name: string;
-  type: string;
-  description: string;
-  url: string;
 }
 
 /** A national startup-ecosystem profile as stored in the data source. */
@@ -48,11 +31,10 @@ export interface CountryRecord {
   lng: number;
   summary: string;
   highlights: string[];
-  visas: CountryVisa[];
-  organizations: CountryOrg[];
-  links: CountryLink[];
-  /** External, country-specific startup-ecosystem directories we point founders to. */
-  directories: CountryDirectory[];
+  /** The country's business/ecosystem portal that links out to the wider ecosystem. */
+  business?: CountryGuideLink;
+  /** The official "how to move / get in" immigration/relocation site. */
+  relocation?: CountryGuideLink;
   updatedAt: string;
   source: string;
 }
@@ -94,8 +76,6 @@ export const COUNTRIES: Country[] = raw.countries
     const n = counts[c.name] ?? { residential: 0, traditional: 0 };
     return {
       ...c,
-      // Never let a consumer hit undefined if an older record omits directories.
-      directories: c.directories ?? [],
       programsByDataset: n,
       programCount: n.residential + n.traditional,
     };

@@ -1,26 +1,24 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useStore } from '@nanostores/react';
-import type { Program } from '../data/programs';
-import { programTypeLabel } from '../data/programs';
-import { PROGRAM_TYPES, isMvpProgramType } from '../data/taxonomy';
+import type { Program, WorkLiveModel } from '../data/programs';
+import { programModel } from '../data/programs';
 import { STATUS_ORDER, statusMeta, shortStatusLabel } from '../lib/status';
 import { $filters, setFilters, initFiltersFromURL } from '../stores/filters';
 import { hasCountryProfile, countrySlug } from '../data/countries';
 import { openCountry } from '../stores/country';
-import { livingModelLabel } from '../lib/living';
-import type { ProgramFormat } from '../data/programs';
+import CountryMultiSelect from './CountryMultiSelect';
 
 type Variant = 'dashboard' | 'sidebar';
 
-/** Canonical program-type IDs in display order: the 8 MVP types first. */
-const PROGRAM_TYPE_ORDER = [...PROGRAM_TYPES]
-  .map((e) => e.id)
-  .sort((a, b) => (isMvpProgramType(a) === isMvpProgramType(b) ? 0 : isMvpProgramType(a) ? -1 : 1));
+/** The whole program filter axis: where you live / where you work / both. */
+const MODELS: { id: WorkLiveModel; label: string }[] = [
+  { id: 'co-living', label: 'Co-living' },
+  { id: 'co-working', label: 'Co-working' },
+  { id: 'both', label: 'Both' },
+];
 
 const inputCls =
   'w-full rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3 py-2.5 text-[13px] text-text outline-none transition focus:border-a1';
-const selectCls =
-  'rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3 py-2 text-[12.5px] text-text outline-none cursor-pointer';
 
 export default function FilterSidebar({
   programs,
@@ -36,36 +34,24 @@ export default function FilterSidebar({
     initFiltersFromURL();
   }, []);
 
-  // Options + chip counts reflect the active program-type filter.
+  // All countries present in the data — the typeahead suggests from these so a
+  // pick always yields results.
+  const countries = useMemo(() => [...new Set(programs.map((p) => p.country))].sort(), [programs]);
+  // Model chip counts reflect the active country selection.
+  const byCountry = useMemo(
+    () => (filters.country.length ? programs.filter((p) => filters.country.includes(p.country)) : programs),
+    [programs, filters.country],
+  );
+  const modelCounts = useMemo(() => {
+    const m: Record<WorkLiveModel, number> = { 'co-living': 0, 'co-working': 0, both: 0 };
+    for (const p of byCountry) m[programModel(p)] += 1;
+    return m;
+  }, [byCountry]);
+  // Status-chip counts reflect the active model + country selection.
   const slice = useMemo(
-    () => (!filters.type ? programs : programs.filter((p) => p.canonicalType === filters.type)),
-    [programs, filters.type],
+    () => byCountry.filter((p) => !filters.model || programModel(p) === filters.model),
+    [byCountry, filters.model],
   );
-  // Program-type options: canonical types present in the data, MVP types first,
-  // each with a live count (computed against the full set, not the slice).
-  const programTypes = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const p of programs) {
-      if (!p.canonicalType) continue;
-      counts.set(p.canonicalType, (counts.get(p.canonicalType) ?? 0) + 1);
-    }
-    return PROGRAM_TYPE_ORDER.filter((id) => counts.has(id)).map((id) => ({
-      id,
-      label: programTypeLabel(id),
-      mvp: isMvpProgramType(id),
-      count: counts.get(id) ?? 0,
-    }));
-  }, [programs]);
-  const countries = useMemo(() => [...new Set(slice.map((p) => p.country))].sort(), [slice]);
-  // Founder dimensions — these light up only once the data is filled (handoff: no
-  // dead controls while values are unknown).
-  const stages = useMemo(() => [...new Set(slice.flatMap((p) => p.stageFit ?? []))].sort(), [slice]);
-  const formats = useMemo(
-    () => [...new Set(slice.map((p) => p.format).filter((f): f is NonNullable<typeof f> => !!f && f !== 'unknown'))].sort(),
-    [slice],
-  );
-  const sectors = useMemo(() => [...new Set(slice.flatMap((p) => p.sectorFocus ?? []))].sort(), [slice]);
-  const hasHousing = useMemo(() => slice.some((p) => p.providesHousing === true || p.providesHousing === false), [slice]);
 
   async function copyLink() {
     try {
@@ -82,56 +68,51 @@ export default function FilterSidebar({
       ? 'flex flex-col gap-3'
       : 'flex flex-col gap-3';
 
+  const single = filters.country.length === 1 ? filters.country[0] : null;
+
   return (
     <div className={wrap}>
-      {/* Program-type filter (canonical taxonomy — the primary axis) */}
+      {/* The one program filter: co-living / co-working / both. */}
       <div
         className="inline-flex flex-wrap gap-1 rounded-full border border-line2 bg-[rgba(8,10,22,.5)] p-1"
         role="tablist"
-        aria-label="Program type"
+        aria-label="Living / working model"
       >
-        {(() => {
-          const allActive = !filters.type;
+        <button
+          role="tab"
+          aria-selected={!filters.model}
+          onClick={() => setFilters({ model: '' })}
+          className={`rounded-full px-3 py-2 font-display text-[12.5px] font-semibold transition active:scale-95 ${
+            !filters.model
+              ? 'text-[#0a0a0a] shadow-[0_2px_10px_rgba(0,0,0,.4)]'
+              : 'text-a2 hover:bg-[rgba(255,255,255,.07)] hover:text-text'
+          }`}
+          style={!filters.model ? { background: 'var(--grad)' } : undefined}
+        >
+          All
+        </button>
+        {MODELS.map((m) => {
+          const active = filters.model === m.id;
           return (
             <button
+              key={m.id}
               role="tab"
-              aria-selected={allActive}
-              onClick={() => setFilters({ type: '', status: '' })}
+              aria-selected={active}
+              onClick={() => setFilters({ model: active ? '' : m.id })}
               className={`rounded-full px-3 py-2 font-display text-[12.5px] font-semibold transition active:scale-95 ${
-                allActive
+                active
                   ? 'text-[#0a0a0a] shadow-[0_2px_10px_rgba(0,0,0,.4)]'
                   : 'text-a2 hover:bg-[rgba(255,255,255,.07)] hover:text-text'
               }`}
-              style={allActive ? { background: 'var(--grad)' } : undefined}
+              style={active ? { background: 'var(--grad)' } : undefined}
             >
-              All
+              {m.label} <span className="opacity-60">{modelCounts[m.id]}</span>
             </button>
           );
-        })()}
-        {programTypes
-          .filter((t) => t.mvp)
-          .map((t) => {
-            const active = filters.type === t.id;
-            return (
-              <button
-                key={t.id}
-                role="tab"
-                aria-selected={active}
-                onClick={() => setFilters({ type: active ? '' : t.id, status: '' })}
-                className={`rounded-full px-3 py-2 font-display text-[12.5px] font-semibold transition active:scale-95 ${
-                  active
-                    ? 'text-[#0a0a0a] shadow-[0_2px_10px_rgba(0,0,0,.4)]'
-                    : 'text-a2 hover:bg-[rgba(255,255,255,.07)] hover:text-text'
-                }`}
-                style={active ? { background: 'var(--grad)' } : undefined}
-              >
-                {t.label} <span className="opacity-60">{t.count}</span>
-              </button>
-            );
-          })}
+        })}
       </div>
 
-      {/* Search + selects */}
+      {/* Search + country */}
       <div className={variant === 'dashboard' ? 'flex flex-wrap items-center gap-2.5' : 'flex flex-col gap-2.5'}>
         <div className={variant === 'dashboard' ? 'relative min-w-[240px] flex-1' : 'relative'}>
           <svg
@@ -155,112 +136,20 @@ export default function FilterSidebar({
             className={inputCls + ' pl-9'}
           />
         </div>
-        <select
-          aria-label="Filter by program type"
-          value={filters.type}
-          onChange={(e) => setFilters({ type: e.target.value })}
-          className={selectCls + (variant === 'sidebar' ? ' w-full' : '')}
-        >
-          <option value="">All program types</option>
-          <optgroup label="MVP types">
-            {programTypes
-              .filter((t) => t.mvp)
-              .map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.label} ({t.count})
-                </option>
-              ))}
-          </optgroup>
-          {programTypes.some((t) => !t.mvp) && (
-            <optgroup label="More">
-              {programTypes
-                .filter((t) => !t.mvp)
-                .map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.label} ({t.count})
-                  </option>
-                ))}
-            </optgroup>
-          )}
-        </select>
-        <select
-          aria-label="Filter by country"
-          value={filters.country}
-          onChange={(e) => setFilters({ country: e.target.value })}
-          className={selectCls + (variant === 'sidebar' ? ' w-full' : '')}
-        >
-          <option value="">All countries</option>
-          {countries.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
-        </select>
-        {filters.country && hasCountryProfile(filters.country) && (
+        <CountryMultiSelect
+          countries={countries}
+          selected={filters.country}
+          onChange={(next) => setFilters({ country: next })}
+          fullWidth={variant === 'sidebar'}
+        />
+        {single && hasCountryProfile(single) && (
           <button
             type="button"
-            onClick={() => openCountry(countrySlug(filters.country))}
+            onClick={() => openCountry(countrySlug(single))}
             className="inline-flex items-center gap-1.5 rounded-full border border-line2 bg-[rgba(8,10,22,.6)] px-3 py-2 text-[12.5px] font-semibold text-text transition hover:border-a1"
           >
-            View {filters.country} →
+            View {single} →
           </button>
-        )}
-        {stages.length > 0 && (
-          <select
-            aria-label="Filter by stage"
-            value={filters.stage}
-            onChange={(e) => setFilters({ stage: e.target.value })}
-            className={selectCls + (variant === 'sidebar' ? ' w-full' : '')}
-          >
-            <option value="">All stages</option>
-            {stages.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
-        )}
-        {formats.length > 0 && (
-          <select
-            aria-label="Filter by living model"
-            value={filters.format}
-            onChange={(e) => setFilters({ format: e.target.value })}
-            className={selectCls + (variant === 'sidebar' ? ' w-full' : '')}
-          >
-            <option value="">All living models</option>
-            {formats.map((f) => (
-              <option key={f} value={f}>
-                {livingModelLabel(f as ProgramFormat) ?? f}
-              </option>
-            ))}
-          </select>
-        )}
-        {sectors.length > 0 && (
-          <select
-            aria-label="Filter by sector"
-            value={filters.sector}
-            onChange={(e) => setFilters({ sector: e.target.value })}
-            className={selectCls + (variant === 'sidebar' ? ' w-full' : '')}
-          >
-            <option value="">All sectors</option>
-            {sectors.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
-        )}
-        {hasHousing && (
-          <select
-            aria-label="Filter by housing"
-            value={filters.housing}
-            onChange={(e) => setFilters({ housing: e.target.value })}
-            className={selectCls + (variant === 'sidebar' ? ' w-full' : '')}
-          >
-            <option value="">Housing: any</option>
-            <option value="yes">Housing provided</option>
-            <option value="no">No housing</option>
-          </select>
         )}
         {variant === 'dashboard' && (
           <>
