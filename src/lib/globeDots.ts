@@ -8,6 +8,7 @@ export interface Dot {
   lng: number;
   color: string; // sampled rgb, filled in once imagery loads
   alt: number; // small relief altitude from the topology map
+  bright: number; // 0..1 luminance of the sampled imagery (drives the ASCII glyph ramp)
 }
 
 let GRID: Dot[] | null = null;
@@ -26,7 +27,7 @@ export function sphereGrid(stepDeg = 1.4): Dot[] {
     const n = Math.max(1, Math.round((360 * c) / stepDeg));
     for (let i = 0; i < n; i++) {
       const lng = -180 + (360 * i) / n;
-      dots.push({ lat, lng, color: '#1a1a1a', alt: 0.002 });
+      dots.push({ lat, lng, color: '#1a1a1a', alt: 0.002, bright: 0 });
     }
   }
   GRID = dots;
@@ -90,6 +91,8 @@ export async function sampleEarth(dots: Dot[], reliefAmount = 0.05): Promise<boo
     const g = Math.min(255, Math.round(cd[i + 1] * 1.12));
     const b = Math.min(255, Math.round(cd[i + 2] * 1.12));
     d.color = `rgb(${r},${g},${b})`;
+    // Luminance of the sampled imagery → ASCII density (land brighter than ocean).
+    d.bright = (r + g + b) / 3 / 255;
     if (rd) {
       // Topology luminance (land elevation) -> a little altitude for relief.
       const lum = (rd[i] + rd[i + 1] + rd[i + 2]) / 3 / 255;
