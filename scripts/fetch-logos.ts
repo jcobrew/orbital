@@ -94,8 +94,21 @@ async function discoverFromHtml(domain: string): Promise<string[]> {
   }
 }
 
+// Hand-researched logo sources for programs the favicon services don't index
+// (popular but small/new houses, sites that are down, or logos served as a
+// plain <img> rather than a <link rel="icon">). Tried before everything else.
+// Keep the comment next to each so the source is auditable on a re-run.
+const OVERRIDES: Record<string, string> = {
+  'conviction.com': 'https://conviction.com/applogo.png', // Conviction icon (<img>, not a favicon link)
+  'biopunklab.com': 'https://biopunklab.com/images/logo.png', // 1080² square brand logo
+  'vinnova.se': 'https://www.vinnova.se/Static/build/images/apple-touch-icon.png', // square app icon (favicon.ico is 403)
+  'fr8.fi': 'https://unavatar.io/x/shipfr8', // FR8 Hacker Hotel — site down; X @shipfr8 avatar
+  'aigrant.com': 'https://aigrant.com/img/card.png', // AI Grant — only branded asset they publish
+};
+
 async function sources(domain: string): Promise<string[]> {
   return [
+    ...(OVERRIDES[domain] ? [OVERRIDES[domain]] : []),
     `https://icons.duckduckgo.com/ip3/${domain}.ico`,
     `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
     `https://logo.clearbit.com/${domain}`,
