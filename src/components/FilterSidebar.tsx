@@ -97,8 +97,10 @@ export default function FilterSidebar({
               role="tab"
               aria-selected={allActive}
               onClick={() => setFilters({ type: '', status: '' })}
-              className={`rounded-full px-3 py-2 font-display text-[12.5px] font-semibold transition ${
-                allActive ? 'text-[#0a0a0a]' : 'text-muted hover:text-text'
+              className={`rounded-full px-3 py-2 font-display text-[12.5px] font-semibold transition active:scale-95 ${
+                allActive
+                  ? 'text-[#0a0a0a] shadow-[0_2px_10px_rgba(0,0,0,.4)]'
+                  : 'text-a2 hover:bg-[rgba(255,255,255,.07)] hover:text-text'
               }`}
               style={allActive ? { background: 'var(--grad)' } : undefined}
             >
@@ -116,8 +118,10 @@ export default function FilterSidebar({
                 role="tab"
                 aria-selected={active}
                 onClick={() => setFilters({ type: active ? '' : t.id, status: '' })}
-                className={`rounded-full px-3 py-2 font-display text-[12.5px] font-semibold transition ${
-                  active ? 'text-[#0a0a0a]' : 'text-muted hover:text-text'
+                className={`rounded-full px-3 py-2 font-display text-[12.5px] font-semibold transition active:scale-95 ${
+                  active
+                    ? 'text-[#0a0a0a] shadow-[0_2px_10px_rgba(0,0,0,.4)]'
+                    : 'text-a2 hover:bg-[rgba(255,255,255,.07)] hover:text-text'
                 }`}
                 style={active ? { background: 'var(--grad)' } : undefined}
               >

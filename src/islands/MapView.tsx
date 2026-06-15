@@ -51,6 +51,10 @@ function jitter(arr: Program[]) {
   });
 }
 
+// Escape data strings before injecting into imperative marker markup.
+const esc = (s: string) =>
+  s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] as string);
+
 function popupHTML(p: Program): string {
   const s = statusMeta(p.status);
   const r = (ic: string, label: string, val: string) =>
@@ -124,7 +128,7 @@ export default function MapView({ programs }: { programs: Program[] }) {
         iconSize: [42, 42],
         iconAnchor: [21, 21],
         popupAnchor: [0, -22],
-        html: `<div class="pin" style="--ring:${color}"><div class="pin-inner">${logoMarkupHTML(p.name, p.domain)}</div></div>`,
+        html: `<div class="pin" style="--ring:${color}"><div class="pin-inner">${logoMarkupHTML(p.name, p.domain)}</div><span class="pin-label">${esc(p.name)}</span></div>`,
       });
       const m = L.marker([p.lat, p.lng], { icon, riseOnHover: true });
       m.bindPopup(popupHTML(p), { maxWidth: 320 });
@@ -208,7 +212,7 @@ export default function MapView({ programs }: { programs: Program[] }) {
           className: '',
           iconSize: [30, 30],
           iconAnchor: [15, 15],
-          html: `<div class="pin" style="--ring:${color}"><div class="pin-inner">${logoMarkupHTML(p.name, p.domain)}</div></div>`,
+          html: `<div class="pin" style="--ring:${color}"><div class="pin-inner">${logoMarkupHTML(p.name, p.domain)}</div><span class="pin-label">${esc(p.name)}</span></div>`,
         });
         L.marker([p.lat, p.lng], { icon, riseOnHover: true })
           .on('click', () => {

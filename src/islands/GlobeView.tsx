@@ -119,8 +119,14 @@ const IconLegend = () => (<svg {...svg}><circle cx="3.3" cy="4" r="1.3" /><circl
 const MINIMAP_SVG =
   '<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.3l4-1.6 4 1.6 4-1.6v9l-4 1.6-4-1.6-4 1.6z"/><path d="M6 2.7v9M10 4.3v9"/></svg>';
 
+// Escape user/data strings before injecting into the imperative pin markup.
+const esc = (s: string) =>
+  s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] as string);
+
 const iconBtn =
-  'flex h-9 w-9 items-center justify-center rounded-full border border-line2 bg-[rgba(16,16,16,.78)] text-muted backdrop-blur transition hover:border-a1 hover:text-text';
+  'flex h-9 w-9 items-center justify-center rounded-full border border-line2 bg-[rgba(16,16,16,.78)] text-muted backdrop-blur transition hover:border-a1 hover:bg-[rgba(255,255,255,.07)] hover:text-text active:scale-90';
+// Pressed/active (selected) look for a toggle icon button.
+const iconBtnOn = 'border-a1 bg-[rgba(255,255,255,.12)] text-text';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobeInstance = any;
@@ -148,6 +154,8 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   // city dock (Leaflet minimaps, managed imperatively)
   const cityElRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const cityMaps = useRef<Record<string, MiniRec>>({});
+  // Floating country-name tooltip (follows the cursor over the globe).
+  const countryTipEl = useRef<HTMLDivElement>(null);
 
   const data = useMemo(() => {
     const copy = programs.map((p) => ({ ...p }));
@@ -276,8 +284,19 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       })
       .onPolygonHover((feat: unknown) => {
         hoverPolyRef.current = feat ?? null;
-        if (globeEl.current) {
-          globeEl.current.style.cursor = countryFromFeature(feat as never) ? 'pointer' : '';
+        const hasProfile = !!countryFromFeature(feat as never);
+        if (globeEl.current) globeEl.current.style.cursor = hasProfile ? 'pointer' : '';
+        // Show the country name in the floating tooltip (hint arrow if clickable).
+        const tip = countryTipEl.current;
+        const geoName = (feat as { properties?: { name?: string } } | null)?.properties?.name;
+        if (tip) {
+          if (geoName) {
+            tip.textContent = geoName;
+            tip.classList.toggle('has-profile', hasProfile);
+            tip.style.opacity = '1';
+          } else {
+            tip.style.opacity = '0';
+          }
         }
         // Re-evaluate cap/stroke so the hovered country lights up.
         world.polygonCapColor(world.polygonCapColor());
@@ -300,8 +319,10 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         if (d.marker) {
           const el = document.createElement('div');
           el.className = 'city-pin';
-          el.innerHTML = `<span class="city-pin-ic">${MINIMAP_SVG}</span>${d.count ? `<span class="city-pin-ct">${d.count}</span>` : ''}`;
-          el.title = `${d.label} — open minimap`;
+          el.innerHTML =
+            `<span class="city-pin-ic">${MINIMAP_SVG}</span>` +
+            (d.count ? `<span class="city-pin-ct">${d.count}</span>` : '') +
+            `<span class="pin-label">${esc(d.label)}</span>`;
           el.onclick = (ev) => {
             ev.stopPropagation();
             openCity(d.id);
@@ -311,8 +332,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         const el = document.createElement('div');
         el.className = 'pin';
         el.style.setProperty('--ring', statusMeta(d.status).color);
-        el.innerHTML = `<div class="pin-inner">${logoMarkupHTML(d.name, d.domain)}</div>`;
-        el.title = d.name;
+        el.innerHTML = `<div class="pin-inner">${logoMarkupHTML(d.name, d.domain)}</div><span class="pin-label">${esc(d.name)}</span>`;
         el.onclick = (ev) => {
           ev.stopPropagation();
           openDetail(d);
@@ -358,6 +378,15 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       controls.update();
     };
     if (!coarsePointer) zoomEl.addEventListener('wheel', onWheel, { passive: false });
+    // Keep the country-name tooltip pinned to the cursor over the globe.
+    const onPointerMove = (e: PointerEvent) => {
+      const tip = countryTipEl.current;
+      if (!tip || !globeWrapEl.current) return;
+      const r = globeWrapEl.current.getBoundingClientRect();
+      tip.style.left = `${e.clientX - r.left}px`;
+      tip.style.top = `${e.clientY - r.top}px`;
+    };
+    zoomEl.addEventListener('pointermove', onPointerMove);
     try {
       const gm = world.globeMaterial();
       if (gm?.color?.set) {
@@ -388,6 +417,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       clearTimeout(t);
       ro.disconnect();
       if (!coarsePointer) zoomEl.removeEventListener('wheel', onWheel);
+      zoomEl.removeEventListener('pointermove', onPointerMove);
       worldRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -494,6 +524,8 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         {webgl && <AsciiBackdrop />}
         {/* z-[1] gives the globe its own stacking context so pin z-indexes stay below the overlay UI */}
         <div ref={globeEl} className="absolute inset-0 z-[1]" />
+        {/* Cursor-following country-name tooltip (positioned imperatively). */}
+        <div ref={countryTipEl} className="country-tip" aria-hidden="true" />
         {/* Terminal boot-up loader, faded out once the globe is ready. */}
         {webgl && (
           <div
@@ -535,7 +567,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       {/* Top-right: icon controls — rotate / reset, then panel toggles */}
       <div className="absolute right-4 top-4 z-20 flex flex-col gap-2">
         <button
-          className={`${iconBtn} ${spinning ? 'border-a1 text-a2' : ''}`}
+          className={`${iconBtn} ${spinning ? iconBtnOn : ''}`}
           onClick={toggleSpin}
           aria-pressed={spinning}
           aria-label="Toggle auto-rotate"
@@ -548,7 +580,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         </button>
         <div className="mx-auto my-0.5 h-px w-5 bg-line2" />
         <button
-          className={`${iconBtn} ${dockOpen ? 'border-a1 text-a2' : ''}`}
+          className={`${iconBtn} ${dockOpen ? iconBtnOn : ''}`}
           onClick={() => setDockOpen((v) => !v)}
           aria-pressed={dockOpen}
           aria-label="Toggle city minimaps"
@@ -557,7 +589,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
           <IconMinimap />
         </button>
         <button
-          className={`${iconBtn} ${legendOpen ? 'border-a1 text-a2' : ''}`}
+          className={`${iconBtn} ${legendOpen ? iconBtnOn : ''}`}
           onClick={() => setLegendOpen((v) => !v)}
           aria-pressed={legendOpen}
           aria-label="Toggle status legend"

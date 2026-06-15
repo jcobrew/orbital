@@ -48,8 +48,10 @@ export default function SiteNav({ current }: { current?: NavCurrent }) {
               role="tab"
               aria-selected={active}
               aria-current={active ? 'page' : undefined}
-              className={`rounded-full px-3 py-1 font-display text-[12px] font-semibold no-underline transition ${
-                active ? 'text-[#0a0a0a]' : 'text-muted hover:text-text'
+              className={`rounded-full px-3 py-1 font-display text-[12px] font-semibold no-underline transition active:scale-95 ${
+                active
+                  ? 'text-[#0a0a0a] shadow-[0_2px_10px_rgba(0,0,0,.4)]'
+                  : 'text-a2 hover:bg-[rgba(255,255,255,.07)] hover:text-text'
               }`}
               style={active ? { background: 'var(--grad)' } : undefined}
             >
