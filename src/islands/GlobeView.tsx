@@ -489,7 +489,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
           className: '',
           iconSize: [28, 28],
           iconAnchor: [14, 14],
-          html: `<div class="pin" style="--ring:${color}"><div class="pin-inner">${logoMarkupHTML(p.name, p.domain)}</div></div>`,
+          html: `<div class="pin" style="--ring:${color}"><div class="pin-inner">${logoMarkupHTML(p.name, p.domain)}</div><span class="pin-label">${esc(p.name)}</span></div>`,
         });
         L.marker([p.lat, p.lng], { icon, riseOnHover: true }).on('click', () => openDetail(p)).addTo(rec!.layer);
       });
