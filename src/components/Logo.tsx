@@ -4,7 +4,7 @@ import { initials, logoSources } from '../lib/logo';
 interface Props {
   name: string;
   domain?: string;
-  /** px size of the square logo. */
+  /** px diameter of the circular logo. */
   size?: number;
   className?: string;
 }
@@ -24,7 +24,7 @@ export default function Logo({ name, domain, size = 38, className = '' }: Props)
     width: size,
     height: size,
     flex: `0 0 ${size}px`,
-    borderRadius: 3,
+    borderRadius: '50%',
     overflow: 'hidden',
     background: '#0a0a0a',
     display: 'flex',

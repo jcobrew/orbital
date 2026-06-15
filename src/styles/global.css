@@ -205,6 +205,28 @@ a {
   border: none !important;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5) !important;
 }
+/* Map popup logo — circular frame (no square displays). */
+.pop-logo {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #0a0a0a;
+  border: 1px solid var(--line2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pop-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #fff;
+}
+.pop-logo .ini {
+  font-size: 13px;
+}
 
 /* ---- Off-coast cluster insets (map only) ---- */
 .inset-leaders {
