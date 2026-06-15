@@ -57,15 +57,20 @@ function titleFor(typeId: string, label: string): { t: string; s: string } {
   };
 }
 
-// Dense regions get their own crisp, interactive minimap in the dock below the
-// globe (one shown at a time, defaulting to SF). Membership is by lat/lng box.
+// Dense regions can get their own crisp, interactive minimap (shown one at a
+// time). Membership is by lat/lng box. `pin` optionally places the clickable
+// globe marker off-coast so it isn't buried under the program pins it summarizes.
+// A marker only appears when the region actually clusters programs (see MIN_DENSITY).
 const CLUSTERS = [
-  { id: 'sf', label: 'SF Bay Area', bounds: [[37.2, -122.65], [37.95, -121.7]] },
+  { id: 'sf', label: 'SF Bay Area', bounds: [[37.2, -122.65], [37.95, -121.7]], pin: [37.55, -123.7] },
   { id: 'nyc', label: 'New York', bounds: [[40.45, -74.2], [40.95, -73.65]] },
-  { id: 'ldn', label: 'London', bounds: [[51.25, -0.55], [51.72, 0.3]] },
+  { id: 'ldn', label: 'London', bounds: [[51.25, -0.55], [51.72, 0.3]], pin: [51.45, 1.95] },
   { id: 'blr', label: 'Bangalore', bounds: [[12.78, 77.4], [13.18, 77.85]] },
 ] as const;
 const DEFAULT_CITY = 'sf';
+// A minimap/marker is only worthwhile where programs cluster too tightly to
+// click apart on the globe — i.e. more than this many in the box.
+const MIN_DENSITY = 3;
 function inBounds(p: Program, b: readonly (readonly number[])[]) {
   return p.lat >= b[0][0] && p.lat <= b[1][0] && p.lng >= b[0][1] && p.lng <= b[1][1];
 }
@@ -179,18 +184,25 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     return m;
   }, [cityData]);
 
-  // Clickable minimap markers placed on each dense city; selecting one opens that
-  // city's round minimap. Merged with program pins into one globe htmlElements layer.
+  // Clickable minimap markers — only for regions dense enough to need one, placed
+  // off-coast (via `pin`) where defined so they're not buried under program pins.
+  // Merged with program pins into one globe htmlElements layer.
   const cityMarkers = useMemo(
     () =>
-      CLUSTERS.map((c) => ({
-        marker: true as const,
-        id: c.id,
-        label: c.label,
-        count: cityCounts[c.id] ?? 0,
-        lat: (c.bounds[0][0] + c.bounds[1][0]) / 2,
-        lng: (c.bounds[0][1] + c.bounds[1][1]) / 2,
-      })),
+      CLUSTERS.filter((c) => (cityCounts[c.id] ?? 0) > MIN_DENSITY).map((c) => {
+        const at: readonly [number, number] =
+          'pin' in c
+            ? (c.pin as readonly [number, number])
+            : [(c.bounds[0][0] + c.bounds[1][0]) / 2, (c.bounds[0][1] + c.bounds[1][1]) / 2];
+        return {
+          marker: true as const,
+          id: c.id,
+          label: c.label,
+          count: cityCounts[c.id] ?? 0,
+          lat: at[0],
+          lng: at[1],
+        };
+      }),
     [cityCounts],
   );
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

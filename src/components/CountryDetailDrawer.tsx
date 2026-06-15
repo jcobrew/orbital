@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useStore } from '@nanostores/react';
-import { $selectedCountrySlug, closeCountry } from '../stores/country';
-import { getCountry } from '../data/countries';
+import { $selectedCountrySlug, closeCountry, openCountry } from '../stores/country';
+import { getCountry, COUNTRIES } from '../data/countries';
 import { flagSrc } from '../lib/flag';
 
 /**
@@ -135,6 +135,21 @@ export default function CountryDetailDrawer() {
               </ul>
             </>
           )}
+
+          {/* Jump to another country without leaving the drawer */}
+          <div className="orbit-divider my-4" aria-hidden="true" />
+          <h3 className="m-0 mb-2 font-display text-[12px] font-bold uppercase tracking-wide text-muted">Other countries</h3>
+          <div className="mb-4 flex flex-wrap gap-1.5">
+            {COUNTRIES.filter((c) => c.slug !== country.slug).map((c) => (
+              <button
+                key={c.slug}
+                onClick={() => openCountry(c.slug)}
+                className="rounded-full border border-line2 px-2.5 py-1 text-[11.5px] font-semibold text-a2 transition hover:border-a1 hover:text-text active:scale-95"
+              >
+                {c.name}
+              </button>
+            ))}
+          </div>
 
           <p className="m-0 mt-4 text-[11px] italic text-muted">
             Last verified {country.updatedAt}. Directories and visa rules change often — confirm on the official source.
