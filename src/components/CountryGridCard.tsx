@@ -1,4 +1,5 @@
 import { openCountry } from '../stores/country';
+import { flagSrc } from '../lib/flag';
 
 /**
  * Client island for a country card on /countries. Visually identical to the
@@ -21,6 +22,7 @@ export default function CountryGridCard({
   programCount: number;
   directoryCount: number;
 }) {
+  const flag = flagSrc(slug);
   return (
     <a
       href={`/country/${slug}`}
@@ -30,9 +32,20 @@ export default function CountryGridCard({
       }}
       className="orbit-hover flex flex-col rounded-md border border-line2 bg-[rgba(8,10,22,.5)] p-5 transition hover:border-a1"
     >
-      <div className="mb-1 flex items-baseline justify-between gap-2">
-        <span className="font-display text-[17px] font-bold text-text">{name}</span>
-        <span className="text-[11px] text-muted">{region}</span>
+      <div className="mb-1 flex items-center justify-between gap-2">
+        <span className="flex min-w-0 items-center gap-2">
+          {flag && (
+            <img
+              src={flag}
+              alt=""
+              width={22}
+              height={22}
+              className="h-[22px] w-[22px] shrink-0 rounded-full ring-1 ring-line2"
+            />
+          )}
+          <span className="truncate font-display text-[17px] font-bold text-text">{name}</span>
+        </span>
+        <span className="shrink-0 text-[11px] text-muted">{region}</span>
       </div>
       <p className="mb-3 flex-1 text-[12.5px] leading-relaxed text-muted">{summary}</p>
       <div className="flex flex-wrap gap-1.5 text-[11px] text-muted">
