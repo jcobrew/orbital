@@ -2,54 +2,36 @@
 // globe and dashboard all agree on what a given filter set returns.
 
 import type { Program } from '../data/programs';
+import { programModel } from '../data/programs';
 import { STATUS_ORDER, type StatusKey } from './status';
 
 export interface Filters {
-  /**
-   * Primary categorical axis: a canonical program-type ID (see taxonomy), or
-   * 'all' for no constraint. The legacy `dataset` binary was removed.
-   */
-  type: string;
+  /** Free-text search across name, city, country, focus, operator. */
   q: string;
-  country: string;
+  /** Recruiting status (rolling, open, closing-soon, …) or '' for any. */
   status: string;
-  focus: string;
-  // Founder dimensions (handoff §15). Empty = no constraint; these no-op while
-  // the underlying data is unknown, and the UI hides controls that have no data.
-  format: string;
-  stage: string;
-  sector: string;
-  housing: string; // '', 'yes', 'no'
+  /** The living/working model: '', 'co-living', 'co-working' or 'both'. */
+  model: string;
+  /** Selected countries, OR-matched. Empty array = no country constraint. */
+  country: string[];
 }
 
 export const EMPTY_FILTERS: Filters = {
-  type: '',
   q: '',
-  country: '',
   status: '',
-  focus: '',
-  format: '',
-  stage: '',
-  sector: '',
-  housing: '',
+  model: '',
+  country: [],
 };
 
-/** Mirrors the original index.html passes() predicate, plus founder filters. */
+/** Co-living/co-working model + country + status + free-text search. */
 export function passes(p: Program, f: Filters): boolean {
   const q = f.q.trim().toLowerCase();
   const hay = (p.name + p.city + p.country + p.focus + p.operator + p.type).toLowerCase();
   return (
     (!q || hay.includes(q)) &&
-    (!f.type || f.type === 'all' || p.canonicalType === f.type) &&
-    (!f.country || p.country === f.country) &&
-    (!f.status || p.status === f.status) &&
-    (!f.focus || (p.focus || '').toLowerCase().includes(f.focus.trim().toLowerCase())) &&
-    (!f.format || p.format === f.format) &&
-    (!f.stage || (p.stageFit ?? []).includes(f.stage as never)) &&
-    (!f.sector || (p.sectorFocus ?? []).map((s) => s.toLowerCase()).includes(f.sector.toLowerCase())) &&
-    (!f.housing ||
-      (f.housing === 'yes' && p.providesHousing === true) ||
-      (f.housing === 'no' && p.providesHousing === false))
+    (!f.model || programModel(p) === f.model) &&
+    (!f.country.length || f.country.includes(p.country)) &&
+    (!f.status || p.status === f.status)
   );
 }
 

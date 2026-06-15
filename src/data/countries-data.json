@@ -1,8 +1,8 @@
 {
   "meta": {
-    "title": "Orbital — country startup-ecosystem directories",
-    "compiled": "2026-06-09",
-    "note": "Human-curated profiles of national startup ecosystems for founders considering relocation. Rather than re-collecting every ecosystem detail itself, Orbital points OUT to existing, well-known country-specific startup directories/portals via `directories`. Each entry is a stand-alone record keyed by `slug` so it can later be served from a cloud database without code changes (see src/data/countries.ts for the swap point). Links and visa details change frequently — always confirm on the official source. Each profile shows a round flag icon collected by scripts/fetch-flags.ts into public/flags/ and indexed by src/lib/flagManifest.json (resolved via flagSrc()); add a new country's ISO code to that script when extending this list.",
+    "title": "Orbital — country startup-ecosystem guides",
+    "compiled": "2026-06-15",
+    "note": "Human-curated profiles of national startup ecosystems for founders considering relocation. Rather than re-collecting every ecosystem detail itself, Orbital points OUT to two canonical official portals per country: `business` (the national business/ecosystem portal that itself links to the wider ecosystem) and `relocation` (the official 'how to move / get in' immigration site). Either may be omitted when no canonical source exists — the UI shows a graceful placeholder. Each entry is a stand-alone record keyed by `slug` so it can later be served from a cloud database without code changes (see src/data/countries.ts for the swap point). Links and visa details change frequently — always confirm on the official source. Each profile shows a round flag icon collected by scripts/fetch-flags.ts into public/flags/ and indexed by src/lib/flagManifest.json (resolved via flagSrc()); add a new country's ISO code to that script when extending this list.",
     "schema": {
       "slug": "URL-safe id, also the /country/<slug> route",
       "name": "Display name; MUST match the `country` value used in the program datasets so program counts join",
@@ -11,10 +11,8 @@
       "lng": "Approximate centroid longitude",
       "summary": "1-2 sentence ecosystem overview for a relocating founder",
       "highlights": "Short bullet facts (strengths, hubs, notable wins)",
-      "visas": "Founder/startup-relevant visa or residency routes: { name, description, url }",
-      "organizations": "Key ecosystem orgs to know: { name, type, description, url }",
-      "links": "Other useful official/portal links: { label, url }",
-      "directories": "External, country-specific startup-ecosystem directories/portals Orbital points founders to: { label, url, description? }",
+      "business": "Optional. The national business/ecosystem portal that links out to the wider ecosystem: { label, url, description? }",
+      "relocation": "Optional. The official immigration / 'how to move / get in' portal: { label, url, description? }",
       "updatedAt": "ISO date this record was last verified",
       "source": "Where the record was curated from (free text)"
     }
@@ -32,22 +30,9 @@
         "Most accelerators and residencies (YC, Techstars, a16z Speedrun, f.inc).",
         "No dedicated startup visa — founders typically use O-1, H-1B, or the International Entrepreneur Parole route."
       ],
-      "visas": [
-        { "name": "International Entrepreneur Parole (IEP)", "description": "Up to 5 years for founders of fast-growing startups with qualified investment.", "url": "https://www.uscis.gov/humanitarian/international-entrepreneur-parole" },
-        { "name": "O-1A Visa", "description": "For individuals with extraordinary ability — commonly used by founders.", "url": "https://www.uscis.gov/working-in-the-united-states/temporary-workers/o-1-visa-individuals-with-extraordinary-ability-or-achievement" }
-      ],
-      "organizations": [
-        { "name": "U.S. Small Business Administration (SBA)", "type": "Government", "description": "Federal agency supporting small businesses and startups.", "url": "https://www.sba.gov/" },
-        { "name": "National Venture Capital Association", "type": "Industry body", "description": "Trade association of the US VC industry.", "url": "https://nvca.org/" }
-      ],
-      "links": [
-        { "label": "USCIS — working in the US", "url": "https://www.uscis.gov/working-in-the-united-states" }
-      ],
-      "directories": [
-        { "label": "Crunchbase", "url": "https://www.crunchbase.com/", "description": "The largest open database of US (and global) startups, funding rounds and investors." },
-        { "label": "Dealroom — United States", "url": "https://dealroom.co/guides/united-states", "description": "Data-driven profile of the US tech ecosystem: unicorns, funding and top companies." }
-      ],
-      "updatedAt": "2026-06-13",
+      "business": { "label": "SelectUSA", "url": "https://www.trade.gov/selectusa", "description": "The U.S. government program that helps foreign companies invest, expand and connect with the American business ecosystem." },
+      "relocation": { "label": "USCIS — working in the United States", "url": "https://www.uscis.gov/", "description": "Official U.S. Citizenship and Immigration Services portal for work visas, parole and residency routes." },
+      "updatedAt": "2026-06-15",
       "source": "Initial scaffold — needs verification pass"
     },
     {
@@ -62,22 +47,9 @@
         "Innovator Founder visa is purpose-built for startup founders.",
         "Strong university spinout pipeline (Oxford, Cambridge, Imperial)."
       ],
-      "visas": [
-        { "name": "Innovator Founder visa", "description": "For founders with an innovative, viable and scalable business endorsed by an approved body.", "url": "https://www.gov.uk/innovator-founder-visa" },
-        { "name": "Global Talent visa", "description": "For leaders or potential leaders in tech, research and the arts.", "url": "https://www.gov.uk/global-talent" }
-      ],
-      "organizations": [
-        { "name": "Tech Nation / Innovate UK", "type": "Government / Quango", "description": "National support and endorsement for high-growth tech companies.", "url": "https://www.ukri.org/councils/innovate-uk/" },
-        { "name": "British Business Bank", "type": "Government", "description": "Government-owned development bank improving access to finance for smaller businesses.", "url": "https://www.british-business-bank.co.uk/" }
-      ],
-      "links": [
-        { "label": "GOV.UK — set up a business", "url": "https://www.gov.uk/set-up-business" }
-      ],
-      "directories": [
-        { "label": "Dealroom — United Kingdom", "url": "https://dealroom.co/guides/united-kingdom", "description": "Data-driven profile of the UK tech ecosystem: funding, unicorns and top startups." },
-        { "label": "Tech Nation", "url": "https://technation.io/", "description": "National growth platform and data hub for UK tech companies." }
-      ],
-      "updatedAt": "2026-06-13",
+      "business": { "label": "great.gov.uk", "url": "https://www.great.gov.uk/", "description": "The UK government's official portal for setting up, investing and growing a business in the UK." },
+      "relocation": { "label": "GOV.UK — visas and immigration", "url": "https://www.gov.uk/browse/visas-immigration", "description": "Official UK government hub for work, founder and talent visa routes." },
+      "updatedAt": "2026-06-15",
       "source": "Initial scaffold — needs verification pass"
     },
     {
@@ -92,21 +64,9 @@
         "Hub for Southeast Asian expansion and fintech.",
         "Fast company incorporation and clear tax regime."
       ],
-      "visas": [
-        { "name": "EntrePass", "description": "For eligible foreign entrepreneurs starting and operating a venture-backed or innovative business.", "url": "https://www.mom.gov.sg/passes-and-permits/entrepass" }
-      ],
-      "organizations": [
-        { "name": "Enterprise Singapore", "type": "Government", "description": "Government agency championing enterprise development, including Startup SG.", "url": "https://www.enterprisesg.gov.sg/" },
-        { "name": "Startup SG", "type": "Government programme", "description": "National umbrella for startup grants, talent and funding schemes.", "url": "https://www.startupsg.gov.sg/" }
-      ],
-      "links": [
-        { "label": "EDB — why Singapore", "url": "https://www.edb.gov.sg/" }
-      ],
-      "directories": [
-        { "label": "Startup SG", "url": "https://www.startupsg.gov.sg/", "description": "Singapore's national startup portal and directory of programmes, grants and partners." },
-        { "label": "Dealroom — Singapore", "url": "https://dealroom.co/guides/singapore", "description": "Data-driven profile of Singapore's tech ecosystem." }
-      ],
-      "updatedAt": "2026-06-13",
+      "business": { "label": "Startup SG", "url": "https://www.startupsg.gov.sg/", "description": "Singapore's national startup portal and directory of programmes, grants and partners." },
+      "relocation": { "label": "EntrePass — Ministry of Manpower", "url": "https://www.mom.gov.sg/passes-and-permits/entrepass", "description": "Official work pass for eligible foreign entrepreneurs starting and operating a venture in Singapore." },
+      "updatedAt": "2026-06-15",
       "source": "Initial scaffold — needs verification pass"
     },
     {
@@ -121,20 +81,9 @@
         "Sovereign and government-backed funds actively deploying capital.",
         "Long-term residency via the Golden Visa for entrepreneurs and talent."
       ],
-      "visas": [
-        { "name": "Golden Visa (Entrepreneurs)", "description": "Long-term (up to 10-year) residency for entrepreneurs and investors.", "url": "https://u.ae/en/information-and-services/visa-and-emirates-id/residence-visas/golden-visa" }
-      ],
-      "organizations": [
-        { "name": "Hub71 (Abu Dhabi)", "type": "Ecosystem / Government-backed", "description": "Global tech ecosystem offering incentives, capital and market access.", "url": "https://hub71.com/" },
-        { "name": "Dubai SME", "type": "Government", "description": "Agency of the Dubai Economy supporting entrepreneurship and SMEs.", "url": "https://sme.ae/" }
-      ],
-      "links": [
-        { "label": "u.ae — starting a business", "url": "https://u.ae/en/information-and-services/business" }
-      ],
-      "directories": [
-        { "label": "Dealroom — United Arab Emirates", "url": "https://dealroom.co/guides/united-arab-emirates", "description": "Data-driven profile of the UAE tech ecosystem." }
-      ],
-      "updatedAt": "2026-06-13",
+      "business": { "label": "u.ae — starting a business", "url": "https://u.ae/en/information-and-services/business", "description": "The UAE government's official portal for starting and running a business across the Emirates." },
+      "relocation": { "label": "Golden Visa (Entrepreneurs)", "url": "https://u.ae/en/information-and-services/visa-and-emirates-id/residence-visas/golden-visa", "description": "Long-term (up to 10-year) residency for entrepreneurs and investors." },
+      "updatedAt": "2026-06-15",
       "source": "Initial scaffold — needs verification pass"
     },
     {
@@ -149,20 +98,9 @@
         "Highest number of unicorns per capita in Europe (Wise, Bolt, Skype heritage).",
         "Dedicated Startup Visa and Startup Estonia programme."
       ],
-      "visas": [
-        { "name": "Estonian Startup Visa", "description": "For non-EU founders to relocate and build, or to hire from abroad.", "url": "https://startupestonia.ee/visa" },
-        { "name": "e-Residency", "description": "Digital identity to register and run an EU company remotely (not a residence permit).", "url": "https://www.e-resident.gov.ee/" }
-      ],
-      "organizations": [
-        { "name": "Startup Estonia", "type": "Government programme", "description": "Government initiative to supercharge the local startup ecosystem.", "url": "https://startupestonia.ee/" }
-      ],
-      "links": [
-        { "label": "Invest in Estonia", "url": "https://investinestonia.com/" }
-      ],
-      "directories": [
-        { "label": "Startup Estonia — startup database", "url": "https://startupestonia.ee/startup-database", "description": "Official directory of Estonian startups maintained by Startup Estonia." }
-      ],
-      "updatedAt": "2026-06-13",
+      "business": { "label": "Startup Estonia", "url": "https://startupestonia.ee/", "description": "Government initiative and ecosystem hub for the Estonian startup community, with a directory of startups and programmes." },
+      "relocation": { "label": "Estonian Startup Visa", "url": "https://startupestonia.ee/visa", "description": "Official route for non-EU founders to relocate and build in Estonia, or to hire from abroad." },
+      "updatedAt": "2026-06-15",
       "source": "Initial scaffold — needs verification pass"
     },
     {
@@ -177,21 +115,9 @@
         "Strong public funding and R&D tax credits via Bpifrance.",
         "French Tech Visa is a fast track for founders, employees and investors."
       ],
-      "visas": [
-        { "name": "French Tech Visa for Founders", "description": "4-year renewable residence permit for founders selected by a partner incubator/accelerator.", "url": "https://lafrenchtech.gouv.fr/en/how-france-helps-startups/french-tech-visa/" }
-      ],
-      "organizations": [
-        { "name": "La French Tech", "type": "Government initiative", "description": "National movement and support network for French startups.", "url": "https://lafrenchtech.gouv.fr/en/" },
-        { "name": "Bpifrance", "type": "Government", "description": "Public investment bank financing and supporting French companies.", "url": "https://www.bpifrance.fr/" }
-      ],
-      "links": [
-        { "label": "Welcome to France — talent", "url": "https://www.welcometofrance.com/en" }
-      ],
-      "directories": [
-        { "label": "La French Tech", "url": "https://lafrenchtech.gouv.fr/en/", "description": "France's national startup movement, support network and ecosystem map." },
-        { "label": "Dealroom — France", "url": "https://dealroom.co/guides/france", "description": "Data-driven profile of the French tech ecosystem." }
-      ],
-      "updatedAt": "2026-06-13",
+      "business": { "label": "La French Tech", "url": "https://lafrenchtech.gouv.fr/en/", "description": "France's national startup movement, support network and ecosystem map." },
+      "relocation": { "label": "French Tech Visa for Founders", "url": "https://lafrenchtech.gouv.fr/en/how-france-helps-startups/french-tech-visa/", "description": "4-year renewable residence permit for founders selected by a partner incubator/accelerator." },
+      "updatedAt": "2026-06-15",
       "source": "Initial scaffold — needs verification pass"
     },
     {
@@ -206,14 +132,9 @@
         "Strong corporate and public co-investment (e.g. KfW, High-Tech Gründerfonds).",
         "Large domestic and EU market on the doorstep."
       ],
-      "visas": [],
-      "organizations": [],
-      "links": [],
-      "directories": [
-        { "label": "Dealroom — Germany", "url": "https://dealroom.co/guides/germany", "description": "Data-driven profile of the German tech ecosystem: funding, unicorns and top startups." },
-        { "label": "Startupdetector", "url": "https://www.startupdetector.de/", "description": "Tracker and directory of newly registered German startups and funding rounds." }
-      ],
-      "updatedAt": "2026-06-13",
+      "business": { "label": "Make it in Germany — starting a business", "url": "https://www.make-it-in-germany.com/en/looking-for-foreign-professionals/setting-up-a-business", "description": "The German government's official portal for founders, with guidance on setting up and growing a business." },
+      "relocation": { "label": "Make it in Germany — visa & residence", "url": "https://www.make-it-in-germany.com/en/visa-residence", "description": "Official guide to German work, self-employment and founder visa and residence routes." },
+      "updatedAt": "2026-06-15",
       "source": "Initial scaffold — needs verification pass"
     },
     {
@@ -228,15 +149,9 @@
         "World-class AI research clusters in Toronto and Montreal.",
         "Generous SR&ED R&D tax incentives."
       ],
-      "visas": [
-        { "name": "Start-up Visa Program", "description": "Permanent residency for entrepreneurs with a qualifying business and support from a designated organization.", "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/start-visa.html" }
-      ],
-      "organizations": [],
-      "links": [],
-      "directories": [
-        { "label": "Dealroom — Canada", "url": "https://dealroom.co/guides/canada", "description": "Data-driven profile of the Canadian tech ecosystem." }
-      ],
-      "updatedAt": "2026-06-13",
+      "business": { "label": "Invest in Canada", "url": "https://www.investcanada.ca/", "description": "Canada's national investment-attraction agency, the front door to the Canadian business ecosystem." },
+      "relocation": { "label": "Start-up Visa Program", "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/start-visa.html", "description": "Permanent residency for entrepreneurs with a qualifying business and support from a designated organization." },
+      "updatedAt": "2026-06-15",
       "source": "Initial scaffold — needs verification pass"
     },
     {
@@ -251,14 +166,9 @@
         "Sydney and Melbourne are the primary hubs.",
         "Strong APAC time-zone position and English-language market."
       ],
-      "visas": [],
-      "organizations": [],
-      "links": [],
-      "directories": [
-        { "label": "Techboard", "url": "https://techboard.com.au/", "description": "Australia's largest directory and funding-data source for startup and tech companies." },
-        { "label": "Dealroom — Australia", "url": "https://dealroom.co/guides/australia", "description": "Data-driven profile of the Australian tech ecosystem." }
-      ],
-      "updatedAt": "2026-06-13",
+      "business": { "label": "Austrade — Invest in Australia", "url": "https://www.austrade.gov.au/en/investment", "description": "The Australian Trade and Investment Commission's official gateway for investing and building a business in Australia." },
+      "relocation": { "label": "Home Affairs — visas", "url": "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing", "description": "Official Australian government listing of work, business and innovation visa routes." },
+      "updatedAt": "2026-06-15",
       "source": "Initial scaffold — needs verification pass"
     },
     {
@@ -273,14 +183,9 @@
         "Strong public grant support through aws and FFG.",
         "Notable scaleups including Bitpanda and GoStudent."
       ],
-      "visas": [],
-      "organizations": [],
-      "links": [],
-      "directories": [
-        { "label": "Dealroom — Austria", "url": "https://dealroom.co/guides/austria", "description": "Data-driven profile of the Austrian tech ecosystem." }
-      ],
-      "updatedAt": "2026-06-13",
-      "source": "Initial scaffold — needs verification pass"
+      "business": { "label": "Dealroom — Austria", "url": "https://dealroom.co/guides/austria", "description": "Data-driven profile of the Austrian tech ecosystem." },
+      "updatedAt": "2026-06-15",
+      "source": "Initial scaffold — needs verification pass; business migrated from prior directories entry"
     },
     {
       "slug": "finland",
@@ -294,18 +199,9 @@
         "Strong gaming heritage (Supercell, Rovio) and deep-tech research.",
         "Active public funding via Business Finland."
       ],
-      "visas": [
-        { "name": "Startup permit", "description": "Residence permit for non-EU founders building an innovative startup in Finland, with a Business Finland eligibility statement.", "url": "https://migri.fi/en/startup-entrepreneur" }
-      ],
-      "organizations": [
-        { "name": "Business Finland", "type": "Government", "description": "Public funding and internationalization agency supporting Finnish startups.", "url": "https://www.businessfinland.fi/" }
-      ],
-      "links": [],
-      "directories": [
-        { "label": "Slush", "url": "https://slush.org/", "description": "Founder-focused community and event run by the not-for-profit Startup Foundation, anchoring the Finnish ecosystem." },
-        { "label": "Dealroom — Finland", "url": "https://dealroom.co/guides/finland", "description": "Data-driven profile of the Finnish tech ecosystem." }
-      ],
-      "updatedAt": "2026-06-13",
+      "business": { "label": "Business Finland", "url": "https://www.businessfinland.fi/", "description": "Finland's public funding and internationalization agency, the gateway to the Finnish startup ecosystem." },
+      "relocation": { "label": "EnterFinland", "url": "https://enterfinland.fi/", "description": "The official e-service for applying for residence permits to move to and work in Finland." },
+      "updatedAt": "2026-06-15",
       "source": "Initial scaffold — needs verification pass"
     },
     {
@@ -320,14 +216,9 @@
         "Major successes: Spotify, Klarna, Mojang, Northvolt.",
         "Strong design, fintech and climate-tech scenes."
       ],
-      "visas": [],
-      "organizations": [],
-      "links": [],
-      "directories": [
-        { "label": "Dealroom — Sweden", "url": "https://dealroom.co/guides/sweden", "description": "Data-driven profile of the Swedish tech ecosystem." }
-      ],
-      "updatedAt": "2026-06-13",
-      "source": "Initial scaffold — needs verification pass"
+      "business": { "label": "Dealroom — Sweden", "url": "https://dealroom.co/guides/sweden", "description": "Data-driven profile of the Swedish tech ecosystem." },
+      "updatedAt": "2026-06-15",
+      "source": "Initial scaffold — needs verification pass; business migrated from prior directories entry"
     },
     {
       "slug": "switzerland",
@@ -341,15 +232,9 @@
         "Zug's 'Crypto Valley' is a global blockchain hub.",
         "Stable, high-trust environment with strong access to capital."
       ],
-      "visas": [],
-      "organizations": [],
-      "links": [],
-      "directories": [
-        { "label": "startup.ch (IFJ)", "url": "https://www.startup.ch/", "description": "Swiss startup support platform and resource directory run by the IFJ Institut für Jungunternehmen." },
-        { "label": "Dealroom — Switzerland", "url": "https://dealroom.co/guides/switzerland", "description": "Data-driven profile of the Swiss tech ecosystem." }
-      ],
-      "updatedAt": "2026-06-13",
-      "source": "Initial scaffold — needs verification pass"
+      "business": { "label": "startup.ch (IFJ)", "url": "https://www.startup.ch/", "description": "Swiss startup support platform and resource directory run by the IFJ Institut für Jungunternehmen." },
+      "updatedAt": "2026-06-15",
+      "source": "Initial scaffold — needs verification pass; business migrated from prior directories entry"
     },
     {
       "slug": "india",
@@ -363,17 +248,9 @@
         "Major hubs: Bengaluru, Delhi NCR, Mumbai, Hyderabad.",
         "National Startup India programme offers recognition, tax benefits and funding."
       ],
-      "visas": [],
-      "organizations": [
-        { "name": "Startup India", "type": "Government programme", "description": "Flagship national initiative supporting startup recognition, funding and networking.", "url": "https://www.startupindia.gov.in/" }
-      ],
-      "links": [],
-      "directories": [
-        { "label": "Startup India", "url": "https://www.startupindia.gov.in/", "description": "Official Government of India portal and directory of recognised startups, schemes and investors." },
-        { "label": "Dealroom — India", "url": "https://dealroom.co/guides/india", "description": "Data-driven profile of the Indian tech ecosystem." }
-      ],
-      "updatedAt": "2026-06-13",
-      "source": "Initial scaffold — needs verification pass"
+      "business": { "label": "Startup India", "url": "https://www.startupindia.gov.in/", "description": "Official Government of India portal and directory of recognised startups, schemes and investors." },
+      "updatedAt": "2026-06-15",
+      "source": "Initial scaffold — needs verification pass; business migrated from prior directories entry"
     },
     {
       "slug": "indonesia",
@@ -387,14 +264,9 @@
         "Major successes: GoTo (Gojek + Tokopedia), Traveloka, Bukalapak.",
         "Jakarta is the dominant hub."
       ],
-      "visas": [],
-      "organizations": [],
-      "links": [],
-      "directories": [
-        { "label": "Dealroom — Indonesia", "url": "https://dealroom.co/guides/indonesia", "description": "Data-driven profile of the Indonesian tech ecosystem." }
-      ],
-      "updatedAt": "2026-06-13",
-      "source": "Initial scaffold — needs verification pass"
+      "business": { "label": "Dealroom — Indonesia", "url": "https://dealroom.co/guides/indonesia", "description": "Data-driven profile of the Indonesian tech ecosystem." },
+      "updatedAt": "2026-06-15",
+      "source": "Initial scaffold — needs verification pass; business migrated from prior directories entry"
     },
     {
       "slug": "malaysia",
@@ -408,14 +280,9 @@
         "Government support via Cradle Fund and MyStartup.",
         "Cost-effective base for Southeast Asian expansion."
       ],
-      "visas": [],
-      "organizations": [],
-      "links": [],
-      "directories": [
-        { "label": "Dealroom — Malaysia", "url": "https://dealroom.co/guides/malaysia", "description": "Data-driven profile of the Malaysian tech ecosystem." }
-      ],
-      "updatedAt": "2026-06-13",
-      "source": "Initial scaffold — needs verification pass"
+      "business": { "label": "Dealroom — Malaysia", "url": "https://dealroom.co/guides/malaysia", "description": "Data-driven profile of the Malaysian tech ecosystem." },
+      "updatedAt": "2026-06-15",
+      "source": "Initial scaffold — needs verification pass; business migrated from prior directories entry"
     },
     {
       "slug": "vietnam",
@@ -429,14 +296,9 @@
         "Strong, low-cost engineering talent base.",
         "Notable successes include VNG, MoMo and Sky Mavis."
       ],
-      "visas": [],
-      "organizations": [],
-      "links": [],
-      "directories": [
-        { "label": "Dealroom — Vietnam", "url": "https://dealroom.co/guides/vietnam", "description": "Data-driven profile of the Vietnamese tech ecosystem." }
-      ],
-      "updatedAt": "2026-06-13",
-      "source": "Initial scaffold — needs verification pass"
+      "business": { "label": "Dealroom — Vietnam", "url": "https://dealroom.co/guides/vietnam", "description": "Data-driven profile of the Vietnamese tech ecosystem." },
+      "updatedAt": "2026-06-15",
+      "source": "Initial scaffold — needs verification pass; business migrated from prior directories entry"
     },
     {
       "slug": "mexico",
@@ -450,14 +312,9 @@
         "Major fintech successes including Clip, Konfío and Bitso.",
         "Proximity and trade ties to the US (USMCA)."
       ],
-      "visas": [],
-      "organizations": [],
-      "links": [],
-      "directories": [
-        { "label": "Dealroom — Mexico", "url": "https://dealroom.co/guides/mexico", "description": "Data-driven profile of the Mexican tech ecosystem." }
-      ],
-      "updatedAt": "2026-06-13",
-      "source": "Initial scaffold — needs verification pass"
+      "business": { "label": "Dealroom — Mexico", "url": "https://dealroom.co/guides/mexico", "description": "Data-driven profile of the Mexican tech ecosystem." },
+      "updatedAt": "2026-06-15",
+      "source": "Initial scaffold — needs verification pass; business migrated from prior directories entry"
     },
     {
       "slug": "colombia",
@@ -471,14 +328,9 @@
         "Home to Rappi, one of Latin America's largest startups.",
         "National entrepreneurship support via iNNpulsa Colombia."
       ],
-      "visas": [],
-      "organizations": [],
-      "links": [],
-      "directories": [
-        { "label": "Dealroom — Colombia", "url": "https://dealroom.co/guides/colombia", "description": "Data-driven profile of the Colombian tech ecosystem." }
-      ],
-      "updatedAt": "2026-06-13",
-      "source": "Initial scaffold — needs verification pass"
+      "business": { "label": "Dealroom — Colombia", "url": "https://dealroom.co/guides/colombia", "description": "Data-driven profile of the Colombian tech ecosystem." },
+      "updatedAt": "2026-06-15",
+      "source": "Initial scaffold — needs verification pass; business migrated from prior directories entry"
     },
     {
       "slug": "argentina",
@@ -492,14 +344,9 @@
         "Produced unicorns: MercadoLibre, Globant, Auth0, Ualá, OLX.",
         "Strong, globally competitive engineering talent."
       ],
-      "visas": [],
-      "organizations": [],
-      "links": [],
-      "directories": [
-        { "label": "Dealroom — Argentina", "url": "https://dealroom.co/guides/argentina", "description": "Data-driven profile of the Argentine tech ecosystem." }
-      ],
-      "updatedAt": "2026-06-13",
-      "source": "Initial scaffold — needs verification pass"
+      "business": { "label": "Dealroom — Argentina", "url": "https://dealroom.co/guides/argentina", "description": "Data-driven profile of the Argentine tech ecosystem." },
+      "updatedAt": "2026-06-15",
+      "source": "Initial scaffold — needs verification pass; business migrated from prior directories entry"
     }
   ]
 }

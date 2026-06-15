@@ -4,7 +4,7 @@ import Globe from 'globe.gl';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Program } from '../data/programs';
-import { programTypeLabel } from '../data/programs';
+import { programModel } from '../data/programs';
 import { passes, defaultSort } from '../lib/filter';
 import { statusMeta, STATUS_ORDER } from '../lib/status';
 import { logoMarkupHTML, installLogoFallback } from '../lib/logo';
@@ -18,7 +18,8 @@ import SiteNav from '../components/SiteNav';
 import BootSequence from '../components/BootSequence';
 import AsciiBackdrop from '../components/AsciiBackdrop';
 import { useTypewriter } from '../lib/useTypewriter';
-import { sphereGrid, sampleEarth, type Dot } from '../lib/globeDots';
+import { sphereGrid, sampleEarth } from '../lib/globeDots';
+import { createAsciiGlobe } from '../lib/asciiGlobe';
 import worldGeo from '../data/world-110m.geo.json';
 
 // Country polygons (Natural Earth 110m) for the white border outlines; each
@@ -48,13 +49,16 @@ const TITLE_ALL = {
   t: 'Where founders gather',
   s: 'Spin the globe or pick a residency to fly there; the houses with the strongest pull are mapped below. Status as of June 2026 — verify on each site.',
 };
-/** Subtitle when a specific canonical program type is selected. */
-function titleFor(typeId: string, label: string): { t: string; s: string } {
-  if (!typeId) return TITLE_ALL;
-  return {
-    t: label,
-    s: `${label} programs worldwide. Spin or pick a program to fly there; dense cities are mapped below.`,
-  };
+const MODEL_TITLES: Record<string, string> = {
+  'co-living': 'Live-in residencies',
+  'co-working': 'Co-working bases',
+  both: 'Live & build together',
+};
+/** Heading when a living/working model is selected. */
+function titleFor(model: string): { t: string; s: string } {
+  if (!model || !MODEL_TITLES[model]) return TITLE_ALL;
+  const t = MODEL_TITLES[model];
+  return { t, s: `${t} — spin or pick a place to fly there; dense cities are mapped below.` };
 }
 
 // Dense regions can get their own crisp, interactive minimap (shown one at a
@@ -173,8 +177,8 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   // Dock membership tracks the program-type filter only (not search/status), so
   // each dense-city minimap is a stable overview and doesn't rebuild on every keystroke.
   const cityData = useMemo(
-    () => data.filter((p) => !filters.type || p.canonicalType === filters.type),
-    [data, filters.type],
+    () => data.filter((p) => !filters.model || programModel(p) === filters.model),
+    [data, filters.model],
   );
   const cityCounts = useMemo(() => {
     const m: Record<string, number> = {};
@@ -268,25 +272,18 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     }
     const reduceMotion = prefersReducedMotion();
 
-    // Dense dot grid; colors/relief are sampled from earth imagery just below.
-    const dotGrid = sphereGrid(1.4);
+    // Coarser grid than a classic dot-globe: each point becomes a legible ASCII
+    // glyph. Brightness sampled from earth imagery just below drives the ramp.
+    const dotGrid = sphereGrid(2.4);
 
     // globe.gl's factory call signature isn't well typed; cast to call it.
     const world: GlobeInstance = (Globe as unknown as (cfg?: object) => (el: HTMLElement) => GlobeInstance)({ animateIn: false })(globeEl.current)
-      // Whole-sphere dot mesh sampled from NASA earth imagery (landscape +
-      // ocean color + topology relief) with white country borders, over a
-      // transparent (page-black) backdrop.
+      // Near-black sphere + white country borders over a transparent backdrop.
+      // The surface itself is drawn as ASCII glyphs (createAsciiGlobe, below),
+      // added straight to the scene instead of globe.gl's points layer.
       .backgroundColor('rgba(0,0,0,0)')
       .showGlobe(true)
       .showGraticules(false)
-      .pointsData(dotGrid)
-      .pointLat('lat')
-      .pointLng('lng')
-      .pointColor((d: Dot) => d.color)
-      .pointAltitude((d: Dot) => d.alt)
-      .pointRadius(0.24)
-      .pointResolution(6)
-      .pointsMerge(true)
       // Country borders, clickable: a country with a profile opens its card.
       .polygonsData(LAND_FEATURES)
       .polygonCapColor((feat: unknown) =>
@@ -424,9 +421,15 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     worldRef.current = world;
     seedRings(null);
 
-    // Color the dots from earth imagery once it decodes, then re-render the layer.
+    // The ASCII surface: one THREE.Points of glyphs, added to the globe scene
+    // (which sits at the origin with identity transform, so it lines up with the
+    // country polygons and pins). globe.gl owns interaction; this is pure visuals.
+    const ascii = createAsciiGlobe(dotGrid, { altitude: 0.012 });
+    world.scene().add(ascii.object);
+
+    // Re-read glyph brightness from the earth imagery once it decodes.
     sampleEarth(dotGrid).then((ok) => {
-      if (ok && worldRef.current === world) world.pointsData(dotGrid);
+      if (ok && worldRef.current === world) ascii.refreshBrightness();
     });
 
     const fit = () => world.width(globeWrapEl.current!.clientWidth).height(globeWrapEl.current!.clientHeight);
@@ -441,6 +444,8 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       ro.disconnect();
       if (!coarsePointer) zoomEl.removeEventListener('wheel', onWheel);
       zoomEl.removeEventListener('pointermove', onPointerMove);
+      world.scene().remove(ascii.object);
+      ascii.dispose();
       worldRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -534,7 +539,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     seedRings(null);
   }
 
-  const title = titleFor(filters.type, programTypeLabel(filters.type));
+  const title = titleFor(filters.model);
   const tagline = useTypewriter('~/ some places pull you into orbit', { speed: 46, startDelay: 2600, loop: true });
 
   return (

@@ -1,11 +1,13 @@
 // Cross-island filter state. Astro islands are isolated, so the map/globe and
 // the sidebar share state through this nanostore rather than props. The store
 // also stays in sync with the URL query string — the deep-link contract that
-// agents and humans use (e.g. /dashboard?type=accelerator&country=USA&status=open).
+// agents and humans use (e.g. /dashboard?model=both&country=USA&country=UK&status=open).
 //
-// `type` carries a canonical program-type ID (the primary categorical axis).
-// The legacy `dataset` URL-param was removed; an old `?dataset=residential`
-// link no longer constrains results (it is silently ignored).
+// The filter axis is intentionally small: a co-living/co-working/both `model`,
+// one-or-more `country` values, recruiting `status`, and free-text `q`. Older
+// links carrying removed params (type/format/stage/sector/housing/dataset) are
+// silently ignored. A legacy single `?country=USA` still works (parsed into a
+// one-element array).
 
 import { atom } from 'nanostores';
 import { EMPTY_FILTERS, type Filters } from '../lib/filter';
@@ -17,17 +19,11 @@ export const $filters = atom<Filters>({ ...EMPTY_FILTERS });
 export function filtersFromURL(search = window.location.search): Filters {
   const u = new URLSearchParams(search);
   const status = u.get('status');
-  const type = u.get('type') ?? '';
   return {
-    type: type === 'all' ? '' : type,
     q: u.get('q') ?? '',
-    country: u.get('country') ?? '',
     status: status && status in STATUS ? status : '',
-    focus: u.get('focus') ?? '',
-    format: u.get('format') ?? '',
-    stage: u.get('stage') ?? '',
-    sector: u.get('sector') ?? '',
-    housing: u.get('housing') ?? '',
+    model: u.get('model') ?? '',
+    country: u.getAll('country').filter(Boolean),
   };
 }
 
@@ -35,14 +31,9 @@ export function filtersFromURL(search = window.location.search): Filters {
 export function filtersToQuery(f: Filters): string {
   const u = new URLSearchParams();
   if (f.q) u.set('q', f.q);
-  if (f.type) u.set('type', f.type);
-  if (f.country) u.set('country', f.country);
+  if (f.model) u.set('model', f.model);
+  for (const c of f.country) u.append('country', c);
   if (f.status) u.set('status', f.status);
-  if (f.focus) u.set('focus', f.focus);
-  if (f.format) u.set('format', f.format);
-  if (f.stage) u.set('stage', f.stage);
-  if (f.sector) u.set('sector', f.sector);
-  if (f.housing) u.set('housing', f.housing);
   return u.toString();
 }
 

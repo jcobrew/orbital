@@ -70,28 +70,45 @@ const jsonLd = {
 
   <main class="mx-auto max-w-[900px] px-7 pb-16 pt-4 flex flex-col gap-7">
     <section>
-      <h2 class="mb-1.5 font-display text-[15px] font-semibold text-text">Start with the local directories</h2>
+      <h2 class="mb-1.5 font-display text-[15px] font-semibold text-text">Start here</h2>
       <p class="mb-2.5 max-w-[640px] text-[12.5px] leading-relaxed text-muted">
-        Rather than re-collect every detail, Orbital points you outward — to the ecosystem directories
-        and portals worth knowing in {country.name}.
+        Rather than re-collect every detail, Orbital points you outward — to the two official portals
+        worth knowing in {country.name}: where the ecosystem lives, and how to move in.
       </p>
-      {country.directories.length > 0 ? (
+      {country.business || country.relocation ? (
         <div class="grid gap-3 sm:grid-cols-2">
-          {country.directories.map((d) => (
+          {country.business && (
             <a
-              href={d.url}
+              href={country.business.url}
               target="_blank"
               rel="noopener"
               class="orbit-hover rounded-2xl border border-line2 bg-[rgba(16,16,16,.5)] p-4 transition hover:border-a1"
             >
-              <div class="mb-1 text-[13.5px] font-semibold text-text">{d.label} ↗</div>
-              {d.description && <div class="text-[12.5px] leading-relaxed text-muted">{d.description}</div>}
+              <div class="mb-1 text-[10.5px] font-semibold uppercase tracking-wide text-a2">Business & ecosystem</div>
+              <div class="mb-1 text-[13.5px] font-semibold text-text">{country.business.label} ↗</div>
+              {country.business.description && (
+                <div class="text-[12.5px] leading-relaxed text-muted">{country.business.description}</div>
+              )}
             </a>
-          ))}
+          )}
+          {country.relocation && (
+            <a
+              href={country.relocation.url}
+              target="_blank"
+              rel="noopener"
+              class="orbit-hover rounded-2xl border border-line2 bg-[rgba(16,16,16,.5)] p-4 transition hover:border-a1"
+            >
+              <div class="mb-1 text-[10.5px] font-semibold uppercase tracking-wide text-a2">Moving in</div>
+              <div class="mb-1 text-[13.5px] font-semibold text-text">{country.relocation.label} ↗</div>
+              {country.relocation.description && (
+                <div class="text-[12.5px] leading-relaxed text-muted">{country.relocation.description}</div>
+              )}
+            </a>
+          )}
         </div>
       ) : (
         <p class="text-[12.5px] italic leading-relaxed text-muted">
-          No external directories mapped here yet — help us chart this orbit.
+          Local guides coming soon.
         </p>
       )}
     </section>
@@ -141,58 +158,6 @@ const jsonLd = {
         <ul class="orbit-list flex flex-col gap-2 text-[13px] leading-relaxed text-muted">
           {country.highlights.map((h) => (
             <li>{h}</li>
-          ))}
-        </ul>
-      </section>
-    )}
-
-    {country.visas.length > 0 && (
-      <section>
-        <h2 class="mb-2.5 font-display text-[15px] font-semibold text-text">Visa & residency routes</h2>
-        <div class="grid gap-3 sm:grid-cols-2">
-          {country.visas.map((v) => (
-            <a
-              href={v.url}
-              target="_blank"
-              rel="noopener"
-              class="orbit-hover rounded-2xl border border-line2 bg-[rgba(16,16,16,.5)] p-4 transition hover:border-a1"
-            >
-              <div class="mb-1 text-[13.5px] font-semibold text-text">{v.name} ↗</div>
-              <div class="text-[12.5px] leading-relaxed text-muted">{v.description}</div>
-            </a>
-          ))}
-        </div>
-      </section>
-    )}
-
-    {country.organizations.length > 0 && (
-      <section>
-        <h2 class="mb-2.5 font-display text-[15px] font-semibold text-text">Key organizations</h2>
-        <div class="grid gap-3 sm:grid-cols-2">
-          {country.organizations.map((o) => (
-            <a
-              href={o.url}
-              target="_blank"
-              rel="noopener"
-              class="orbit-hover rounded-2xl border border-line2 bg-[rgba(16,16,16,.5)] p-4 transition hover:border-a1"
-            >
-              <div class="mb-0.5 text-[13.5px] font-semibold text-text">{o.name} ↗</div>
-              <div class="mb-1 text-[10.5px] font-semibold uppercase tracking-wide text-a2">{o.type}</div>
-              <div class="text-[12.5px] leading-relaxed text-muted">{o.description}</div>
-            </a>
-          ))}
-        </div>
-      </section>
-    )}
-
-    {country.links.length > 0 && (
-      <section>
-        <h2 class="mb-2.5 font-display text-[15px] font-semibold text-text">More links</h2>
-        <ul class="orbit-list flex flex-col gap-2 text-[13px]">
-          {country.links.map((l) => (
-            <li>
-              <a href={l.url} target="_blank" rel="noopener" class="font-semibold">{l.label} ↗</a>
-            </li>
           ))}
         </ul>
       </section>

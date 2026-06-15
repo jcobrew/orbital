@@ -13,14 +13,14 @@ export default function CountryGridCard({
   region,
   summary,
   programCount,
-  directoryCount,
+  hasGuides = false,
 }: {
   slug: string;
   name: string;
   region: string;
   summary: string;
   programCount: number;
-  directoryCount: number;
+  hasGuides?: boolean;
 }) {
   const flag = flagSrc(slug);
   return (
@@ -50,7 +50,7 @@ export default function CountryGridCard({
       <p className="mb-3 flex-1 text-[12.5px] leading-relaxed text-muted">{summary}</p>
       <div className="flex flex-wrap gap-1.5 text-[11px] text-muted">
         <span className="rounded-full border border-line2 px-2 py-0.5 font-semibold text-text">{programCount} houses</span>
-        <span className="rounded-full border border-line2 px-2 py-0.5">{directoryCount} directories</span>
+        {hasGuides && <span className="rounded-full border border-line2 px-2 py-0.5">guides</span>}
       </div>
     </a>
   );

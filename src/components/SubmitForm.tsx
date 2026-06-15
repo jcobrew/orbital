@@ -91,7 +91,7 @@ export default function SubmitForm() {
         <Field label="Application URL"><input value={f.applyUrl} onChange={set('applyUrl')} className={input} placeholder="https://…/apply" /></Field>
         <Field label="City"><input value={f.city} onChange={set('city')} className={input} /></Field>
         <Field label="Country"><input value={f.country} onChange={set('country')} className={input} /></Field>
-        <Field label="Stage fit"><input value={f.stage} onChange={set('stage')} className={input} placeholder="pre-seed, mvp…" /></Field>
+        <Field label="Stage fit"><input value={f.stage} onChange={set('stage')} className={input} placeholder="pre-seed, seed…" /></Field>
         <Field label="Sector focus"><input value={f.sector} onChange={set('sector')} className={input} placeholder="AI, climate…" /></Field>
         <Field label="Application status"><input value={f.status} onChange={set('status')} className={input} placeholder="rolling / open / closed…" /></Field>
         <Field label="Deadline"><input value={f.deadline} onChange={set('deadline')} className={input} placeholder="YYYY-MM-DD" /></Field>
