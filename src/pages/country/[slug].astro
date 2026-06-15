@@ -7,6 +7,7 @@ import { citiesInCountry, citySlug } from '../../data/cities';
 import { statusMeta } from '../../lib/status';
 import { livingModelLabel } from '../../lib/living';
 import { defaultSort } from '../../lib/filter';
+import { flagSrc } from '../../lib/flag';
 
 // One static page per country profile. As the dataset grows (or moves to a
 // cloud DB), this list grows automatically — no per-page wiring needed.
@@ -19,6 +20,7 @@ const country = getCountry(slug!);
 if (!country) return Astro.redirect('/countries');
 
 const dashboardHref = `/dashboard?country=${encodeURIComponent(country.name)}`;
+const flag = flagSrc(country.slug);
 const programs = defaultSort(PROGRAMS.filter((p) => p.country === country.name));
 const cities = citiesInCountry(country.name);
 
@@ -40,12 +42,23 @@ const jsonLd = {
   <header class="mx-auto max-w-[900px] px-7 pt-6">
     <SiteNav current="countries" client:load />
     <a href="/countries" class="mt-5 inline-block text-[12px] text-muted hover:text-text">← All countries</a>
-    <h1
-      class="m-0 mb-2 mt-1 font-display text-[30px] font-bold leading-[1.12]"
-      style="color:var(--text)"
-    >
-      {country.name}
-    </h1>
+    <div class="mb-2 mt-1 flex items-center gap-3">
+      {flag && (
+        <img
+          src={flag}
+          alt={`${country.name} flag`}
+          width={40}
+          height={40}
+          class="h-10 w-10 shrink-0 rounded-full ring-1 ring-line2"
+        />
+      )}
+      <h1
+        class="m-0 font-display text-[30px] font-bold leading-[1.12]"
+        style="color:var(--text)"
+      >
+        {country.name}
+      </h1>
+    </div>
     <div class="mb-3 flex flex-wrap items-center gap-2 text-[12px] text-muted">
       <span class="rounded-[3px] border border-line2 px-2.5 py-1">{country.region}</span>
       <a href={dashboardHref} class="rounded-[3px] border border-line2 px-2.5 py-1 font-semibold text-text hover:border-a1">

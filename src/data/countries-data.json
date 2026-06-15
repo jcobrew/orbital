@@ -2,7 +2,7 @@
   "meta": {
     "title": "Orbital — country startup-ecosystem directories",
     "compiled": "2026-06-09",
-    "note": "Human-curated profiles of national startup ecosystems for founders considering relocation. Rather than re-collecting every ecosystem detail itself, Orbital points OUT to existing, well-known country-specific startup directories/portals via `directories`. Each entry is a stand-alone record keyed by `slug` so it can later be served from a cloud database without code changes (see src/data/countries.ts for the swap point). Links and visa details change frequently — always confirm on the official source.",
+    "note": "Human-curated profiles of national startup ecosystems for founders considering relocation. Rather than re-collecting every ecosystem detail itself, Orbital points OUT to existing, well-known country-specific startup directories/portals via `directories`. Each entry is a stand-alone record keyed by `slug` so it can later be served from a cloud database without code changes (see src/data/countries.ts for the swap point). Links and visa details change frequently — always confirm on the official source. Each profile shows a round flag icon collected by scripts/fetch-flags.ts into public/flags/ and indexed by src/lib/flagManifest.json (resolved via flagSrc()); add a new country's ISO code to that script when extending this list.",
     "schema": {
       "slug": "URL-safe id, also the /country/<slug> route",
       "name": "Display name; MUST match the `country` value used in the program datasets so program counts join",

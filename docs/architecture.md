@@ -73,7 +73,8 @@
 | `src/lib/living.ts` | `LIVING_MODELS` map (labels/blurbs for each `ProgramFormat`), `livingModelLabel()`, `LIVING_MODEL_ORDER` |
 | `src/lib/display.ts` | `displayVal()`, `displayBool()`, `displayDuration()`, `whatYouGet()`, `PROVIDES[]` — shared "show Unknown on missing data" formatting |
 | `src/lib/submit.ts` | `SubmitFields`, `buildIssueBody()`, `buildIssueUrl()` — composes a prefilled GitHub issue URL |
-| `src/lib/logo.ts` | `initials()`, `logoSources()`, `logoMarkupHTML()`, `installLogoFallback()` — favicon/logo helpers for cards + map markers |
+| `src/lib/logo.ts` | `initials()`, `logoSources()`, `localLogo()`, `logoMarkupHTML()`, `installLogoFallback()` — favicon/logo helpers for cards + map markers; serves self-hosted `/logos` (collected by `scripts/fetch-logos.ts`, indexed by `src/lib/logoManifest.json`) before remote favicon services |
+| `src/lib/flag.ts` | `flagSrc(slug)` — resolves a country's round flag SVG in `/flags` (collected by `scripts/fetch-flags.ts`, indexed by `src/lib/flagManifest.json`); used by the country drawer, grid card and profile page |
 | `src/lib/useTypewriter.ts` | React hook for typewriter text effect (used in `BootSequence`) |
 
 ### Stores (`src/stores/`)

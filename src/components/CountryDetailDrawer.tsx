@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useStore } from '@nanostores/react';
 import { $selectedCountrySlug, closeCountry } from '../stores/country';
 import { getCountry } from '../data/countries';
+import { flagSrc } from '../lib/flag';
 
 /**
  * Country detail drawer — the reusable pop-out shown when a founder clicks a
@@ -31,6 +32,7 @@ export default function CountryDetailDrawer() {
 
   const dashboardHref = `/dashboard?country=${encodeURIComponent(country.name)}`;
   const count = country.programCount;
+  const flag = flagSrc(country.slug);
 
   return (
     <div className="fixed inset-0 z-[1000]" role="presentation">
@@ -43,6 +45,15 @@ export default function CountryDetailDrawer() {
       >
         {/* Header */}
         <div className="flex items-start gap-3 border-b border-line p-5">
+          {flag && (
+            <img
+              src={flag}
+              alt={`${country.name} flag`}
+              width={34}
+              height={34}
+              className="mt-0.5 h-[34px] w-[34px] shrink-0 rounded-full ring-1 ring-line2"
+            />
+          )}
           <div className="min-w-0 flex-1">
             <h2 className="m-0 font-display text-[17px] font-bold leading-tight text-text">{country.name}</h2>
             <div className="mt-1.5">
