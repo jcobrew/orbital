@@ -123,6 +123,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.16s ease;
 }
 .pin .pin-inner img {
   width: 100%;
@@ -142,8 +143,22 @@ body {
   justify-content: center;
 }
 .pin:hover {
-  transform: scale(1.16);
-  z-index: 10;
+  transform: scale(1.16); /* applies to map pins (no inline transform); harmless on globe */
+}
+/* Lift the hovered/focused pin and its label above ALL other pins so the name
+   isn't covered and the user can't accidentally click a neighbour. globe.gl
+   writes an inline z-index on every element each frame (depth sort), so
+   !important is required to beat it. On the globe the pin's transform is owned
+   by globe.gl for positioning, so the "expand" is applied to the inner content. */
+.pin:hover,
+.pin:focus-within,
+.city-pin:hover,
+.city-pin:focus-within {
+  z-index: 99999 !important;
+}
+.pin:hover .pin-inner,
+.city-pin:hover .city-pin-ic {
+  transform: scale(1.1);
 }
 
 /* Hover name label shared by globe + map pins and city markers. */
@@ -556,6 +571,7 @@ body {
 }
 .city-pin-ic {
   display: flex;
+  transition: transform 0.16s ease;
 }
 .city-pin-ct {
   position: absolute;
