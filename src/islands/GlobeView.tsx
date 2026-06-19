@@ -18,8 +18,7 @@ import SiteNav from '../components/SiteNav';
 import BootSequence from '../components/BootSequence';
 import AsciiBackdrop from '../components/AsciiBackdrop';
 import { useTypewriter } from '../lib/useTypewriter';
-import { sphereGrid, sampleEarth } from '../lib/globeDots';
-import { createAsciiGlobe } from '../lib/asciiGlobe';
+import { sphereGrid, sampleEarth, type Dot } from '../lib/globeDots';
 import worldGeo from '../data/world-110m.geo.json';
 
 // Country polygons (Natural Earth 110m) for the white border outlines; each
@@ -272,18 +271,24 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     }
     const reduceMotion = prefersReducedMotion();
 
-    // Coarser grid than a classic dot-globe: each point becomes a legible ASCII
-    // glyph. Brightness sampled from earth imagery just below drives the ramp.
-    const dotGrid = sphereGrid(2.4);
+    // Fine dot-matrix earth; colors/relief sampled from imagery just below.
+    const dotGrid = sphereGrid(1.4);
 
     // globe.gl's factory call signature isn't well typed; cast to call it.
     const world: GlobeInstance = (Globe as unknown as (cfg?: object) => (el: HTMLElement) => GlobeInstance)({ animateIn: false })(globeEl.current)
       // Near-black sphere + white country borders over a transparent backdrop.
-      // The surface itself is drawn as ASCII glyphs (createAsciiGlobe, below),
-      // added straight to the scene instead of globe.gl's points layer.
+      // The surface is a clean dot-matrix sampled from earth imagery.
       .backgroundColor('rgba(0,0,0,0)')
       .showGlobe(true)
       .showGraticules(false)
+      .pointsData(dotGrid)
+      .pointLat('lat')
+      .pointLng('lng')
+      .pointColor((d: Dot) => d.color)
+      .pointAltitude((d: Dot) => d.alt)
+      .pointRadius(0.24)
+      .pointResolution(6)
+      .pointsMerge(true)
       // Country borders, clickable: a country with a profile opens its card.
       .polygonsData(LAND_FEATURES)
       .polygonCapColor((feat: unknown) =>
@@ -421,15 +426,9 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     worldRef.current = world;
     seedRings(null);
 
-    // The ASCII surface: one THREE.Points of glyphs, added to the globe scene
-    // (which sits at the origin with identity transform, so it lines up with the
-    // country polygons and pins). globe.gl owns interaction; this is pure visuals.
-    const ascii = createAsciiGlobe(dotGrid, { altitude: 0.012 });
-    world.scene().add(ascii.object);
-
-    // Re-read glyph brightness from the earth imagery once it decodes.
+    // Color the dots from earth imagery once it decodes, then re-render the layer.
     sampleEarth(dotGrid).then((ok) => {
-      if (ok && worldRef.current === world) ascii.refreshBrightness();
+      if (ok && worldRef.current === world) world.pointsData(dotGrid);
     });
 
     const fit = () => world.width(globeWrapEl.current!.clientWidth).height(globeWrapEl.current!.clientHeight);
@@ -444,8 +443,6 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       ro.disconnect();
       if (!coarsePointer) zoomEl.removeEventListener('wheel', onWheel);
       zoomEl.removeEventListener('pointermove', onPointerMove);
-      world.scene().remove(ascii.object);
-      ascii.dispose();
       worldRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
