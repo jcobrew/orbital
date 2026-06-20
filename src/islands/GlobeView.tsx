@@ -16,10 +16,7 @@ import Logo from '../components/Logo';
 import StatusBadge from '../components/StatusBadge';
 import SiteNav from '../components/SiteNav';
 import BootSequence from '../components/BootSequence';
-import AsciiBackdrop from '../components/AsciiBackdrop';
 import { useTypewriter } from '../lib/useTypewriter';
-import { sphereGrid, sampleEarth } from '../lib/globeDots';
-import { createAsciiGlobe } from '../lib/asciiGlobe';
 import worldGeo from '../data/world-110m.geo.json';
 
 // Country polygons (Natural Earth 110m) for the white border outlines; each
@@ -272,32 +269,27 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     }
     const reduceMotion = prefersReducedMotion();
 
-    // Coarser grid than a classic dot-globe: each point becomes a legible ASCII
-    // glyph. Brightness sampled from earth imagery just below drives the ramp.
-    const dotGrid = sphereGrid(2.4);
-
     // globe.gl's factory call signature isn't well typed; cast to call it.
     const world: GlobeInstance = (Globe as unknown as (cfg?: object) => (el: HTMLElement) => GlobeInstance)({ animateIn: false })(globeEl.current)
-      // Near-black sphere + white country borders over a transparent backdrop.
-      // The surface itself is drawn as ASCII glyphs (createAsciiGlobe, below),
-      // added straight to the scene instead of globe.gl's points layer.
+      // Plain monochrome globe: light-grey land filled over a near-black ocean
+      // sphere for heavy contrast, with crisp white coastlines and borders.
       .backgroundColor('rgba(0,0,0,0)')
       .showGlobe(true)
       .showGraticules(false)
-      // Country borders, clickable: a country with a profile opens its card.
+      // Filled land polygons (the land/ocean contrast) + clickable countries.
       .polygonsData(LAND_FEATURES)
       .polygonCapColor((feat: unknown) =>
         feat === hoverPolyRef.current && countryFromFeature(feat as never)
-          ? 'rgba(255,255,255,0.10)'
-          : 'rgba(0,0,0,0)',
+          ? 'rgba(246,246,246,1)'
+          : 'rgba(202,202,202,0.97)',
       )
-      .polygonSideColor(() => 'rgba(0,0,0,0)')
+      .polygonSideColor(() => 'rgba(150,150,150,0.28)')
       .polygonStrokeColor((feat: unknown) =>
         feat === hoverPolyRef.current && countryFromFeature(feat as never)
-          ? 'rgba(255,255,255,0.85)'
-          : 'rgba(255,255,255,0.42)',
+          ? 'rgba(255,255,255,0.95)'
+          : 'rgba(255,255,255,0.6)',
       )
-      .polygonAltitude(0.006)
+      .polygonAltitude(0.01)
       .onPolygonClick((feat: unknown) => {
         const name = countryFromFeature(feat as never);
         if (name) openCountry(countrySlug(name));
@@ -410,8 +402,8 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     try {
       const gm = world.globeMaterial();
       if (gm?.color?.set) {
-        // Near-black sphere so only the white dots and rings read.
-        gm.color.set('#050505');
+        // Near-black ocean sphere for heavy contrast against the light-grey land.
+        gm.color.set('#0c0c0c');
         if (gm.emissive?.set) gm.emissive.set('#000000');
         if (gm.shininess != null) gm.shininess = 0;
       }
@@ -420,17 +412,6 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     }
     worldRef.current = world;
     seedRings(null);
-
-    // The ASCII surface: one THREE.Points of glyphs, added to the globe scene
-    // (which sits at the origin with identity transform, so it lines up with the
-    // country polygons and pins). globe.gl owns interaction; this is pure visuals.
-    const ascii = createAsciiGlobe(dotGrid, { altitude: 0.012 });
-    world.scene().add(ascii.object);
-
-    // Re-read glyph brightness from the earth imagery once it decodes.
-    sampleEarth(dotGrid).then((ok) => {
-      if (ok && worldRef.current === world) ascii.refreshBrightness();
-    });
 
     const fit = () => world.width(globeWrapEl.current!.clientWidth).height(globeWrapEl.current!.clientHeight);
     fit();
@@ -444,8 +425,6 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       ro.disconnect();
       if (!coarsePointer) zoomEl.removeEventListener('wheel', onWheel);
       zoomEl.removeEventListener('pointermove', onPointerMove);
-      world.scene().remove(ascii.object);
-      ascii.dispose();
       worldRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -548,8 +527,6 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     // 100dvh (not 100vh) so mobile browser chrome doesn't crop the controls.
     <div className="relative h-[100dvh] overflow-hidden">
       <div ref={globeWrapEl} className="absolute inset-0 overflow-hidden bg-black">
-        {/* Drifting ASCII starfield sits behind the globe (z-0). */}
-        {webgl && <AsciiBackdrop />}
         {/* z-[1] gives the globe its own stacking context so pin z-indexes stay below the overlay UI */}
         <div ref={globeEl} className="absolute inset-0 z-[1]" />
         {/* Cursor-following country-name tooltip (positioned imperatively). */}
