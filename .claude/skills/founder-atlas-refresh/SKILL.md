@@ -73,17 +73,31 @@ coordinates. A city-center coordinate is fine — the UI jitters overlapping pin
 3. **Refresh existing entries.** For each program, re-verify `status` /
    `status_detail` (cohorts open/close often) and fix anything stale. Touch only
    fields that changed.
-4. **Add clearly-verified new programs** to the correct file, using the schema.
+4. **Re-verify `rolling` entries hardest.** `rolling` is the dominant value
+   (~90 of 123 programs) and the lowest-information one — it's the default
+   whenever no fixed window is known, so it's where the data silently drifts.
+   Do **not** skim past it. For each `rolling` program, open its live apply/landing
+   page and confirm it really is always-open:
+   - If you find a discrete current cohort window → change to `open` (or
+     `closing-soon` if the deadline is imminent, `running` if mid-cohort).
+   - If applications are announced but not yet open → `opening-soon`.
+   - If the program is full, paused, or the latest cohort has closed → `closed`.
+   - If it genuinely accepts applications anytime → leave `rolling`, but note in
+     the PR that it was re-confirmed (and against what source).
+   - If the apply page is dead / domain parked / no live presence → do not silently
+     keep `rolling`; flag it in "Needs human review" as possibly defunct.
+   Treat a `rolling` tag as "unverified default until checked," not as settled.
+5. **Add clearly-verified new programs** to the correct file, using the schema.
    - Skip anything you cannot corroborate on the program's own site or two
      independent sources.
    - De-dupe: do not add a program whose `name` or `domain` already exists.
-5. **Flag, don't guess.** Anything uncertain — unverifiable existence, ambiguous
+6. **Flag, don't guess.** Anything uncertain — unverifiable existence, ambiguous
    residential-vs-traditional classification, missing coordinates, suspected
    duplicate — goes in the **PR body as a checklist**, not silently into the data.
    (Precedent: "Threshold (UK)" was kept out / clearly labelled because it had no
    verifiable public presence.)
-6. **Validate** the JSON parses and the schema is intact (see Validation).
-7. **Open a draft PR** (see Output).
+7. **Validate** the JSON parses and the schema is intact (see Validation).
+8. **Open a draft PR** (see Output).
 
 ## Scope guardrails (important for unattended runs)
 
@@ -130,6 +144,9 @@ Commit to the working branch and open a **draft** PR. Body template:
 
 ### Added (<n>)
 - <Program> (<file>) — <source URL>
+
+### Rolling re-verified (<n> checked, <m> changed)
+- <Program> — re-confirmed rolling | changed to <status> — <source URL>
 
 ### Needs human review
 - [ ] <uncertain item + why>
