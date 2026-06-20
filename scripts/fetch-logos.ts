@@ -80,7 +80,13 @@ const EXT: Record<string, string> = {
 /** A source returns null when it has no usable branded icon. */
 async function tryFetch(url: string): Promise<{ buf: Buffer; ext: string } | null> {
   try {
-    const res = await fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(20000) });
+    // Send a same-origin Referer so hotlink-protected site assets still serve.
+    const ref = (() => { try { return new URL(url).origin + '/'; } catch { return undefined; } })();
+    const res = await fetch(url, {
+      redirect: 'follow',
+      signal: AbortSignal.timeout(20000),
+      headers: { 'user-agent': 'Mozilla/5.0 (compatible; founder-atlas-logos)', ...(ref ? { referer: ref } : {}) },
+    });
     if (!res.ok) return null;
     const type = (res.headers.get('content-type') || '').split(';')[0].trim().toLowerCase();
     const ext = EXT[type];
@@ -139,6 +145,8 @@ const OVERRIDES: Record<string, string> = {
   'biopunklab.com': 'https://biopunklab.com/images/logo.png', // 1080² square brand logo
   'vinnova.se': 'https://www.vinnova.se/Static/build/images/apple-touch-icon.png', // square app icon (favicon.ico is 403)
   'aigrant.com': 'https://aigrant.com/img/card.png', // AI Grant — only branded asset they publish
+  'fr8.so': 'https://unavatar.io/x/shipfr8', // fr8.so favicon is white-on-transparent (invisible on the white marker); X avatar is the black FR8 mark
+  'founders-house.fi': 'https://founders-house.fi/favicon.ico', // real red mark; favicon services return a generic icon for this domain
 };
 
 async function sources(domain: string): Promise<string[]> {
