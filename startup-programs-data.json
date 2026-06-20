@@ -957,6 +957,38 @@
       "domain": "yesyale.org",
       "url": "https://www.yesyale.org/programs/yale-hacker-house",
       "highlight": "Yale's first SF hacker house — elite student founders plugging directly into the Bay Area ecosystem for a summer."
+    },
+    {
+      "name": "SILTA",
+      "type": "Accelerator → Founder House",
+      "city": "San Francisco",
+      "country": "USA",
+      "lat": 37.77,
+      "lng": -122.42,
+      "focus": "Finnish early-stage founders; US market validation, fundraising",
+      "operator": "SILTA (Finland → Silicon Valley)",
+      "stage": "Pre-seed / very early",
+      "status": "closed",
+      "status_detail": "Takes top Finnish founders to the SF Bay Area to live & build together for 12 weeks (6-wk option), twice/yr. Mentors incl. YC partners & VCs. Fall'26 apps closed; Spring'27 opens Oct 2026.",
+      "domain": "siltahouse.com",
+      "url": "https://www.siltahouse.com/application",
+      "highlight": "A Finnish founder house in Silicon Valley — a cohort that crosses the Atlantic to live and build together for a season."
+    },
+    {
+      "name": "The Bridge (by Entrepreneurs First)",
+      "type": "Cofounder Matching → Residency",
+      "city": "San Francisco",
+      "country": "USA",
+      "lat": 37.7749,
+      "lng": -122.4194,
+      "focus": "Pre-team/pre-idea founders; cofounder matching → company building",
+      "operator": "Entrepreneurs First",
+      "stage": "Pre-team / pre-seed",
+      "status": "closed",
+      "status_detail": "8-wk SF residency: apply solo, get matched, then live & build together in a Bay Area hacker house. Housing + board + visa support. EF invests $250K ($125K for 8% SAFE + optional $125K MFN). Inaugural Apr 2026; Summer'26 (Jul) apps closed.",
+      "domain": "join-thebridge.com",
+      "url": "https://www.join-thebridge.com/",
+      "highlight": "EF's relocation residency — cofounder matching that moves into an SF hacker house for 8 weeks."
     }
   ]
 }

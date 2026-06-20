@@ -27,10 +27,45 @@ and any new rules learned there should be folded back into this file.
 - `traditional-programs-data.json` — traditional accelerators, incubators, talent
   investors **without** a live-in/relocation element.
 
-The dividing line is real and load-bearing. Antler, EF, YC, a16z Speedrun, Sequoia
-Arc, Techstars, Betaworks, On Deck, Z Fellows, HAX, etc. are **traditional** — never
-put them in the residential file. When unsure which file an entry belongs in, flag it
-in the PR rather than guessing.
+The dividing line is the **live-in test**: does the program require participants to
+relocate and live/build together for a defined stretch? If yes → residential. If it's
+desks, mentoring, and cheques with no live-in/relocation → traditional. Antler, YC,
+a16z Speedrun, Sequoia Arc, Techstars, Betaworks, On Deck, Z Fellows, HAX, etc. are
+**traditional**. When unsure which file an entry belongs in, flag it in the PR rather
+than guessing.
+
+### Hybrid programs (accelerator/matching → residency)
+
+Some programs are an accelerator or cofounder-matching scheme that **culminates in a
+relocation + co-living phase** — the live-in sprint is real and central, not a
+side perk. These belong in the **residential** file, classified by their live-in
+phase. Examples already in the data:
+
+- **SILTA** — a Finnish accelerator that moves its cohort to a San Francisco founder
+  house to live and build for ~12 weeks. `type: "Accelerator → Founder House"`.
+- **The Bridge (by Entrepreneurs First)** — starts as cofounder matching, then the
+  cohort lives and builds together in a Bay Area hacker house for 8 weeks.
+  `type: "Cofounder Matching → Residency"`.
+
+Rules for hybrids:
+
+- **Classify by the live-in phase**, not the parent brand. Use an arrow `type` like
+  `"Accelerator → Residency"` or `"Cofounder Matching → Residency"` so the hybrid
+  model is visible at a glance.
+- **Parent and hybrid can coexist in different files.** *Entrepreneurs First* (the
+  global talent investor) lives in the **traditional** file; *The Bridge* (its live-in
+  SF residency) lives in **residential**. They are distinct programs — keep them
+  separate by giving each its own `domain` (e.g. `joinef.com` vs `join-thebridge.com`)
+  so dedup (which keys on `name`/`domain`) does not collapse them or false-flag a dup.
+- **The bar is a genuine, required relocation + co-living block.** A program that
+  merely offers an optional trip, a demo-day visit, or remote mentoring is **not** a
+  hybrid — it stays traditional. If the live-in phase is ambiguous or unconfirmed,
+  flag it in the PR instead of filing it as residential.
+- **Reclassification counts as a judgment call.** Moving a program across the boundary
+  (as The Bridge was — EF's "The Bridge" was previously excluded as a pure accelerator
+  before it launched as a live-in residency) must be noted in the PR body with the
+  source that justifies the move. Routines should *propose* such moves, not make them
+  silently.
 
 ## Entry schema
 
@@ -40,7 +75,7 @@ as a template. Required fields:
 ```json
 {
   "name": "Program Name",
-  "type": "Hacker House | Residency | Startup Campus + Fund | Accelerator | ...",
+  "type": "Hacker House | Residency | Startup Campus + Fund | Accelerator | Accelerator → Residency | Cofounder Matching → Residency | ...",
   "city": "San Francisco",
   "country": "USA",
   "lat": 37.8065,
