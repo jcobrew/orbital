@@ -70,7 +70,8 @@ const CLUSTERS = [
 ] as const;
 const DEFAULT_CITY = 'sf';
 // A minimap/marker is only worthwhile where programs cluster too tightly to
-// click apart on the globe — i.e. more than this many in the box.
+// click apart on the globe — i.e. this many or more in the box. At 3 the pins
+// already crowd into each other, so that's where the minimap takes over.
 const MIN_DENSITY = 3;
 function inBounds(p: Program, b: readonly (readonly number[])[]) {
   return p.lat >= b[0][0] && p.lat <= b[1][0] && p.lng >= b[0][1] && p.lng <= b[1][1];
@@ -90,8 +91,12 @@ function jitter(arr: Program[]) {
     if (seen[k]) {
       const n = seen[k]++;
       const a = n * 2.3;
-      p.lat += 0.16 * Math.cos(a);
-      p.lng += 0.16 * Math.sin(a);
+      // Pairs (a single duplicate) still read as one blob at the old radius, so
+      // give the first offset more room; later duplicates collapse into a
+      // minimap anyway, so they keep the tighter spiral.
+      const r = n === 1 ? 0.3 : 0.16;
+      p.lat += r * Math.cos(a);
+      p.lng += r * Math.sin(a);
     } else seen[k] = 1;
   });
 }
@@ -188,7 +193,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   // Regions dense enough to be represented by a single minimap button instead
   // of a cluster of overlapping program pins.
   const denseClusters = useMemo(
-    () => CLUSTERS.filter((c) => (cityCounts[c.id] ?? 0) > MIN_DENSITY),
+    () => CLUSTERS.filter((c) => (cityCounts[c.id] ?? 0) >= MIN_DENSITY),
     [cityCounts],
   );
 
