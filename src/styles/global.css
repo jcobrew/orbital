@@ -97,6 +97,26 @@ body {
   border-color: transparent;
 }
 
+/* ---- ASCII-art globe overlay (sampled from the WebGL canvas) ---- */
+.ascii-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2; /* above the WebGL canvas, below globe.gl's HTML pin layer */
+  pointer-events: none; /* drags/clicks/hover fall through to the globe */
+  background: #000;
+  font-family: var(--font-mono);
+}
+/* Smoothly cross-fade the base globe when ASCII mode toggles (the WebGL canvas
+   sits immediately before the overlay). */
+canvas:has(+ .ascii-layer) {
+  transition: opacity 0.32s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  canvas:has(+ .ascii-layer) {
+    transition: none;
+  }
+}
+
 /* ---- Map pins (Leaflet + Globe islands) ---- */
 .pin {
   width: 34px;

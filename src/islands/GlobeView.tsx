@@ -17,6 +17,7 @@ import StatusBadge from '../components/StatusBadge';
 import SiteNav from '../components/SiteNav';
 import BootSequence from '../components/BootSequence';
 import { useTypewriter } from '../lib/useTypewriter';
+import { createAsciiRenderer, type AsciiRenderer } from '../lib/asciiGlobe';
 import worldGeo from '../data/world-110m.geo.json';
 
 // Country polygons (Natural Earth 110m) for the white border outlines; each
@@ -142,6 +143,8 @@ const IconRotate = () => (<svg {...svg}><path d="M13.5 8a5.5 5.5 0 1 1-1.7-3.97"
 const IconReset = () => (<svg {...svg}><circle cx="8" cy="8" r="5.3" /><path d="M8 1v2.2M8 12.8V15M1 8h2.2M12.8 8H15" /></svg>);
 const IconMinimap = () => (<svg {...svg}><path d="M2 4.3l4-1.6 4 1.6 4-1.6v9l-4 1.6-4-1.6-4 1.6z" /><path d="M6 2.7v9M10 4.3v9" /></svg>);
 const IconLegend = () => (<svg {...svg}><circle cx="3.3" cy="4" r="1.3" /><circle cx="3.3" cy="8" r="1.3" /><circle cx="3.3" cy="12" r="1.3" /><path d="M6.6 4h7.4M6.6 8h7.4M6.6 12h7.4" /></svg>);
+// Terminal-style glyph for the ASCII render toggle (a prompt window).
+const IconAscii = () => (<svg {...svg}><rect x="1.7" y="2.8" width="12.6" height="10.4" rx="1.2" /><path d="M4 6l2.2 2-2.2 2M8 10h3" /></svg>);
 
 // Escape user/data strings before injecting into the imperative pin markup.
 const esc = (s: string) =>
@@ -167,6 +170,11 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   const [spinning, setSpinning] = useState(true);
   const [loading, setLoading] = useState(true);
   const [webgl, setWebgl] = useState(true);
+  const [asciiMode, setAsciiMode] = useState(false);
+  // ASCII-art overlay: samples the live WebGL globe into a character grid. The
+  // base canvas keeps rendering (and handling clicks/drags/hover) underneath.
+  const asciiRef = useRef<AsciiRenderer | null>(null);
+  const glCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const [activeCity, setActiveCity] = useState<string>(DEFAULT_CITY);
 
   // Everything but the globe starts minimized so the homepage opens on a clean
@@ -288,7 +296,12 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     const reduceMotion = prefersReducedMotion();
 
     // globe.gl's factory call signature isn't well typed; cast to call it.
-    const world: GlobeInstance = (Globe as unknown as (cfg?: object) => (el: HTMLElement) => GlobeInstance)({ animateIn: false })(globeEl.current)
+    const world: GlobeInstance = (Globe as unknown as (cfg?: object) => (el: HTMLElement) => GlobeInstance)({
+      animateIn: false,
+      // preserveDrawingBuffer lets the ASCII renderer read pixels off the WebGL
+      // canvas on its own rAF tick, independent of globe.gl's render loop.
+      rendererConfig: { preserveDrawingBuffer: true },
+    })(globeEl.current)
       // Plain monochrome globe: light-grey land filled over a near-black ocean
       // sphere for heavy contrast, with crisp white coastlines and borders.
       .backgroundColor('rgba(0,0,0,0)')
@@ -430,7 +443,25 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     worldRef.current = world;
     seedRings(null);
 
-    const fit = () => world.width(globeWrapEl.current!.clientWidth).height(globeWrapEl.current!.clientHeight);
+    // ASCII overlay: insert a transparent <canvas> directly above the WebGL
+    // canvas but below globe.gl's HTML pin layer (which is appended last), so
+    // the pins stay crisp on top. pointer-events:none lets every drag/click/hover
+    // fall through to the globe beneath. The renderer is created but idle until
+    // the user flips ASCII mode on.
+    const glCanvas = globeEl.current.querySelector('canvas') as HTMLCanvasElement | null;
+    if (glCanvas) {
+      const asciiCanvas = document.createElement('canvas');
+      asciiCanvas.className = 'ascii-layer';
+      asciiCanvas.setAttribute('aria-hidden', 'true');
+      glCanvas.insertAdjacentElement('afterend', asciiCanvas);
+      glCanvasRef.current = glCanvas;
+      asciiRef.current = createAsciiRenderer({ source: glCanvas, target: asciiCanvas });
+    }
+
+    const fit = () => {
+      world.width(globeWrapEl.current!.clientWidth).height(globeWrapEl.current!.clientHeight);
+      asciiRef.current?.resize();
+    };
     fit();
     const ro = new ResizeObserver(fit);
     ro.observe(globeWrapEl.current);
@@ -442,6 +473,9 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       ro.disconnect();
       if (!coarsePointer) zoomEl.removeEventListener('wheel', onWheel);
       zoomEl.removeEventListener('pointermove', onPointerMove);
+      asciiRef.current?.destroy();
+      asciiRef.current = null;
+      glCanvasRef.current = null;
       worldRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -451,6 +485,21 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   useEffect(() => {
     if (worldRef.current) worldRef.current.htmlElementsData(globePins);
   }, [globePins]);
+
+  // ASCII mode: paint the character overlay and fade out the WebGL globe (it
+  // keeps rendering — and handling pointer input — invisibly underneath).
+  useEffect(() => {
+    const ascii = asciiRef.current;
+    const gl = glCanvasRef.current;
+    if (!ascii || !gl) return;
+    if (asciiMode) {
+      gl.style.opacity = '0';
+      ascii.start();
+    } else {
+      ascii.stop();
+      gl.style.opacity = '1';
+    }
+  }, [asciiMode]);
 
   // ---- city minimaps: build the active one lazily, keep markers in sync ----
   // Only while the dock is open; tear the Leaflet maps down when it closes so
@@ -599,6 +648,15 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         </button>
         <button className={iconBtn} onClick={reset} aria-label="Reset view" title="Reset view">
           <IconReset />
+        </button>
+        <button
+          className={`${iconBtn} ${asciiMode ? iconBtnOn : ''}`}
+          onClick={() => setAsciiMode((v) => !v)}
+          aria-pressed={asciiMode}
+          aria-label="Toggle ASCII globe"
+          title={asciiMode ? 'ASCII globe: on' : 'ASCII globe: off'}
+        >
+          <IconAscii />
         </button>
         <div className="mx-auto my-0.5 h-px w-5 bg-line2" />
         <button
