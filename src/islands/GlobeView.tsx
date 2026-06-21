@@ -70,7 +70,8 @@ const CLUSTERS = [
 ] as const;
 const DEFAULT_CITY = 'sf';
 // A minimap/marker is only worthwhile where programs cluster too tightly to
-// click apart on the globe — i.e. more than this many in the box.
+// click apart on the globe — i.e. this many or more in the box. At 3 the pins
+// already crowd into each other, so that's where the minimap takes over.
 const MIN_DENSITY = 3;
 function inBounds(p: Program, b: readonly (readonly number[])[]) {
   return p.lat >= b[0][0] && p.lat <= b[1][0] && p.lng >= b[0][1] && p.lng <= b[1][1];
@@ -84,15 +85,37 @@ const RING_SEEDS = CLUSTERS.map((c) => ({
 }));
 
 function jitter(arr: Program[]) {
-  const seen: Record<string, number> = {};
+  // Pins are a fixed pixel size, so any two programs sitting within a degree or
+  // so of each other (e.g. FR8 in Espoo and Founders House in Helsinki) render
+  // as one overlapping blob on the globe — not just exact-coordinate dupes.
+  // Group every set of near-neighbours and fan them out evenly around the
+  // group's centre so each reads as a distinct node.
+  //
+  // Programs inside a defined dense-cluster box are skipped: they collapse into
+  // that city's minimap, and nudging them could change the box's program count
+  // (which drives the minimap threshold).
+  const PROX = 0.9; // ≈ how close two programs must be to collide as pins
+  const SPREAD = 0.5; // ring radius the group fans out to
+  type Cluster = { lat: number; lng: number; members: Program[] };
+  const clusters: Cluster[] = [];
   arr.forEach((p) => {
-    const k = p.lat.toFixed(4) + ',' + p.lng.toFixed(4);
-    if (seen[k]) {
-      const n = seen[k]++;
-      const a = n * 2.3;
-      p.lat += 0.16 * Math.cos(a);
-      p.lng += 0.16 * Math.sin(a);
-    } else seen[k] = 1;
+    if (CLUSTERS.some((c) => inBounds(p, c.bounds))) return;
+    const near = clusters.find(
+      (cl) => Math.abs(cl.lat - p.lat) < PROX && Math.abs(cl.lng - p.lng) < PROX,
+    );
+    if (near) near.members.push(p);
+    else clusters.push({ lat: p.lat, lng: p.lng, members: [p] });
+  });
+  clusters.forEach((c) => {
+    if (c.members.length < 2) return;
+    const cLat = c.members.reduce((s, p) => s + p.lat, 0) / c.members.length;
+    const cLng = c.members.reduce((s, p) => s + p.lng, 0) / c.members.length;
+    const step = (2 * Math.PI) / c.members.length;
+    c.members.forEach((p, i) => {
+      const a = i * step;
+      p.lat = cLat + SPREAD * Math.cos(a);
+      p.lng = cLng + SPREAD * Math.sin(a);
+    });
   });
 }
 
@@ -119,11 +142,6 @@ const IconRotate = () => (<svg {...svg}><path d="M13.5 8a5.5 5.5 0 1 1-1.7-3.97"
 const IconReset = () => (<svg {...svg}><circle cx="8" cy="8" r="5.3" /><path d="M8 1v2.2M8 12.8V15M1 8h2.2M12.8 8H15" /></svg>);
 const IconMinimap = () => (<svg {...svg}><path d="M2 4.3l4-1.6 4 1.6 4-1.6v9l-4 1.6-4-1.6-4 1.6z" /><path d="M6 2.7v9M10 4.3v9" /></svg>);
 const IconLegend = () => (<svg {...svg}><circle cx="3.3" cy="4" r="1.3" /><circle cx="3.3" cy="8" r="1.3" /><circle cx="3.3" cy="12" r="1.3" /><path d="M6.6 4h7.4M6.6 8h7.4M6.6 12h7.4" /></svg>);
-
-// HTML-string twin of <IconMinimap> for the clickable city markers rendered as
-// globe.gl htmlElements (which take raw DOM, not React).
-const MINIMAP_SVG =
-  '<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.3l4-1.6 4 1.6 4-1.6v9l-4 1.6-4-1.6-4 1.6z"/><path d="M6 2.7v9M10 4.3v9"/></svg>';
 
 // Escape user/data strings before injecting into the imperative pin markup.
 const esc = (s: string) =>
@@ -188,7 +206,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   // Regions dense enough to be represented by a single minimap button instead
   // of a cluster of overlapping program pins.
   const denseClusters = useMemo(
-    () => CLUSTERS.filter((c) => (cityCounts[c.id] ?? 0) > MIN_DENSITY),
+    () => CLUSTERS.filter((c) => (cityCounts[c.id] ?? 0) >= MIN_DENSITY),
     [cityCounts],
   );
 
@@ -332,8 +350,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
           const el = document.createElement('div');
           el.className = 'city-pin';
           el.innerHTML =
-            `<span class="city-pin-ic">${MINIMAP_SVG}</span>` +
-            (d.count ? `<span class="city-pin-ct">${d.count}</span>` : '') +
+            `<span class="city-pin-ct">${d.count ?? ''}</span>` +
             `<span class="pin-label">${esc(d.label)}</span>`;
           el.onclick = (ev) => {
             ev.stopPropagation();
@@ -357,7 +374,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       });
 
     world.htmlElementsData(globePins);
-    world.pointOfView({ lat: 22, lng: 8, altitude: 2.4 }, 0);
+    world.pointOfView({ lat: 22, lng: 8, altitude: 1.9 }, 0);
     const controls = world.controls();
     controls.autoRotate = !reduceMotion;
     if (reduceMotion) setSpinning(false);
@@ -512,7 +529,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     const world = worldRef.current;
     setSelected(null);
     if (!world) return;
-    world.pointOfView({ lat: 22, lng: 8, altitude: 2.4 }, 900);
+    world.pointOfView({ lat: 22, lng: 8, altitude: 1.9 }, 900);
     world.controls().autoRotate = true;
     setSpinning(true);
     seedRings(null);
