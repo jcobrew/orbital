@@ -163,6 +163,11 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   const worldRef = useRef<GlobeInstance>(null);
   // Currently hovered country polygon (for the hover highlight + pointer cursor).
   const hoverPolyRef = useRef<unknown>(null);
+  // Timestamp of the last press on a city marker. globe.gl resolves country
+  // clicks by raycasting the polygon mesh on the canvas, independent of the DOM,
+  // so a marker's stopPropagation can't block the country behind it — we instead
+  // suppress the polygon click when it lands right after a marker press.
+  const markerPressRef = useRef(0);
   const [selected, setSelected] = useState<Program | null>(null);
   const [spinning, setSpinning] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -309,6 +314,8 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       )
       .polygonAltitude(0.01)
       .onPolygonClick((feat: unknown) => {
+        // Ignore the polygon hit that fires underneath a city marker press.
+        if (Date.now() - markerPressRef.current < 400) return;
         const name = countryFromFeature(feat as never);
         if (name) openCountry(countrySlug(name));
       })
@@ -352,6 +359,10 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
           el.innerHTML =
             `<span class="city-pin-ct">${d.count ?? ''}</span>` +
             `<span class="pin-label">${esc(d.label)}</span>`;
+          // Mark the press so the polygon click raycast underneath is ignored.
+          el.onpointerdown = () => {
+            markerPressRef.current = Date.now();
+          };
           el.onclick = (ev) => {
             ev.stopPropagation();
             openCity(d.id);
@@ -362,6 +373,10 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         el.className = 'pin';
         el.style.setProperty('--ring', statusMeta(d.status).color);
         el.innerHTML = `<div class="pin-inner">${logoMarkupHTML(d.name, d.domain)}</div><span class="pin-label">${esc(d.name)}</span>`;
+        // Mark the press so the polygon click raycast underneath is ignored.
+        el.onpointerdown = () => {
+          markerPressRef.current = Date.now();
+        };
         el.onclick = (ev) => {
           ev.stopPropagation();
           openDetail(d);
