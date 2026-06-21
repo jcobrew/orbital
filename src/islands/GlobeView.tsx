@@ -85,19 +85,37 @@ const RING_SEEDS = CLUSTERS.map((c) => ({
 }));
 
 function jitter(arr: Program[]) {
-  const seen: Record<string, number> = {};
+  // Pins are a fixed pixel size, so any two programs sitting within a degree or
+  // so of each other (e.g. FR8 in Espoo and Founders House in Helsinki) render
+  // as one overlapping blob on the globe — not just exact-coordinate dupes.
+  // Group every set of near-neighbours and fan them out evenly around the
+  // group's centre so each reads as a distinct node.
+  //
+  // Programs inside a defined dense-cluster box are skipped: they collapse into
+  // that city's minimap, and nudging them could change the box's program count
+  // (which drives the minimap threshold).
+  const PROX = 0.9; // ≈ how close two programs must be to collide as pins
+  const SPREAD = 0.5; // ring radius the group fans out to
+  type Cluster = { lat: number; lng: number; members: Program[] };
+  const clusters: Cluster[] = [];
   arr.forEach((p) => {
-    const k = p.lat.toFixed(4) + ',' + p.lng.toFixed(4);
-    if (seen[k]) {
-      const n = seen[k]++;
-      const a = n * 2.3;
-      // Pairs (a single duplicate) still read as one blob at the old radius, so
-      // give the first offset more room; later duplicates collapse into a
-      // minimap anyway, so they keep the tighter spiral.
-      const r = n === 1 ? 0.3 : 0.16;
-      p.lat += r * Math.cos(a);
-      p.lng += r * Math.sin(a);
-    } else seen[k] = 1;
+    if (CLUSTERS.some((c) => inBounds(p, c.bounds))) return;
+    const near = clusters.find(
+      (cl) => Math.abs(cl.lat - p.lat) < PROX && Math.abs(cl.lng - p.lng) < PROX,
+    );
+    if (near) near.members.push(p);
+    else clusters.push({ lat: p.lat, lng: p.lng, members: [p] });
+  });
+  clusters.forEach((c) => {
+    if (c.members.length < 2) return;
+    const cLat = c.members.reduce((s, p) => s + p.lat, 0) / c.members.length;
+    const cLng = c.members.reduce((s, p) => s + p.lng, 0) / c.members.length;
+    const step = (2 * Math.PI) / c.members.length;
+    c.members.forEach((p, i) => {
+      const a = i * step;
+      p.lat = cLat + SPREAD * Math.cos(a);
+      p.lng = cLng + SPREAD * Math.sin(a);
+    });
   });
 }
 
@@ -362,7 +380,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       });
 
     world.htmlElementsData(globePins);
-    world.pointOfView({ lat: 22, lng: 8, altitude: 2.4 }, 0);
+    world.pointOfView({ lat: 22, lng: 8, altitude: 1.9 }, 0);
     const controls = world.controls();
     controls.autoRotate = !reduceMotion;
     if (reduceMotion) setSpinning(false);
@@ -517,7 +535,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     const world = worldRef.current;
     setSelected(null);
     if (!world) return;
-    world.pointOfView({ lat: 22, lng: 8, altitude: 2.4 }, 900);
+    world.pointOfView({ lat: 22, lng: 8, altitude: 1.9 }, 900);
     world.controls().autoRotate = true;
     setSpinning(true);
     seedRings(null);
