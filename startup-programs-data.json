@@ -989,6 +989,22 @@
       "domain": "join-thebridge.com",
       "url": "https://www.join-thebridge.com/",
       "highlight": "EF's relocation residency — cofounder matching that moves into an SF hacker house for 8 weeks."
+    },
+    {
+      "name": "Boost VC",
+      "type": "Accelerator → Residency",
+      "city": "San Mateo",
+      "country": "USA",
+      "lat": 37.563,
+      "lng": -122.3255,
+      "focus": "Sci-fi / deep tech — crypto, space, biotech, robotics, AR/VR, AI",
+      "operator": "Boost VC (Adam Draper & Brayton Williams)",
+      "stage": "Pre-seed",
+      "status": "rolling",
+      "status_detail": "3-month live-in accelerator, twice/yr (~20 startups/Tribe, now ~Tribe 18). $500K for equity; founders housed together at Draper University across from the incubator. Rolling apps between Tribes.",
+      "domain": "boost.vc",
+      "url": "https://www.boost.vc/apply",
+      "highlight": "One of the original live-in accelerators — founders move into Draper University and build together for a full Tribe."
     }
   ]
 }
