@@ -1,14 +1,14 @@
 ---
-name: founder-atlas-refresh
+name: update-programs
 description: >-
-  Refresh the Founder Atlas program datasets. Use when asked to update, refresh,
+  Update the Founder Atlas program datasets. Use when asked to update, refresh,
   re-verify, or add to the founder-program data (startup-programs-data.json /
   traditional-programs-data.json) — whether run interactively or from a scheduled
   routine. Gathers via web research, verifies, dedupes against existing entries,
   edits the JSON, and opens a DRAFT PR. Never pushes data straight to the live site.
 ---
 
-# Founder Atlas — data refresh
+# Founder Atlas — update programs
 
 You are maintaining the data behind a public, auto-deploying map of founder programs.
 The two JSON files are the **single source of truth** and Vercel deploys `master` on
@@ -33,6 +33,24 @@ desks, mentoring, and cheques with no live-in/relocation → traditional. Antler
 a16z Speedrun, Sequoia Arc, Techstars, Betaworks, On Deck, Z Fellows, HAX, etc. are
 **traditional**. When unsure which file an entry belongs in, flag it in the PR rather
 than guessing.
+
+### The two files are NOT maintained equally
+
+Residential is the product; traditional is context and a funnel. Spend effort
+accordingly:
+
+- **`startup-programs-data.json` (residential) — actively curated.** This gets the
+  full treatment every run: status re-verification, rolling re-checks, new-program
+  discovery, hybrid hunting, geographic gap-filling. This is where the routine's
+  budget goes.
+- **`traditional-programs-data.json` (traditional) — lightly maintained reference
+  layer.** It exists to (a) give the residential map a "compared to what?" contrast
+  and (b) serve as the **funnel where future residencies first appear**. Only touch a
+  traditional entry when something *material* changes (program shut down, moved,
+  renamed). **Do not** spend the run re-verifying every accelerator's batch dates —
+  that is the lowest-value, highest-volume work in the dataset.
+
+Keep traditional *complete enough to be a credible baseline*, not *fresh to the day*.
 
 ### Hybrid programs (accelerator/matching → residency)
 
@@ -122,17 +140,31 @@ coordinates. A city-center coordinate is fine — the UI jitters overlapping pin
    - If the apply page is dead / domain parked / no live presence → do not silently
      keep `rolling`; flag it in "Needs human review" as possibly defunct.
    Treat a `rolling` tag as "unverified default until checked," not as settled.
-5. **Add clearly-verified new programs** to the correct file, using the schema.
+   **Prioritize residential `rolling` entries.** Traditional ones are the reference
+   layer — only re-check a traditional entry if you're already looking at it for
+   another reason (see the maintenance tiers above).
+5. **Run the promotion scan (traditional → residential).** The traditional file is
+   the funnel where future residencies first appear. Quickly scan it for any program
+   that has **added a required relocation + co-living phase** since it was last
+   reviewed (the EF → The Bridge pattern). For any candidate:
+   - Confirm the live-in phase is genuine and required (apply the hybrid bar, not an
+     optional trip).
+   - **Propose** the promotion in the PR — either add a residential hybrid entry with
+     an arrow `type` and its own `domain` (parent stays in traditional), or flag it for
+     review if co-living is unconfirmed. Do **not** move programs across the boundary
+     silently. Current watchlist: *Entrepreneurs First* (main program now relocates the
+     cohort to SF — promote only if that phase becomes confirmed co-living).
+6. **Add clearly-verified new programs** to the correct file, using the schema.
    - Skip anything you cannot corroborate on the program's own site or two
      independent sources.
    - De-dupe: do not add a program whose `name` or `domain` already exists.
-6. **Flag, don't guess.** Anything uncertain — unverifiable existence, ambiguous
+7. **Flag, don't guess.** Anything uncertain — unverifiable existence, ambiguous
    residential-vs-traditional classification, missing coordinates, suspected
    duplicate — goes in the **PR body as a checklist**, not silently into the data.
    (Precedent: "Threshold (UK)" was kept out / clearly labelled because it had no
    verifiable public presence.)
-7. **Validate** the JSON parses and the schema is intact (see Validation).
-8. **Open a draft PR** (see Output).
+8. **Validate** the JSON parses and the schema is intact (see Validation).
+9. **Open a draft PR** (see Output).
 
 ## Scope guardrails (important for unattended runs)
 
@@ -182,6 +214,9 @@ Commit to the working branch and open a **draft** PR. Body template:
 
 ### Rolling re-verified (<n> checked, <m> changed)
 - <Program> — re-confirmed rolling | changed to <status> — <source URL>
+
+### Promotions traditional → residential (<n>)
+- <Program> — added residential hybrid entry / flagged for review — <source URL>
 
 ### Needs human review
 - [ ] <uncertain item + why>
