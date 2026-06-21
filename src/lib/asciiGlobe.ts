@@ -14,7 +14,7 @@ export interface AsciiRendererOptions {
   cell?: number;
   /** Frame cap. The globe auto-rotates slowly, so 30fps is plenty. */
   fps?: number;
-  /** Tint each glyph by the sampled pixel colour (else paint near-white). */
+  /** Tint each glyph by the sampled pixel colour. Off by default → grayscale. */
   colored?: boolean;
 }
 
@@ -26,16 +26,22 @@ export interface AsciiRenderer {
   destroy(): void;
 }
 
-const DEFAULT_RAMP = ' .,:;-=+*oO%#@';
+// Dark→light glyph ramp, roughly ordered by ink coverage. The wider, more
+// varied character set gives the globe surface texture instead of reading as a
+// flat field of one or two symbols.
+const DEFAULT_RAMP = ' .,:;~-+=<>i!lrcvznutfjoeswmICUXZ0Q*#%8B&WM@';
 // Monospace advance width is ~0.6× the font size; keeps the globe un-squished.
 const CHAR_ASPECT = 0.6;
+// Gamma < 1 lifts the midtones so the mostly-grey land spreads across the ramp
+// (more grey gradient + glyph variety) rather than clamping to the bright end.
+const GAMMA = 0.72;
 
 export function createAsciiRenderer(opts: AsciiRendererOptions): AsciiRenderer {
   const { source, target } = opts;
   const ramp = opts.ramp ?? DEFAULT_RAMP;
   const fontPx = Math.max(6, opts.cell ?? 11);
   const colWidth = Math.max(3, Math.round(fontPx * CHAR_ASPECT));
-  const colored = opts.colored ?? true;
+  const colored = opts.colored ?? false;
   const minFrameMs = 1000 / (opts.fps ?? 30);
 
   const tctx = target.getContext('2d')!;
@@ -95,13 +101,20 @@ export function createAsciiRenderer(opts: AsciiRendererOptions): AsciiRenderer {
         const g = px[i + 1];
         const b = px[i + 2];
         const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-        if (lum < 0.04) continue; // deep-shadow ocean → empty for contrast
-        const ch = ramp[Math.min(lastIdx, Math.round(lum * lastIdx))];
+        if (lum < 0.03) continue; // deep-shadow ocean → empty for contrast
+        // Gamma-spread brightness drives both the glyph and its grey level, so
+        // texture and shade move together as a coherent grayscale gradient.
+        const shade = Math.pow(lum, GAMMA);
+        const ch = ramp[Math.min(lastIdx, Math.round(shade * lastIdx))];
         if (ch === ' ') continue;
-        // Lift very dark tints so coloured glyphs stay visible on black.
-        tctx.fillStyle = colored
-          ? `rgb(${Math.max(r, 60)},${Math.max(g, 60)},${Math.max(b, 60)})`
-          : 'rgba(244,244,244,0.92)';
+        if (colored) {
+          // Lift very dark tints so coloured glyphs stay visible on black.
+          tctx.fillStyle = `rgb(${Math.max(r, 60)},${Math.max(g, 60)},${Math.max(b, 60)})`;
+        } else {
+          // Grayscale: map shade to a grey floored at ~36 so dim cells still read.
+          const v = 36 + Math.round(shade * 219);
+          tctx.fillStyle = `rgb(${v},${v},${v})`;
+        }
         tctx.fillText(ch, x * colWidth, y * fontPx);
       }
     }
