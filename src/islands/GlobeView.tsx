@@ -143,11 +143,6 @@ const IconReset = () => (<svg {...svg}><circle cx="8" cy="8" r="5.3" /><path d="
 const IconMinimap = () => (<svg {...svg}><path d="M2 4.3l4-1.6 4 1.6 4-1.6v9l-4 1.6-4-1.6-4 1.6z" /><path d="M6 2.7v9M10 4.3v9" /></svg>);
 const IconLegend = () => (<svg {...svg}><circle cx="3.3" cy="4" r="1.3" /><circle cx="3.3" cy="8" r="1.3" /><circle cx="3.3" cy="12" r="1.3" /><path d="M6.6 4h7.4M6.6 8h7.4M6.6 12h7.4" /></svg>);
 
-// HTML-string twin of <IconMinimap> for the clickable city markers rendered as
-// globe.gl htmlElements (which take raw DOM, not React).
-const MINIMAP_SVG =
-  '<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.3l4-1.6 4 1.6 4-1.6v9l-4 1.6-4-1.6-4 1.6z"/><path d="M6 2.7v9M10 4.3v9"/></svg>';
-
 // Escape user/data strings before injecting into the imperative pin markup.
 const esc = (s: string) =>
   s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] as string);
@@ -355,8 +350,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
           const el = document.createElement('div');
           el.className = 'city-pin';
           el.innerHTML =
-            `<span class="city-pin-ic">${MINIMAP_SVG}</span>` +
-            (d.count ? `<span class="city-pin-ct">${d.count}</span>` : '') +
+            `<span class="city-pin-ct">${d.count ?? ''}</span>` +
             `<span class="pin-label">${esc(d.label)}</span>`;
           el.onclick = (ev) => {
             ev.stopPropagation();
