@@ -89,15 +89,15 @@ Funding/Mentorship/InvestorAccess/DemoDay/VisaSupport), \`applyUrl\`, \`sourceUr
 The [Dashboard](/dashboard) renders the full map as a semantic, sortable table with
 schema.org JSON-LD per program. Drive it entirely by query params (filters compose with AND):
 
-- \`type\` = canonical program-type ID (the primary axis; see \`facets.canonicalType\` in the API)
 - \`q\` = free-text match over name, city, country, focus, operator, type
-- \`country\` = exact country (see \`facets.country\`)
+- \`model\` = living/working axis: \`co-living\` | \`co-working\` | \`both\`
+- \`country\` = exact country (repeatable for OR; see \`facets.country\`)
 - \`status\` = one of the status enum values
-- \`focus\` = free-text match within the focus field
-- \`sort\` = column to sort by (\`name\`, \`type\`, \`country\`, \`status\`, ...)
+- \`sort\` = column to sort by (\`name\`, \`type\`, \`canonicalType\`, \`city\`, \`country\`, \`status\`, \`focus\`, \`stage\`), with \`dir=-1\` to reverse
 
-Example: \`/dashboard?type=accelerator&country=USA&status=open\` opens pre-filtered to open US accelerators.
+Example: \`/dashboard?model=co-living&country=USA&status=open\` opens pre-filtered to open US co-living houses.
 Any filter state is reflected back into the URL, so a dashboard URL is a shareable deep link.
+To filter by program type/category, query the [JSON API](/api/programs.json) (\`facets.canonicalType\`) directly.
 
 ## Country ecosystem profiles
 
@@ -116,8 +116,8 @@ cloud database without changing the API shape.
 
 Every page shares one header: brand · a Globe / List view toggle · Countries · About.
 
-- [Globe](/): 3D globe — the desktop entry point (small screens redirect to the list). Programs
-  panel, dense-city minimaps and the status legend are toggleable overlays.
+- [Globe](/): 3D globe — the entry point on every device. Programs panel, dense-city minimaps and
+  the status legend are toggleable overlays; where WebGL is unavailable it falls back to a list-view link.
 - [List](/explore): searchable, filterable card list with a program detail drawer.
 - [Map](/map): 2D interactive Leaflet map of the same data (also powers the globe's city minimaps).
 - [About](/about): what Orbital is + a guide to the co-living program types.
@@ -125,8 +125,8 @@ Every page shares one header: brand · a Globe / List view toggle · Countries �
 Each program also has a dedicated profile page at \`/programs/<slug>\` (slug = lowercased name,
 non-alphanumerics → hyphens), with schema.org \`EducationalOccupationalProgram\` JSON-LD.
 
-The /explore page accepts the same query params as the dashboard (\`q\`, \`type\`, \`country\`, \`status\`,
-\`focus\`, plus \`format\` (living model), \`stage\`, \`sector\`, \`housing\`), e.g. \`/explore?q=residency&country=USA\`.
+The /explore page accepts the same filter query params as the dashboard (\`q\`, \`model\`, \`country\`,
+\`status\`), e.g. \`/explore?model=co-living&country=USA\`.
 `;
 
 export const GET: APIRoute = () =>
