@@ -579,8 +579,11 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     setSelected(null);
     if (!world) return;
     world.pointOfView({ lat: 22, lng: 8, altitude: 1.9 }, 900);
-    world.controls().autoRotate = true;
-    setSpinning(true);
+    // Honor prefers-reduced-motion: don't force the globe back into auto-rotate
+    // for users who opted out of motion.
+    const resume = !prefersReducedMotion();
+    world.controls().autoRotate = resume;
+    setSpinning(resume);
     seedRings(null);
   }
 
