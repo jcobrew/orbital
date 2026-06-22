@@ -3,6 +3,7 @@ import { useStore } from '@nanostores/react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Program } from '../data/programs';
+import { withOriginPins } from '../data/programs';
 import { passes, defaultSort } from '../lib/filter';
 import { statusMeta, STATUS_ORDER } from '../lib/status';
 import { logoMarkupHTML, installLogoFallback } from '../lib/logo';
@@ -59,41 +60,48 @@ const esc = (s: string) =>
 
 function popupHTML(p: Program): string {
   const s = statusMeta(p.status);
-  const r = (ic: string, label: string, val: string) =>
-    `<div class="row"><span class="ic">${ic}</span><div><b>${label}</b>${val}</div></div>`;
+  const r = (label: string, val: string) =>
+    `<div class="row"><div><b>${label}</b>${val}</div></div>`;
   return `<div class="pop">
     <div class="pop-head"><div class="pop-logo">${logoMarkupHTML(p.name, p.domain)}</div>
       <div><div class="pop-title">${p.name}</div><div class="pop-type">${p.type}</div></div></div>
     <span class="badge" style="background:${s.color}"><span class="k"></span>${s.label}</span>
     <div class="rows">
-      ${r('📍', 'Location: ', p.city + ', ' + p.country)}
-      ${r('🎯', 'Focus: ', p.focus)}
-      ${r('🧭', 'Run by: ', p.operator || 'Not publicly listed')}
-      ${r('🌱', 'Stage: ', p.stage)}
-      ${p.status_detail ? r('📋', 'Details: ', p.status_detail) : ''}
+      ${r('Location: ', p.city + ', ' + p.country)}
+      ${r('Focus: ', p.focus)}
+      ${r('Run by: ', p.operator || 'Not publicly listed')}
+      ${r('Stage: ', p.stage)}
+      ${p.status_detail ? r('Details: ', p.status_detail) : ''}
     </div>
     ${p.highlight ? `<div class="hl">${p.highlight}</div>` : ''}
     <a class="pop-link" href="${p.url}" target="_blank" rel="noopener">Visit program →</a>
   </div>`;
 }
 
-const keyOf = (p: Program) => (p.canonicalType ?? 'other') + '|' + p.name;
+const keyOf = (p: Program) =>
+  (p.canonicalType ?? 'other') + '|' + p.name + (p.isOriginPin ? '|origin' : '');
 
 export default function MapView({ programs }: { programs: Program[] }) {
   const filters = useStore($filters);
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markers = useRef<Map<string, L.Marker>>(new Map());
+  // Connecting lines from a hybrid program's primary pin to its origin pin,
+  // keyed by the program's primary key so visibility can track the program.
+  const originLines = useRef<Map<string, L.Polyline>>(new Map());
   const insetsRef = useRef<{ cfg: (typeof CLUSTERS)[number]; card: HTMLElement; mini: L.Map; members: Program[] }[]>([]);
   const insetCovered = useRef<Set<string>>(new Set());
   const leaderSvgRef = useRef<SVGSVGElement | null>(null);
 
-  // jitter once
-  const data = useMemo(() => {
-    const copy = programs.map((p) => ({ ...p }));
+  // Expand into pins (primary + optional origin twin) and jitter once. The
+  // sidebar list and counts use `data` (primaries only) so each program shows a
+  // single row; the map renders every pin in `pins`.
+  const pins = useMemo(() => {
+    const copy = withOriginPins(programs).map((p) => ({ ...p }));
     jitter(copy);
     return copy;
   }, [programs]);
+  const data = useMemo(() => pins.filter((p) => !p.isOriginPin), [pins]);
 
   const shown = useMemo(() => defaultSort(data.filter((p) => passes(p, filters))), [data, filters]);
 
@@ -122,8 +130,9 @@ export default function MapView({ programs }: { programs: Program[] }) {
     tint.className = 'map-tint';
     map.getContainer().appendChild(tint);
     const markerLayer = L.layerGroup().addTo(map);
+    const lineLayer = L.layerGroup().addTo(map);
 
-    data.forEach((p) => {
+    pins.forEach((p) => {
       const color = statusMeta(p.status).color;
       const icon = L.divIcon({
         className: '',
@@ -136,6 +145,21 @@ export default function MapView({ programs }: { programs: Program[] }) {
       m.bindPopup(popupHTML(p), { maxWidth: 320 });
       m.addTo(markerLayer);
       markers.current.set(keyOf(p), m);
+    });
+
+    // Link each hybrid program's two pins so the origin → host hop reads clearly.
+    pins.forEach((p) => {
+      if (!p.isOriginPin) return;
+      const primary = data.find((d) => d.name === p.name && d.canonicalType === p.canonicalType);
+      if (!primary) return;
+      const line = L.polyline(
+        [
+          [primary.lat, primary.lng],
+          [p.lat, p.lng],
+        ],
+        { color: statusMeta(p.status).color, weight: 1.5, opacity: 0.5, dashArray: '4 5', interactive: false },
+      ).addTo(lineLayer);
+      originLines.current.set((primary.canonicalType ?? 'other') + '|' + primary.name, line);
     });
 
     // legend
@@ -166,9 +190,10 @@ export default function MapView({ programs }: { programs: Program[] }) {
       map.remove();
       mapRef.current = null;
       markers.current.clear();
+      originLines.current.clear();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }, [pins]);
 
   // ---- inset (off-coast callout) system ----
   function inBounds(p: Program, b: readonly (readonly number[])[]) {
@@ -304,7 +329,9 @@ export default function MapView({ programs }: { programs: Program[] }) {
   // ---- react to filter changes: toggle marker visibility + rebuild insets ----
   useEffect(() => {
     if (!mapRef.current) return;
-    const pass = new Set(shown.map(keyOf));
+    // Origin twins share their primary's fields, so the same predicate keeps a
+    // program's two pins (and the line between them) in lockstep.
+    const pass = new Set(pins.filter((p) => passes(p, filters)).map(keyOf));
     markers.current.forEach((m, k) => {
       const mk = m as L.Marker & { _icon?: HTMLElement };
       const ok = pass.has(k);
@@ -314,6 +341,7 @@ export default function MapView({ programs }: { programs: Program[] }) {
         mk._icon.style.display = ok ? '' : 'none';
       }
     });
+    originLines.current.forEach((line, k) => line.setStyle({ opacity: pass.has(k) ? 0.5 : 0 }));
     buildInsets(shown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shown]);

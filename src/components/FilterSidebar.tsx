@@ -158,7 +158,7 @@ export default function FilterSidebar({
               title="Copy a link to this exact filtered view"
               className="inline-flex items-center gap-1.5 rounded-full border border-line2 bg-[rgba(16,16,16,.6)] px-3.5 py-2.5 text-[12.5px] font-semibold text-text transition hover:border-a1"
             >
-              🔗 Copy link
+              Copy link
             </button>
             <a
               href="/api/programs.json"

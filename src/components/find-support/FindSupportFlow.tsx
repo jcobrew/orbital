@@ -244,7 +244,7 @@ export default function FindSupportFlow({ programs }: { programs: Program[] }) {
             onClick={copyLink}
             className="rounded-full border border-line2 bg-[rgba(16,16,16,.6)] px-3.5 py-2 text-[12.5px] font-semibold text-text transition hover:border-a1"
           >
-            🔗 Copy results link
+            Copy results link
           </button>
           <button
             onClick={() => {

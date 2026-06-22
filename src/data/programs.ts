@@ -63,6 +63,16 @@ export interface Program {
   country: string;
   lat: number;
   lng: number;
+  /**
+   * Optional second ("origin") location for hybrid/relocation programs that
+   * begin in one country and run in another (e.g. Silta: Helsinki → SF). When
+   * set, the map/globe render a second pin at the origin so the program is
+   * visible from both ends. `originCity`/`originCountry` label that pin.
+   */
+  originLat?: number;
+  originLng?: number;
+  originCity?: string;
+  originCountry?: string;
   focus: string;
   operator: string;
   stage: string;
@@ -119,6 +129,40 @@ export interface Program {
   mvp?: boolean;
   /** MVP ecosystem tag, e.g. "finland-nordics", "estonia", "uk" (set by Stream 3). */
   ecosystem?: string;
+
+  /**
+   * Runtime-only marker (never stored in the JSON source): set on the synthetic
+   * "twin" record produced by {@link withOriginPins} so the views can tell an
+   * origin pin apart from the primary one. The twin carries the same program
+   * data, repositioned at the origin coordinates.
+   */
+  isOriginPin?: boolean;
+}
+
+/**
+ * Expand a program list into a render-ready pin list: every program passes
+ * through unchanged, and any program carrying `originLat`/`originLng` also
+ * yields a second "twin" positioned at its origin (`isOriginPin: true`). Both
+ * pins keep the same name/domain/url so popups and the detail panel render the
+ * same program from either end. Used only for map/globe markers — sidebar lists
+ * and counts stay on the un-expanded program list so they show one row each.
+ */
+export function withOriginPins(programs: Program[]): Program[] {
+  const out: Program[] = [];
+  for (const p of programs) {
+    out.push(p);
+    if (typeof p.originLat === 'number' && typeof p.originLng === 'number') {
+      out.push({
+        ...p,
+        lat: p.originLat,
+        lng: p.originLng,
+        city: p.originCity ?? p.city,
+        country: p.originCountry ?? p.country,
+        isOriginPin: true,
+      });
+    }
+  }
+  return out;
 }
 
 /** URL slug for a program (mirrors countrySlug in countries.ts). */
@@ -277,6 +321,10 @@ export const API_SCHEMA: Record<string, string> = {
   country: 'Country',
   lat: 'Latitude (number)',
   lng: 'Longitude (number)',
+  originLat: 'Latitude of the optional origin location (hybrid/relocation programs)',
+  originLng: 'Longitude of the optional origin location (hybrid/relocation programs)',
+  originCity: 'City of the optional origin location',
+  originCountry: 'Country of the optional origin location',
   focus: 'Areas of focus (comma-separated text)',
   operator: 'Organization or person running the program',
   stage: 'Founder stage served (e.g. Pre-seed / very early)',
