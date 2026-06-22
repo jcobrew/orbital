@@ -4,7 +4,7 @@ import Globe from 'globe.gl';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Program } from '../data/programs';
-import { programModel } from '../data/programs';
+import { programModel, withOriginPins } from '../data/programs';
 import { passes, defaultSort } from '../lib/filter';
 import { statusMeta, STATUS_ORDER } from '../lib/status';
 import { logoMarkupHTML, installLogoFallback } from '../lib/logo';
@@ -245,9 +245,28 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   // into the cluster's minimap button), plus the city markers themselves.
   const globePins = useMemo(() => {
     const loose = shown.filter((p) => !denseClusters.some((c) => inBounds(p, c.bounds)));
+    // Origin twins for hybrid/relocation programs always show as standalone
+    // pins (even when their host city collapses into a minimap), so the program
+    // is clickable from its origin end too.
+    const originTwins = withOriginPins(shown).filter((p) => p.isOriginPin);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return [...(loose as any[]), ...cityMarkers];
+    return [...(loose as any[]), ...(originTwins as any[]), ...cityMarkers];
   }, [shown, denseClusters, cityMarkers]);
+
+  // Arcs linking each hybrid program's origin to its host city.
+  const arcs = useMemo(
+    () =>
+      shown
+        .filter((p) => typeof p.originLat === 'number' && typeof p.originLng === 'number')
+        .map((p) => ({
+          startLat: p.originLat as number,
+          startLng: p.originLng as number,
+          endLat: p.lat,
+          endLng: p.lng,
+          color: statusMeta(p.status).color,
+        })),
+    [shown],
+  );
   const activeCluster = CLUSTERS.find((c) => c.id === activeCity) ?? CLUSTERS[0];
 
   function seedRings(focus: Program | null) {
@@ -400,6 +419,14 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       });
 
     world.htmlElementsData(globePins);
+    world
+      .arcColor('color')
+      .arcStroke(0.5)
+      .arcAltitudeAutoScale(0.4)
+      .arcDashLength(0.5)
+      .arcDashGap(0.25)
+      .arcDashAnimateTime(reduceMotion ? 0 : 2600)
+      .arcsData(arcs);
     world.pointOfView({ lat: 22, lng: 8, altitude: 1.9 }, 0);
     const controls = world.controls();
     controls.autoRotate = !reduceMotion;
@@ -500,6 +527,11 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   useEffect(() => {
     if (worldRef.current) worldRef.current.htmlElementsData(globePins);
   }, [globePins]);
+
+  // keep origin→host arcs in sync with the filtered set
+  useEffect(() => {
+    if (worldRef.current) worldRef.current.arcsData(arcs);
+  }, [arcs]);
 
   // ---- city minimaps: build the active one lazily, keep markers in sync ----
   // Only while the dock is open; tear the Leaflet maps down when it closes so
@@ -726,11 +758,11 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
                 <StatusBadge status={selected.status} full />
               </div>
               <div className="orbit-meta">
-                <div className="text-text">📍 {selected.city}, {selected.country}</div>
-                <div>🎯 {selected.focus}</div>
-                <div>🧭 {selected.operator || 'Not publicly listed'}</div>
-                <div>🌱 {selected.stage}</div>
-                {selected.status_detail && <div>📋 {selected.status_detail}</div>}
+                <div className="text-text"><b>Location: </b>{selected.city}, {selected.country}</div>
+                <div><b>Focus: </b>{selected.focus}</div>
+                <div><b>Run by: </b>{selected.operator || 'Not publicly listed'}</div>
+                <div><b>Stage: </b>{selected.stage}</div>
+                {selected.status_detail && <div><b>Details: </b>{selected.status_detail}</div>}
               </div>
               {selected.highlight && <div className="orbit-highlight">{selected.highlight}</div>}
               <a

@@ -75,6 +75,10 @@ export const PROGRAM_SCHEMA: SchemaField[] = [
   { field: 'city', meaning: 'City when physical.', requirement: 'optional', kind: 'legacy', type: 'string' },
   { field: 'lat', meaning: 'Latitude.', requirement: 'optional', kind: 'legacy', type: 'number' },
   { field: 'lng', meaning: 'Longitude.', requirement: 'optional', kind: 'legacy', type: 'number' },
+  { field: 'originLat', meaning: 'Latitude of an optional second "origin" location for hybrid/relocation programs (renders a second pin).', requirement: 'optional', kind: 'legacy-optional', type: 'number' },
+  { field: 'originLng', meaning: 'Longitude of the optional origin location.', requirement: 'optional', kind: 'legacy-optional', type: 'number' },
+  { field: 'originCity', meaning: 'City label for the optional origin location.', requirement: 'optional', kind: 'legacy-optional', type: 'string' },
+  { field: 'originCountry', meaning: 'Country label for the optional origin location.', requirement: 'optional', kind: 'legacy-optional', type: 'string' },
   { field: 'region', meaning: 'Broader region grouping.', requirement: 'optional', kind: 'legacy-optional', type: 'string' },
 
   // ---- Legacy descriptors (free-text, kept working) ----
