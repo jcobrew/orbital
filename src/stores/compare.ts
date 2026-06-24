@@ -1,8 +1,8 @@
-// Compare selection — an ephemeral set of program slugs the user is weighing
-// side-by-side. Independent of saving (quick, one-off comparisons). Persisted to
-// sessionStorage so it survives cross-page navigation within a session (Astro is
-// MPA = full reloads) but is intentionally not permanent. Capped so the
-// side-by-side table stays legible.
+// Compare selection — the set of program slugs the user is weighing side-by-side.
+// Independent of the saved shortlist. Persisted to localStorage (and synced across
+// tabs) so a selection survives navigation and reloads — Orbital is an MPA, so
+// every click is a full page load. Capped so the side-by-side table stays legible.
+// "Clear" empties it.
 import { atom } from 'nanostores';
 
 const KEY = 'fa_compare';
@@ -23,7 +23,7 @@ export function closeCompare(): void {
 
 function read(): string[] {
   try {
-    const raw = sessionStorage.getItem(KEY);
+    const raw = localStorage.getItem(KEY);
     if (!raw) return [];
     const v = JSON.parse(raw);
     return Array.isArray(v) ? v.filter((s): s is string => typeof s === 'string').slice(0, COMPARE_MAX) : [];
@@ -34,18 +34,23 @@ function read(): string[] {
 
 function persist(v: string[]): void {
   try {
-    sessionStorage.setItem(KEY, JSON.stringify(v));
+    localStorage.setItem(KEY, JSON.stringify(v));
   } catch {
     /* ignore */
   }
 }
 
 let hydrated = false;
-/** Load from sessionStorage once (idempotent across islands). */
+/** Load from localStorage once (idempotent across islands); keep tabs in sync. */
 export function initCompare(): void {
   if (hydrated) return;
   hydrated = true;
   $compare.set(read());
+  if (typeof window !== 'undefined') {
+    window.addEventListener('storage', (e) => {
+      if (e.key === KEY) $compare.set(read());
+    });
+  }
 }
 
 /** Can this slug still be added? (already-selected always returns true). */
