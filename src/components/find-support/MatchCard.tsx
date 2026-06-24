@@ -3,7 +3,10 @@ import { programSlug } from '../../data/programs';
 import type { ProgramMatch } from '../../lib/matching';
 import Logo from '../Logo';
 import StatusBadge from '../StatusBadge';
+import CompareButton from '../CompareButton';
 import { applyHref } from '../ProgramCard';
+import { noteApplyIntent } from '../../stores/applyIntent';
+import { applyUrgency } from '../../lib/applyUrgency';
 
 /** Apply-link target, reusing ProgramCard's helper (read-only import). */
 
@@ -36,6 +39,8 @@ export default function MatchCard({
   onSelect: (p: Program) => void;
 }) {
   const disqualified = m.disqualifiers.length > 0;
+  const slug = programSlug(p.name);
+  const urgency = applyUrgency(slug, p.status);
 
   return (
     <article
@@ -125,10 +130,17 @@ export default function MatchCard({
 
       {/* Footer: freshness + CTAs */}
       <div className="mt-auto flex items-center justify-between gap-2">
-        <span className="text-[10.5px] text-muted">
-          {p.lastVerified ? `Verified ${p.lastVerified}` : 'Not yet verified'}
+        <span className="min-w-0 truncate text-[10.5px] text-muted">
+          {urgency ? (
+            <span className="font-semibold text-a2">{urgency.label}</span>
+          ) : p.lastVerified ? (
+            `Verified ${p.lastVerified}`
+          ) : (
+            'Not yet verified'
+          )}
         </span>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
+          <CompareButton slug={slug} name={p.name} />
           <button
             onClick={() => onSelect(p)}
             className="rounded-full border border-line2 px-2.5 py-1.5 text-[11.5px] font-semibold text-text transition hover:border-a1"
@@ -139,6 +151,7 @@ export default function MatchCard({
             href={applyHref(p)}
             target="_blank"
             rel="noopener"
+            onClick={() => noteApplyIntent({ slug, name: p.name })}
             className="rounded-full border border-transparent px-2.5 py-1.5 text-[11.5px] font-bold text-[#0a0a0a] no-underline"
             style={{ background: 'var(--grad)' }}
           >

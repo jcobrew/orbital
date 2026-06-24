@@ -46,3 +46,12 @@ export function toggleSaved(slug: string): void {
   $saved.set(next);
   persist(next);
 }
+
+/** Add a slug to the shortlist if it isn't already there (idempotent). */
+export function addSaved(slug: string): void {
+  const cur = $saved.get();
+  if (cur.includes(slug)) return;
+  const next = [...cur, slug];
+  $saved.set(next);
+  persist(next);
+}

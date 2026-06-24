@@ -3,16 +3,21 @@ import { useStore } from '@nanostores/react';
 import type { Program } from '../data/programs';
 import { programSlug } from '../data/programs';
 import { $saved, initSaved } from '../stores/saved';
+import { $tracker, initTracker } from '../stores/tracker';
+import { TRACK_STAGES, trackStageMeta, DEFAULT_STAGE, type TrackStage } from '../lib/tracker';
 import { defaultSort } from '../lib/filter';
 import ProgramCard from './ProgramCard';
+import TrackControls from './TrackControls';
 import ProgramDetailDrawer from './ProgramDetailDrawer';
 
 export default function SavedList({ programs }: { programs: Program[] }) {
   const saved = useStore($saved);
+  const tracker = useStore($tracker);
   const [selected, setSelected] = useState<Program | null>(null);
 
   useEffect(() => {
     initSaved();
+    initTracker();
   }, []);
 
   const shown = useMemo(
@@ -20,10 +25,22 @@ export default function SavedList({ programs }: { programs: Program[] }) {
     [programs, saved],
   );
 
+  // Bucket the shortlist by tracked stage (untracked → the default "Interested").
+  const byStage = useMemo(() => {
+    const groups = new Map<TrackStage, Program[]>();
+    for (const stage of TRACK_STAGES) groups.set(stage, []);
+    for (const p of shown) {
+      const stage = tracker[programSlug(p.name)]?.stage ?? DEFAULT_STAGE;
+      groups.get(stage)!.push(p);
+    }
+    return groups;
+  }, [shown, tracker]);
+
   return (
     <div>
-      <div className="mb-3 text-[12px] font-semibold text-muted" aria-live="polite">
+      <div className="mb-4 text-[12px] font-semibold text-muted" aria-live="polite">
         {shown.length} saved place{shown.length === 1 ? '' : 's'}
+        {shown.length > 0 && ' · set a stage and a private note to track where you are'}
       </div>
 
       {shown.length === 0 ? (
@@ -45,10 +62,29 @@ export default function SavedList({ programs }: { programs: Program[] }) {
           </a>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {shown.map((p) => (
-            <ProgramCard key={(p.canonicalType ?? 'other') + '|' + p.name} program={p} onSelect={setSelected} />
-          ))}
+        <div className="flex flex-col gap-7">
+          {TRACK_STAGES.map((stage) => {
+            const items = byStage.get(stage)!;
+            if (items.length === 0) return null;
+            const meta = trackStageMeta(stage);
+            return (
+              <section key={stage}>
+                <div className="mb-2.5 flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full" style={{ background: meta.color }} aria-hidden="true" />
+                  <h2 className="m-0 font-display text-[14px] font-bold text-text">{meta.label}</h2>
+                  <span className="text-[11px] font-semibold text-muted">{items.length}</span>
+                </div>
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+                  {items.map((p) => (
+                    <div key={(p.canonicalType ?? 'other') + '|' + p.name} className="flex flex-col">
+                      <ProgramCard program={p} onSelect={setSelected} />
+                      <TrackControls slug={programSlug(p.name)} />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
         </div>
       )}
 

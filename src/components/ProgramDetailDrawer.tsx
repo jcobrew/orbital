@@ -3,7 +3,10 @@ import type { Program } from '../data/programs';
 import { programSlug } from '../data/programs';
 import Logo from './Logo';
 import StatusBadge from './StatusBadge';
+import CompareButton from './CompareButton';
 import { applyHref } from './ProgramCard';
+import { noteApplyIntent } from '../stores/applyIntent';
+import { applyUrgency } from '../lib/applyUrgency';
 import { livingModelLabel } from '../lib/living';
 import { UNKNOWN, displayVal as val, displayBool as boolVal, displayDuration as duration } from '../lib/display';
 
@@ -37,6 +40,8 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
 
   if (!p) return null;
   const sources = p.sourceUrls ?? [];
+  const slug = programSlug(p.name);
+  const urgency = applyUrgency(slug, p.status);
 
   return (
     <div className="fixed inset-0 z-[1000]" role="presentation">
@@ -60,28 +65,37 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
               <StatusBadge status={p.status} full />
             </div>
           </div>
-          <button
-            ref={closeRef}
-            onClick={onClose}
-            aria-label="Close"
-            className="rounded-sm border border-line2 px-2 py-1 text-[14px] leading-none text-muted hover:text-text"
-          >
-            ✕
-          </button>
+          <div className="flex flex-none items-center gap-1.5">
+            <CompareButton slug={slug} name={p.name} />
+            <button
+              ref={closeRef}
+              onClick={onClose}
+              aria-label="Close"
+              className="rounded-sm border border-line2 px-2 py-1 text-[14px] leading-none text-muted hover:text-text"
+            >
+              ✕
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto p-5">
           {/* CTAs */}
-          <div className="mb-5 flex flex-wrap gap-2">
+          <div className="mb-5 flex flex-wrap items-center gap-2">
             <a
               href={applyHref(p)}
               target="_blank"
               rel="noopener"
+              onClick={() => noteApplyIntent({ slug, name: p.name })}
               className="rounded-full border border-transparent px-4 py-2.5 font-display text-[13px] font-bold text-[#0a0a0a] no-underline"
               style={{ background: 'var(--grad)' }}
             >
               {p.applyUrl ? 'Apply' : 'Visit site'} →
             </a>
+            {urgency && (
+              <span className="inline-flex items-center rounded-full border border-a2 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-a2">
+                {urgency.label}
+              </span>
+            )}
             {p.applyUrl && (
               <a
                 href={p.url}
