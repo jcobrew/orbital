@@ -8,7 +8,6 @@ import { citySlug } from '../../data/cities';
 import { statusMeta } from '../../lib/status';
 import { livingModelLabel } from '../../lib/living';
 import ApplyButton from '../../components/ApplyButton.tsx';
-import CompareButton from '../../components/CompareButton.tsx';
 import { UNKNOWN, displayVal, displayBool, displayDuration, whatYouGet } from '../../lib/display';
 import { windowsForSlug } from '../../data/applicationWindows';
 import { provenanceForSlug } from '../../data/sources';
@@ -150,7 +149,6 @@ const description = `${p.name} — a ${p.type} in ${p.city}, ${p.country} where 
       >
         Report update
       </a>
-      <CompareButton slug={slug} name={p.name} size="md" client:load />
       <SaveButton slug={programSlug(p.name)} name={p.name} size="md" client:load />
     </div>
 

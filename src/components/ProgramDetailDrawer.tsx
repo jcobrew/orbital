@@ -3,7 +3,6 @@ import type { Program } from '../data/programs';
 import { programSlug } from '../data/programs';
 import Logo from './Logo';
 import StatusBadge from './StatusBadge';
-import CompareButton from './CompareButton';
 import { applyHref } from './ProgramCard';
 import { noteApplyIntent } from '../stores/applyIntent';
 import { applyUrgency } from '../lib/applyUrgency';
@@ -66,7 +65,6 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
             </div>
           </div>
           <div className="flex flex-none items-center gap-1.5">
-            <CompareButton slug={slug} name={p.name} />
             <button
               ref={closeRef}
               onClick={onClose}

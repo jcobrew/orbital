@@ -3,7 +3,6 @@ import { programSlug } from '../../data/programs';
 import type { ProgramMatch } from '../../lib/matching';
 import Logo from '../Logo';
 import StatusBadge from '../StatusBadge';
-import CompareButton from '../CompareButton';
 import { applyHref } from '../ProgramCard';
 import { noteApplyIntent } from '../../stores/applyIntent';
 import { applyUrgency } from '../../lib/applyUrgency';
@@ -140,7 +139,6 @@ export default function MatchCard({
           )}
         </span>
         <div className="flex items-center gap-2">
-          <CompareButton slug={slug} name={p.name} />
           <button
             onClick={() => onSelect(p)}
             className="rounded-full border border-line2 px-2.5 py-1.5 text-[11.5px] font-semibold text-text transition hover:border-a1"

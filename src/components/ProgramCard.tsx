@@ -4,7 +4,6 @@ import Logo from './Logo';
 import StatusBadge from './StatusBadge';
 import LivingModelBadge from './LivingModelBadge';
 import SaveButton from './SaveButton';
-import CompareButton from './CompareButton';
 import { noteApplyIntent } from '../stores/applyIntent';
 import { applyUrgency } from '../lib/applyUrgency';
 
@@ -43,7 +42,6 @@ export default function ProgramCard({ program: p, onSelect }: { program: Program
         </div>
         <div className="flex flex-none items-center gap-1.5">
           <StatusBadge status={p.status} />
-          <CompareButton slug={programSlug(p.name)} name={p.name} />
           <SaveButton slug={programSlug(p.name)} name={p.name} />
         </div>
       </div>
