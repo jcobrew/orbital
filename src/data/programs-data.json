@@ -391,40 +391,6 @@
       "verificationStatus": "verified"
     },
     {
-      "name": "The Residency — Londinium",
-      "type": "Live-in Incubator",
-      "city": "London",
-      "country": "UK",
-      "lat": 51.5074,
-      "lng": -0.1278,
-      "focus": "AI researchers & startup founders",
-      "operator": "The Residency (livetheresidency)",
-      "stage": "Very early / exploratory",
-      "status": "rolling",
-      "status_detail": "AI-focused 5-bedroom home connected to central London.",
-      "domain": "livetheresidency.com",
-      "url": "https://www.livetheresidency.com/residencies",
-      "highlight": "London AI house in The Residency network.",
-      "mvp": true,
-      "ecosystem": "uk",
-      "canonicalType": "founder-residency",
-      "supportModes": [
-        "housing",
-        "workspace",
-        "community",
-        "structure",
-        "mentorship",
-        "funding",
-        "investor-access"
-      ],
-      "format": "live-in",
-      "sourceUrls": [
-        "https://www.livetheresidency.com/residencies"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
-    },
-    {
       "name": "The Residency — Bangalore",
       "type": "Live-in Incubator",
       "city": "Bangalore",
