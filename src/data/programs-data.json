@@ -748,36 +748,6 @@
       "verificationStatus": "needs-review"
     },
     {
-      "name": "Pluto (AI Hacker House)",
-      "type": "Hacker House",
-      "city": "Zurich",
-      "country": "Switzerland",
-      "lat": 47.3769,
-      "lng": 8.5417,
-      "focus": "AI & robotics builders",
-      "operator": "Pluto",
-      "stage": "Early",
-      "status": "rolling",
-      "status_detail": "AI/robotics residential workspace (also Paris).",
-      "domain": "pluto.community",
-      "url": "https://www.techloy.com/17-of-the-best-hacker-houses-for-tech-talents-and-founders-around-the-world/",
-      "highlight": "Shared residential workspace for AI/robotics builders.",
-      "mvp": true,
-      "ecosystem": "europe-wide",
-      "canonicalType": "hacker-house",
-      "supportModes": [
-        "housing",
-        "workspace",
-        "community"
-      ],
-      "format": "live-in",
-      "sourceUrls": [
-        "https://www.techloy.com/17-of-the-best-hacker-houses-for-tech-talents-and-founders-around-the-world/"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
-    },
-    {
       "name": "HackerHouse.world",
       "type": "Hacker House Network",
       "city": "Bordeaux",
@@ -1133,38 +1103,6 @@
       ],
       "lastVerified": "2026-06-13",
       "verificationStatus": "verified"
-    },
-    {
-      "name": "London Founder House",
-      "type": "Hacker House / Residency",
-      "city": "London",
-      "country": "UK",
-      "lat": 51.523,
-      "lng": -0.11,
-      "focus": "'The most obsessed founders in London' (non-competing markets)",
-      "operator": "Haz Hubble (founder of Pally)",
-      "stage": "Early / funded",
-      "status": "open",
-      "status_detail": "Hacker house + residency + community. Notably asks residents to have raised ~$500k. Live-and-build SF energy in London.",
-      "domain": "londonfounderhouse.com",
-      "url": "https://www.londonfounderhouse.com/",
-      "highlight": "Founder mansion offering acceptance & community against startup loneliness.",
-      "mvp": true,
-      "ecosystem": "uk",
-      "canonicalType": "founder-residency",
-      "supportModes": [
-        "housing",
-        "workspace",
-        "community",
-        "structure",
-        "mentorship"
-      ],
-      "format": "live-in",
-      "sourceUrls": [
-        "https://www.londonfounderhouse.com/"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
     },
     {
       "name": "The Residency — Inventors (SF)",
