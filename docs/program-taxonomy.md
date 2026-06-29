@@ -1,6 +1,6 @@
 # Orbital — Program Taxonomy
 
-This document describes the **canonical taxonomy** for founder-support programs and which
+This document describes the **canonical taxonomy** for builder-environment programs and which
 parts are **in MVP scope** vs. **future**. The taxonomy lives in code at
 [`src/data/taxonomy.ts`](../src/data/taxonomy.ts) and is the single source of truth; this
 doc explains it.

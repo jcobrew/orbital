@@ -19,7 +19,7 @@
 
 ## 1. What this section covers
 
-This material covers the **commute-in** half of the founder-support world — programs
+This material covers the **commute-in** half of the builder-environment world — programs
 that do *not* require you to move into a house or relocate to a co-living space. The
 emphasis is on the **program** itself: a fixed-length cohort that gives you money,
 mentorship, and a network, then sends you to a demo day.

@@ -1,5 +1,5 @@
 ---
-name: founder-atlas-refresh
+name: 0rbital-data-review
 description: >-
   Refresh the Orbital program dataset. Use when asked to update, refresh,
   re-verify, or add to the founder-program data (src/data/programs-data.json) —
@@ -23,7 +23,7 @@ rules learned there should be folded back into this file.
 
 There is **one** dataset:
 
-- `src/data/programs-data.json` — **every** founder-support program in a single
+- `src/data/programs-data.json` — **every** builder-environment program in a single
   top-level `programs` array. Residencies, hacker houses, accelerators, fellowships,
   government grants, startup visas, co-founder communities — all live here together.
 

@@ -106,7 +106,7 @@ async function discoverFromHtml(domain: string): Promise<string[]> {
     const res = await fetch(`https://${domain}/`, {
       redirect: 'follow',
       signal: AbortSignal.timeout(20000),
-      headers: { 'user-agent': 'Mozilla/5.0 (compatible; founder-atlas-logos)' },
+      headers: { 'user-agent': 'Mozilla/5.0 (compatible; orbital-logos)' },
     });
     if (!res.ok) return [];
     const html = await res.text();

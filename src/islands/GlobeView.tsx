@@ -44,8 +44,8 @@ function countryFromFeature(feat: { properties?: { name?: string } } | undefined
 }
 
 const TITLE_ALL = {
-  t: 'Where founders gather',
-  s: 'Spin the globe or pick a residency to fly there; the houses with the strongest pull are mapped below. Status as of June 2026 — verify on each site.',
+  t: 'Find your orbit. Launch what’s next.',
+  s: 'The right environment changes your trajectory. Compare founder residencies, hacker houses, startup campuses, and co-living programs where builders gather momentum for their next launch.',
 };
 const MODEL_TITLES: Record<string, string> = {
   'co-living': 'Live-in residencies',
@@ -620,7 +620,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   }
 
   const title = titleFor(filters.model);
-  const tagline = useTypewriter('~/ some places pull you into orbit', { speed: 46, startDelay: 2600, loop: true });
+  const tagline = useTypewriter('~/ 0rbital maps builder environments', { speed: 46, startDelay: 2600, loop: true });
 
   return (
     // The globe is the homepage: it fills the viewport, and every other surface
@@ -666,7 +666,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         >
           <IconMenu />
           <span className="orbit-node" aria-hidden="true" />
-          <span>Orbital</span>
+          <span>0rbital</span>
         </button>
       )}
 
@@ -772,7 +772,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
                 className="mt-3 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-bold text-[#0a0a0a] no-underline"
                 style={{ background: 'var(--grad)' }}
               >
-                Visit house →
+                Visit program →
               </a>
             </div>
           </div>

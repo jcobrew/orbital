@@ -1,117 +1,56 @@
-# Orbital
+# 0rbital
 
-**Find where founders gather.** Orbital maps the residencies, hacker houses and co-living programs
-where founders live and build together — the places with enough gravity to pull people across the
-world (e.g. HF0, FR8, The Residency, Arrayah). It is **not** a general directory of accelerators,
-incubators, fellowships, grants or visas: it is a live map of the founder co-living landscape, with
-**country startup ecosystem** context for founders deciding where to land. Built with **Astro +
-Tailwind + React islands**, output as a static site and deployed on Vercel.
+**Find your orbit. Launch what’s next.** 0rbital (pronounced Orbital) helps early-stage builders, founders, researchers, hackers, and creative technologists compare the places where people live, work, and build around serious peers.
 
-**Live site:** https://founder-atlas.vercel.app/
+The right environment changes your trajectory. Compare founder residencies, hacker houses, startup campuses, and co-living programs where builders gather momentum for their next launch. 0rbital is **not** a generic accelerator, grant, visa, or builder-environment database; it stays focused on builder environments.
+
+**Repository:** https://github.com/jcobrew/orbital
 
 ## Views
 
-Every page shares one header (`SiteNav`): **brand · a Globe / List view toggle · Countries ·
-About**. The toggle carries the active filter state across views; **About** opens the intro overlay
-(also a full page at `/about`). A first-time visitor sees a dismissible intro overlay; returning
-visitors go straight to the data.
+Every page shares one header (`SiteNav`): **0rbital · a Globe / List view toggle · Countries · Saved · About**. The toggle carries active filter state across views; **About** opens the intro overlay (also a full page at `/about`).
 
-- **Globe** (`/`) — the desktop entry point, and the homepage proper: a 3D globe of every program
-  that fills the viewport. The programs panel (search + filters + list), the dense-city minimaps and
-  the status legend each start minimized and toggle open from the floating controls, so the globe
-  opens distraction-free. Falls back to a "browse in list view" prompt where WebGL is unavailable, and
-  honors `prefers-reduced-motion`. On small screens the globe still renders, with an **"enter the orbit"** CTA into the full programs list.
-- **List** (`/explore`) — the main discovery surface: search + filters, a card list, and a program
-  detail drawer with the practical trade-offs (funding, equity, housing, format, deadlines — shown as
-  **Unknown** when not yet verified).
-- **Map** (`/map`) — a 2D Leaflet map (no longer in the header toggle; it backs the globe's dense-city
-  minimaps). Dense regions (SF Bay Area, NYC, London, Bangalore) get a zoomed-in "off-coast" callout
-  so they stay legible at world zoom.
-- **About** (`/about`) — what Orbital is + a guide to the co-living program types (founder
-  residency vs hacker house vs co-living program). Same content as the intro overlay.
-- **Countries** (`/countries`, `/country/<slug>`) — profiles of national startup ecosystems for
-  founders considering relocation.
-- **Dashboard** (`/dashboard`) — the agent/power-user surface (kept out of the human nav): a
-  server-rendered, URL-navigable sortable table of every program with schema.org JSON-LD. Linked from
-  About and `/llms.txt`.
+- **Globe** (`/`) — the homepage: a 3D globe of every program. Small screens include an “enter the orbit” CTA into the full programs list.
+- **Explore** (`/explore`) — the main discovery surface for builder environments: search + filters, a card list, and a program detail drawer with practical tradeoffs.
+- **Find your orbit** (`/find-your-orbit`, compatible route: `/find-support`) — guided matching for stage, goals, location preferences, and constraints. Results are possible orbits, not definitive recommendations.
+- **Saved** (`/saved`) — your shortlist. Save programs, compare tradeoffs, and track where you might apply next.
+- **Submit** (`/submit`) — add a builder environment for review through a prefilled GitHub issue in `jcobrew/orbital`.
+- **Countries** (`/countries`, `/country/<slug>`) — country ecosystem profiles for founders considering relocation.
+- **Dashboard** (`/dashboard`) — data quality dashboard and agent/power-user surface: a server-rendered, URL-navigable sortable table with schema.org JSON-LD.
 
 ## For agents (machine-readable surface)
 
-- **`/api/programs.json`** — the unified dataset: all programs in one array, plus `meta`,
-  `schema`, `count` and `facets` (distinct program types/countries/statuses with counts). Served
-  with permissive CORS. **Generated at build time** by `src/pages/api/programs.json.ts` from the
-  single source dataset — do not hand-edit. (A derived `dataset` value is included only for
-  legacy back-compat; it is not a real categorization axis.)
-- **`/api/countries.json`** — country ecosystem profiles, each with a `programCount` joined from the
-  program data via the shared `name` field. Generated by `src/pages/api/countries.json.ts`.
-- **`/llms.txt`** — a plain-text index describing the project, the schema, the status enum, the
-  endpoints, and the dashboard query-param grammar (`src/pages/llms.txt.ts`).
-- **Dashboard / `/explore` query params** (compose with AND):
-  `?q=<text>&model=<co-living|co-working|both>&country=<country>&status=<status>&sort=<field>&dir=-1`.
-  Example: `/dashboard?model=co-living&country=USA&status=open`. The live filter axis is the
-  **living/working `model`** plus `country`, `status` and free-text `q`; `country` is repeatable
-  (OR). Removed legacy params (`type`/`canonicalType`/`focus`/`format`/`stage`/`sector`/`housing`/
-  `dataset`) are silently ignored — to slice by program type/category, read `facets.canonicalType`
-  from `/api/programs.json`.
+- **`/api/programs.json`** — stable unified dataset: all programs in one array, plus `meta`, `schema`, `count`, and `facets`.
+- **`/api/countries.json`** — country ecosystem profiles, each with a `programCount` joined from the program data.
+- **`/llms.txt`** — a plain-text index describing 0rbital, the schema, endpoints, and dashboard query-param grammar.
+- **Dashboard / `/explore` query params**: `?q=<text>&model=<co-living|co-working|both>&country=<country>&status=<status>&sort=<field>&dir=-1`.
 
 ## Project layout
 
-- `src/data/programs-data.json` — the single source-of-truth program dataset (one unified file).
-- `src/data/taxonomy.ts` — the canonical taxonomy (`canonicalType` + support-mode / stage / intake
-  dimensions) used to categorize, filter, and scope programs.
-- `src/data/programs.ts` — loads the dataset into a typed `Program[]` + `FACETS`.
-- `src/data/countries-data.json` — country ecosystem profiles (source of truth).
-- `src/data/countries.ts` — types the profiles, joins program counts, and is the **cloud-DB swap
-  point** (see below).
-- `src/lib/` — shared `status`, `filter` (`passes`/sort) and `logo` helpers used by every view.
-- `src/components/` — React + Astro components (`Logo`, `StatusBadge`, `ProgramCard`,
-  `ProgramsTable`, `FilterSidebar`, `ViewNav`).
-- `src/islands/` — `MapView` (Leaflet) and `GlobeView` (globe.gl), rendered `client:only`.
-- `src/stores/filters.ts` — nanostore that shares filter state across islands and syncs it to the URL.
-- `src/pages/` — `index.astro` (globe homepage), `explore.astro` (list), `map.astro`, `dashboard.astro`,
-  `countries.astro`, `country/[slug].astro`, and the `api/*.json.ts` + `llms.txt.ts` endpoints.
+- `src/data/programs-data.json` — single source-of-truth program dataset.
+- `src/data/taxonomy.ts` — canonical taxonomy (`canonicalType` + support-mode / stage / intake dimensions).
+- `src/data/programs.ts` — loads the dataset into typed `Program[]` + `FACETS`.
+- `src/data/countries-data.json` — country ecosystem profiles.
+- `src/lib/` — shared status, filtering, matching, submit, and display helpers.
+- `src/components/` — React + Astro components, including guided matching under `src/components/find-support/`.
+- `src/islands/` — map and globe React islands.
+- `src/pages/` — routes, API endpoints, and `llms.txt`.
 
-The `*-knowledge-base.md` files are **legacy** human-readable research notes from the old
-residential/traditional era. They are preserved for the landscape narrative, but the canonical
-taxonomy in `src/data/taxonomy.ts` / `docs/program-taxonomy.md` supersedes the
-residential/traditional split they describe.
+Legacy `*-knowledge-base.md` research notes are preserved as historical landscape notes. The canonical product direction is 0rbital for builder environments.
 
 ## Updating the data
 
-### Programs
-
-1. Edit `src/data/programs-data.json` (each entry needs `canonicalType`, `supportModes`, `name`,
-   `lat`, `lng`, `status`, provenance, etc. — copy an existing entry as a template; see
-   `docs/contributing-program-data.md` and the `founder-atlas-refresh` skill). Pick the
-   `canonicalType` first — it is the category, not the free-text `type` label.
-2. Commit and push. Vercel rebuilds; the API, llms.txt, dashboard and maps all pick up the change
-   automatically — no separate generation step.
-
-To add a new off-coast cluster callout, add an entry to the `CLUSTERS` array in
-`src/islands/MapView.tsx` (a region needs at least 3 programs to appear).
-
-### Countries
-
-1. Add or edit a record in `src/data/countries-data.json` (see the inline `meta.schema`). The `name`
-   **must match** the `country` value used in the program datasets so program counts join; the
-   `slug` becomes the `/country/<slug>` route.
-2. Commit and push. The countries index, per-country pages and `/api/countries.json` all rebuild.
-
-### Moving to a cloud database
-
-The country data is deliberately structured to graduate from a committed JSON file to an updatable
-cloud database. Every consumer goes through `COUNTRIES` / `getCountry()` / `countrySlug()` in
-`src/data/countries.ts`, so when we're ready, swap the local JSON import there for a build-time fetch
-from the DB and nothing downstream changes.
+1. Edit `src/data/programs-data.json` (each entry needs `canonicalType`, `supportModes`, `name`, `lat`, `lng`, `status`, provenance, etc.; copy an existing entry as a template).
+2. Commit and push. Vercel rebuilds; the API, llms.txt, dashboard, and maps all pick up the change automatically.
 
 ## Develop
 
-Requires Node 20+ (see `.nvmrc`).
+Requires Node 20+ (see `.nvmrc` if present).
 
 ```bash
 npm install
 npm run dev      # http://localhost:4321
 npm run build    # static output to dist/
-npm run preview  # serve the built site
+npm test         # vitest
 npx astro check  # type-check
 ```
