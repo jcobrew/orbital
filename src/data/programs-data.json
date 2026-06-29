@@ -4735,6 +4735,37 @@
       ],
       "lastVerified": "2026-06-21",
       "verificationStatus": "needs-review"
+    },
+    {
+      "name": "Pluto (AI Hacker House)",
+      "type": "Hacker House",
+      "city": "Zurich",
+      "country": "Switzerland",
+      "lat": 47.3769,
+      "lng": 8.5417,
+      "focus": "AI & robotics builders",
+      "operator": "Pluto",
+      "stage": "Early",
+      "status": "rolling",
+      "status_detail": "Roving AI/robotics builder residency (most recent cohort: Munich; also Zurich/Paris). Active on LinkedIn.",
+      "domain": "joinpluto.io",
+      "url": "https://joinpluto.io",
+      "highlight": "Roving live-in residency for AI/robotics builders.",
+      "notes": "Moving/pop-up program: each cohort runs in a different city, so an ended location is not a closure. Domain moved pluto.community -> joinpluto.io; verify cadence via LinkedIn.",
+      "mvp": true,
+      "ecosystem": "europe-wide",
+      "canonicalType": "hacker-house",
+      "supportModes": [
+        "housing",
+        "workspace",
+        "community"
+      ],
+      "format": "live-in",
+      "sourceUrls": [
+        "https://joinpluto.io"
+      ],
+      "lastVerified": "2026-06-29",
+      "verificationStatus": "needs-review"
     }
   ]
 }
