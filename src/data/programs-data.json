@@ -748,36 +748,6 @@
       "verificationStatus": "needs-review"
     },
     {
-      "name": "HackerHouse.world",
-      "type": "Hacker House Network",
-      "city": "Bordeaux",
-      "country": "France",
-      "lat": 44.8378,
-      "lng": -0.5792,
-      "focus": "Entrepreneurs, nomads & developers",
-      "operator": "HackerHouse.world",
-      "stage": "Early / nomad",
-      "status": "rolling",
-      "status_detail": "Network across Bordeaux, Berlin, Venice, Rome, Dublin & London.",
-      "domain": "hackerhouse.world",
-      "url": "https://hackerhouse.world/",
-      "highlight": "Multi-city European hacker-house network.",
-      "mvp": true,
-      "ecosystem": "europe-wide",
-      "canonicalType": "hacker-house",
-      "supportModes": [
-        "housing",
-        "workspace",
-        "community"
-      ],
-      "format": "live-in",
-      "sourceUrls": [
-        "https://hackerhouse.world/"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
-    },
-    {
       "name": "Edge Esmeralda",
       "type": "Pop-up Village",
       "city": "Healdsburg",
