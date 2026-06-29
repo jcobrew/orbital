@@ -5,7 +5,7 @@ import { $introOpen, autoOpenIntro, closeIntro } from '../stores/ui';
 /**
  * Dismissible About / intro overlay (mounted once via the layout). Auto-opens on
  * a visitor's first arrival, reopens from the nav's About button. Intentionally
- * simple — just what Orbital is and why it exists — since all the real
+ * simple — just what 0rbital is and why it exists — since all the real
  * interaction lives on the globe itself.
  */
 export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean }) {
@@ -32,7 +32,7 @@ export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean 
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="About Orbital"
+        aria-label="About Orbital (0rbital)"
         className="relative z-[1] w-full max-w-[520px] rounded-[3px] border border-line2 bg-[#0c0c0c] p-7 shadow-[0_30px_80px_rgba(0,0,0,.7)]"
       >
         <button
@@ -45,16 +45,15 @@ export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean 
 
         <div className="mb-1.5 inline-flex items-center gap-1.5 font-display text-[10.5px] font-semibold uppercase tracking-[.22em] text-a2">
           <span className="orbit-node" aria-hidden="true" />
-          Orbital
+          0rbital
         </div>
         <h2 className="m-0 mb-3 max-w-[440px] font-display text-[22px] font-bold leading-[1.12] text-text">
-          Where founders gather.
+          Find your orbit. Launch what’s next.
         </h2>
 
         <div className="flex flex-col gap-3 text-[13.5px] leading-relaxed text-muted">
           <p className="m-0">
-            Orbital is a live map of the residencies, hacker houses and co-living programs where founders
-            actually live and build together — the places with enough gravity to pull people across the world.
+            The right environment changes your trajectory. Compare founder residencies, hacker houses, startup campuses, and co-living programs where builders gather momentum for their next launch.
           </p>
           <p className="m-0">
             Spin the globe to see where these communities cluster, click a point to read what it is and how to
@@ -62,8 +61,7 @@ export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean 
             time to search and filter every program.
           </p>
           <p className="m-0">
-            It exists because this information is scattered across group chats, threads and dead links. Orbital
-            keeps it in one place, verified and current, so you can find your people and go build.
+            It exists because this information is scattered across group chats, threads and dead links. Orbital keeps it in one place, verified and current, so you can compare possible orbits and build with serious peers.
           </p>
         </div>
 

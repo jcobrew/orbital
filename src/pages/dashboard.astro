@@ -10,7 +10,7 @@ import { PROGRAMS } from '../data/programs';
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: 'Orbital — founder residencies, hacker houses & co-living programs',
+  name: '0rbital — founder residencies, hacker houses, startup campuses & co-living programs',
   numberOfItems: PROGRAMS.length,
   itemListElement: PROGRAMS.map((p, i) => ({
     '@type': 'ListItem',
@@ -31,8 +31,8 @@ const jsonLd = {
 ---
 
 <Base
-  title="Orbital — Dashboard (agent-friendly directory)"
-  description="Searchable, URL-navigable directory of founder residencies, hacker houses and co-living programs worldwide — where founders live and build together. Optimized for AI agents: JSON API, llms.txt, deep links and structured data."
+  title="Data quality dashboard — 0rbital"
+  description="Track freshness, verification status, missing fields, and builder environments that need review in 0rbital."
 >
   <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} slot="head" />
 
@@ -42,13 +42,10 @@ const jsonLd = {
       class="m-0 mb-2 mt-5 flex items-center gap-2 font-display text-[24px] font-bold leading-[1.15]"
       style="color:var(--text)"
     >
-      <span class="orbit-node" aria-hidden="true"></span>The whole constellation
+      <span class="orbit-node" aria-hidden="true"></span>Data quality dashboard
     </h1>
     <p class="mb-1.5 max-w-[680px] text-[13px] leading-normal text-muted">
-      Every residency, hacker house and co-living program in one sortable, URL-navigable table —
-      built for agents and power users. Drive every filter by URL, share deep links, or pull the
-      data straight from the <a href="/api/programs.json" class="font-semibold">JSON API</a> and
-      <a href="/llms.txt" class="font-semibold">llms.txt</a>. Status as of June 2026 — always confirm on each site.
+      Track freshness, verification status, missing fields, and programs that need review. Drive every filter by URL, share deep links, or pull the data straight from the <a href="/api/programs.json" class="font-semibold">JSON API</a> and <a href="/llms.txt" class="font-semibold">llms.txt</a>. Status as of June 2026 — always confirm on each site.
     </p>
   </header>
 

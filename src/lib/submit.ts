@@ -1,9 +1,9 @@
 // Builds a prefilled GitHub "new issue" URL from the submit form. Nothing is
 // sent automatically — the form just hands the founder a composed issue to
 // review and submit, which the maintainers triage (and turn into a data PR via
-// the founder-atlas-refresh skill). Zero backend.
+// the 0rbital data review workflow). Zero backend.
 
-const REPO = 'jcobrew/founder-atlas';
+const REPO = 'jcobrew/orbital';
 
 export interface SubmitFields {
   mode: 'new' | 'update';
@@ -48,7 +48,7 @@ const ROWS: [keyof SubmitFields, string][] = [
 
 export function buildIssueBody(f: SubmitFields): string {
   const lines: string[] = [];
-  lines.push(f.mode === 'update' ? `**Update to an existing program**` : `**New program submission**`);
+  lines.push(f.mode === 'update' ? `**Update to an existing program**` : `**New builder environment submission**`);
   lines.push('');
   for (const [key, label] of ROWS) {
     const v = f[key];
@@ -58,12 +58,12 @@ export function buildIssueBody(f: SubmitFields): string {
   lines.push('', '---');
   lines.push(`- Submitted by: ${f.submitter || '(not provided)'}`);
   lines.push(`- Affiliated with this program: ${f.affiliated ? 'Yes' : 'No'}`);
-  lines.push('', '_Submitted via the Orbital /submit form. Please verify against primary sources before merging._');
+  lines.push('', '_Submitted via the 0rbital /submit form. Please verify this builder environment against primary sources before merging._');
   return lines.join('\n');
 }
 
 export function buildIssueUrl(f: SubmitFields): string {
-  const title = (f.mode === 'update' ? '[Update] ' : '[New program] ') + (f.name || 'Untitled');
+  const title = (f.mode === 'update' ? '[Update] ' : '[New builder environment] ') + (f.name || 'Untitled');
   const label = f.mode === 'update' ? 'data-update' : 'program-submission';
   const params = new URLSearchParams({ title, body: buildIssueBody(f), labels: label });
   return `https://github.com/${REPO}/issues/new?${params.toString()}`;

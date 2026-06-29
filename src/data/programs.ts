@@ -35,7 +35,7 @@ export type {
 export type Dataset = 'residential' | 'traditional';
 
 // Founder-facing enums (handoff §14). Values are optional on Program for now and
-// left empty/"unknown" until the data is filled — see the founder-atlas-refresh
+// left empty/"unknown" until the data is filled — see the 0rbital-data-review
 // skill. The UI shows "Unknown" wherever a value is absent.
 export type ProgramFormat = 'in-person' | 'remote' | 'hybrid' | 'live-in' | 'relocation' | 'unknown';
 export type StageFit =

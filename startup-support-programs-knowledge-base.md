@@ -137,7 +137,7 @@ For several pure hacker houses (STAK, FoundHer House, Casa Bernarda, etc.) the i
 > dashboard / map), not a hand-built HTML file.
 
 To add or edit a program covered by this research, follow the
-[`founder-atlas-refresh`](.claude/skills/founder-atlas-refresh/SKILL.md) skill: set its
+[`0rbital-data-review`](.claude/skills/0rbital-data-review/SKILL.md) skill: set its
 **`canonicalType`** (e.g. `founder-residency`, `hacker-house`, `founder-fellowship`),
 its `supportModes`, its `format` (`live-in` for move-in residencies), and provenance
 (`sourceUrls` + `lastVerified` + `verificationStatus`). See

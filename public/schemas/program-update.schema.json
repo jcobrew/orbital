@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://founder-atlas.com/schemas/program-update.schema.json",
-  "title": "Orbital Update Report",
+  "$id": "https://github.com/jcobrew/orbital/schemas/program-update.schema.json",
+  "title": "0rbital Update Report",
   "description": "The aggregate data-update report produced by Stream 7's generateUpdateReport() and served at /api/update-report.json. Report-only: it summarizes freshness, source-URL inventory and MVP-readiness across the dataset and never modifies data. This document describes the `report` object inside that endpoint's response.",
   "type": "object",
   "additionalProperties": true,

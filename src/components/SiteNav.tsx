@@ -30,7 +30,7 @@ export default function SiteNav({ current }: { current?: NavCurrent }) {
     <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
       <a href="/" className="inline-flex items-center gap-1.5 font-display text-[14px] font-bold tracking-tight text-text no-underline">
         <span className="orbit-node" aria-hidden="true" />
-        Orbital
+        0rbital
       </a>
 
       <div

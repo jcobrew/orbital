@@ -8,7 +8,7 @@ run in CI without ever failing a build.
 
 > Design principle (from the MVP plan): *maintainability without pretending
 > automation is solved.* These scripts produce reports a human (or the
-> `founder-atlas-refresh` skill) acts on — they never auto-apply changes.
+> `0rbital-data-review` skill) acts on — they never auto-apply changes.
 
 ## Scripts
 
@@ -82,5 +82,5 @@ npm run report:update -- --check --json --out=update-report.json
 
 A scheduled GitHub Action / cron could run `npm run report:update -- --check --json`
 and post the report (or open an issue) — but **applying** any change stays manual
-via the review-queue (Stream 8) and `founder-atlas-refresh` draft-PR flow. No
+via the review-queue (Stream 8) and `0rbital-data-review` draft-PR flow. No
 auto-scrape, no auto-publish.

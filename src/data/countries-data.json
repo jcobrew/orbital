@@ -232,7 +232,7 @@
         "Zug's 'Crypto Valley' is a global blockchain hub.",
         "Stable, high-trust environment with strong access to capital."
       ],
-      "business": { "label": "startup.ch (IFJ)", "url": "https://www.startup.ch/", "description": "Swiss startup support platform and resource directory run by the IFJ Institut für Jungunternehmen." },
+      "business": { "label": "startup.ch (IFJ)", "url": "https://www.startup.ch/", "description": "Swiss builder environment platform and resource directory run by the IFJ Institut für Jungunternehmen." },
       "updatedAt": "2026-06-15",
       "source": "Initial scaffold — needs verification pass; business migrated from prior directories entry"
     },

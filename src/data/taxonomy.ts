@@ -1,7 +1,7 @@
 // Canonical Orbital taxonomy (Stream 2).
 //
 // This module is the single source of truth for the *canonical* ID sets that
-// describe a founder-support program. It exists alongside — not instead of —
+// describe a builder-environment program. It exists alongside — not instead of —
 // the legacy free-text fields on `Program` (`type`, `stage`, `format`, …).
 // Nothing here mutates or replaces those fields; `src/lib/normalizeProgram.ts`
 // *derives* canonical IDs from the legacy text in a non-destructive way.
