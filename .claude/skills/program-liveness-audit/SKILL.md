@@ -64,6 +64,24 @@ Weight the signals accordingly:
 - **Don't fabricate recency.** Never write "last posted N days ago" unless you actually
   saw the dated post. Cite the specific post/source URL you used.
 
+## Also flag — out-of-scope entries (surface these even if "active")
+
+Orbital maps places where founders **live together in a cohort / residency**. While
+auditing, watch for listed entries that were never that, and flag them for removal
+with a one-line reason — being "alive" doesn't make them in-scope:
+
+- **Generic / nomad co-living** — pay-by-the-month housing open to "students,
+  professionals, digital nomads," not a selective founder cohort (e.g. Hive Coliving,
+  HackerHouse.world). Co-living ≠ a founder program.
+- **One-time events / pop-up retreats** — a single dated event (a weekend hackathon, a
+  5-day retreat) that isn't a recurring program (e.g. Bali Hacker House / The Collective).
+- **Pure co-working / clubs** — desks + events, no live-in (e.g. SHACK15).
+- **Online community / course** — no physical residency.
+
+Distinguish from a roving residency (Pluto) — that *is* a cohort program that changes
+city; keep it. The test is "selective founder cohort that lives together," not "has a
+building." When unsure, flag rather than assert.
+
 ## Classification
 
 For each program, assign one verdict with **dated evidence + source URLs**:

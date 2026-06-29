@@ -662,34 +662,6 @@
       "verificationStatus": "needs-review"
     },
     {
-      "name": "AbadiaDev",
-      "type": "Hacker House (Web3)",
-      "city": "Buenos Aires",
-      "country": "Argentina",
-      "lat": -34.6037,
-      "lng": -58.3816,
-      "focus": "Web3, blockchain, crypto builders",
-      "operator": "AbadiaDev",
-      "stage": "Early",
-      "status": "rolling",
-      "status_detail": "Collaborative space for the Web3/crypto ecosystem.",
-      "domain": "abadiadev.com",
-      "url": "https://abadiadev.com/",
-      "highlight": "Argentina's Web3 builder community house.",
-      "canonicalType": "hacker-house",
-      "supportModes": [
-        "housing",
-        "workspace",
-        "community"
-      ],
-      "format": "unknown",
-      "sourceUrls": [
-        "https://www.techloy.com/17-of-the-best-hacker-houses-for-tech-talents-and-founders-around-the-world/"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
-    },
-    {
       "name": "Hacker Paradise",
       "type": "Hacker House / Coliving",
       "city": "Medellín",
@@ -1319,36 +1291,6 @@
       "format": "live-in",
       "sourceUrls": [
         "https://frontiertower.io/"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
-    },
-    {
-      "name": "Launch House",
-      "type": "Hacker House / Coliving",
-      "city": "Los Angeles",
-      "country": "USA",
-      "lat": 34.0901,
-      "lng": -118.4065,
-      "focus": "Founders — live-in residency + membership community",
-      "operator": "Michael Houck, Brett Goldstein & Jacob Peters",
-      "stage": "Early",
-      "status": "closed",
-      "status_detail": "Pioneered the 4-week live-in residency (a Beverly Hills mansion) + year-long community; the live-in model later wound down / pivoted. Listed for reference.",
-      "domain": "launchhouse.com",
-      "url": "https://techcrunch.com/2021/08/19/launch-house-raises-millions-to-launch-houses-and-the-next-big-startups/",
-      "highlight": "Iconic early-2020s 'new-age hacker house' that popularized the live-in founder residency.",
-      "mvp": true,
-      "ecosystem": "us-global-remote",
-      "canonicalType": "hacker-house",
-      "supportModes": [
-        "housing",
-        "workspace",
-        "community"
-      ],
-      "format": "live-in",
-      "sourceUrls": [
-        "https://techcrunch.com/2021/08/19/launch-house-raises-millions-to-launch-houses-and-the-next-big-startups/"
       ],
       "lastVerified": "2026-06-12",
       "verificationStatus": "needs-review"
