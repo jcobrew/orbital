@@ -9,23 +9,39 @@ const countryCount = Object.keys(FACETS.country).length;
 ---
 
 <Base
-  title="About — Orbital"
-  description="What Orbital is and how to use it: a live map of founder residencies, hacker houses and co-living programs where founders live and build together, filterable by stage, sector, housing, location and application status."
+  title="Story — Orbital"
+  description="Why Orbital exists: helping a new generation of founders find their place — the residencies, hacker houses and co-living programs where they live and build together, anywhere in the world."
 >
   <header class="mx-auto max-w-[1100px] px-7 pt-5">
-    <SiteNav current="about" client:load />
+    <SiteNav current="story" client:load />
   </header>
 
   <section class="mx-auto max-w-[1100px] px-7 pb-6 pt-10">
     <h1 class="m-0 mb-4 max-w-[760px] font-display text-[32px] font-bold leading-[1.08] text-text sm:text-[40px]">
-      Find where founders gather.
+      Find your place to build.
     </h1>
-    <p class="m-0 mb-6 max-w-[680px] text-[15px] leading-relaxed text-muted">
-      Orbital maps the residencies, hacker houses and co-living programs where founders live and build
-      together — the places with enough gravity to pull people across the world. {PROGRAMS.length} programs across
-      {countryCount} countries. Filter by stage, sector, location, housing and
-      application status to find the place that pulls you in.
-    </p>
+    <div class="m-0 mb-6 flex max-w-[680px] flex-col gap-4 text-[15px] leading-relaxed text-muted">
+      <p class="m-0">
+        Every founder hits a point where the room they're in is too small. The ambition outgrows the city, the
+        people who get it are a few time zones away, and the obvious paths — university, the big-name
+        accelerator — were built for a different kind of builder.
+      </p>
+      <p class="m-0">
+        A growing number are choosing something else: residencies, hacker houses and co-living programs where
+        founders move in, live together, and build side by side. In the age of AI a small team can move faster
+        than ever, so the bottleneck isn't tooling — it's focus, peers, and being somewhere with gravity. These
+        places give you all three, plus a way into ecosystems you weren't born into.
+      </p>
+      <p class="m-0">
+        Orbital grew out of a master's thesis on how these residencies are designed and what comes out of them.
+        The finding was simple: they work, and they're one of the best on-ramps a new generation of founders
+        has — but they're easy to miss, mixed in among traditional programs and spread across the world.
+      </p>
+      <p class="m-0">
+        So Orbital puts them on one map — {PROGRAMS.length} programs across {countryCount} countries, verified
+        and current — to help you find your place, then go be in it.
+      </p>
+    </div>
     <div class="flex flex-wrap items-center gap-3">
       <a
         href="/"

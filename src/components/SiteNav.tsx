@@ -1,8 +1,7 @@
 import { useStore } from '@nanostores/react';
 import { $filters, filtersToQuery } from '../stores/filters';
-import { openIntro } from '../stores/ui';
 
-export type NavCurrent = 'globe' | 'map' | 'list' | 'countries' | 'dashboard' | 'about' | 'saved';
+export type NavCurrent = 'globe' | 'map' | 'list' | 'countries' | 'dashboard' | 'story' | 'saved';
 
 const VIEWS: { key: NavCurrent; href: string; label: string }[] = [
   { key: 'globe', href: '/', label: 'Globe' },
@@ -68,14 +67,15 @@ export default function SiteNav({ current }: { current?: NavCurrent }) {
             Countries
           </a>
         )}
-        <button
-          type="button"
-          onClick={openIntro}
-          aria-haspopup="dialog"
-          className="rounded-[3px] px-2.5 py-1.5 font-display text-[12px] font-semibold text-a2 transition hover:text-text"
+        <a
+          href="/story"
+          aria-current={current === 'story' ? 'page' : undefined}
+          className={`rounded-[3px] px-2.5 py-1.5 font-display text-[12px] font-semibold no-underline transition ${
+            current === 'story' ? 'text-text' : 'text-a2 hover:text-text'
+          }`}
         >
-          About
-        </button>
+          Story
+        </a>
       </nav>
     </div>
   );

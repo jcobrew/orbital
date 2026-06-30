@@ -43,8 +43,8 @@ function countryFromFeature(feat: { properties?: { name?: string } } | undefined
 }
 
 const TITLE_ALL = {
-  t: 'Where founders gather',
-  s: 'Spin the globe or pick a residency to fly there; the houses with the strongest pull are mapped below. Status as of June 2026 — verify on each site.',
+  t: 'Find your people',
+  s: 'Spin the globe or pick a residency to fly there — the places with the strongest pull are mapped below. Status as of June 2026 — verify on each site.',
 };
 const MODEL_TITLES: Record<string, string> = {
   'co-living': 'Live-in residencies',

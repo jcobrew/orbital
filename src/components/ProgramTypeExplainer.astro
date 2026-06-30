@@ -3,6 +3,12 @@
 // Content lives in src/data/programTypes.ts so the intro overlay reuses it. Each
 // CTA deep-links into /explore with a free-text query matched against type/focus.
 import { PROGRAM_TYPES as CARDS } from '../data/programTypes';
+
+// Pluralize a type name for the CTA: "residency" → "residencies", "house" → "houses".
+const pluralize = (name: string) => {
+  const lower = name.toLowerCase();
+  return /[^aeiou]y$/.test(lower) ? lower.slice(0, -1) + 'ies' : lower + 's';
+};
 ---
 
 <section class="mx-auto max-w-[1200px] px-7 py-10">
@@ -26,7 +32,7 @@ import { PROGRAM_TYPES as CARDS } from '../data/programTypes';
             ))}
           </ul>
           <span class="mt-auto text-[12px] font-semibold text-a2 group-hover:underline">
-            Find {c.name.toLowerCase()}s →
+            Find {pluralize(c.name)} →
           </span>
         </a>
       ))

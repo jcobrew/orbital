@@ -3,10 +3,10 @@ import { useStore } from '@nanostores/react';
 import { $introOpen, autoOpenIntro, closeIntro } from '../stores/ui';
 
 /**
- * Dismissible About / intro overlay (mounted once via the layout). Auto-opens on
- * a visitor's first arrival, reopens from the nav's About button. Intentionally
- * simple — just what Orbital is and why it exists — since all the real
- * interaction lives on the globe itself.
+ * Dismissible intro overlay (mounted once via the layout). Auto-opens on a
+ * visitor's first arrival, then doesn't reappear; the persistent entry point is
+ * the Story page in the nav. Intentionally minimal — a one-line hook and two
+ * buttons — since all the real interaction lives on the globe itself.
  */
 export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean }) {
   const open = useStore($introOpen);
@@ -48,26 +48,15 @@ export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean 
           Orbital
         </div>
         <h2 className="m-0 mb-3 max-w-[440px] font-display text-[22px] font-bold leading-[1.12] text-text">
-          Where founders gather.
+          Find your place to build.
         </h2>
 
-        <div className="flex flex-col gap-3 text-[13.5px] leading-relaxed text-muted">
-          <p className="m-0">
-            Orbital is a live map of the residencies, hacker houses and co-living programs where founders
-            actually live and build together — the places with enough gravity to pull people across the world.
-          </p>
-          <p className="m-0">
-            Spin the globe to see where these communities cluster, click a point to read what it is and how to
-            join, and open a dense city's minimap to zoom in. Switch to <span className="text-text">List</span> any
-            time to search and filter every program.
-          </p>
-          <p className="m-0">
-            It exists because this information is scattered across group chats, threads and dead links. Orbital
-            keeps it in one place, verified and current, so you can find your people and go build.
-          </p>
-        </div>
+        <p className="m-0 max-w-[440px] text-[13.5px] leading-relaxed text-muted">
+          A live map of the residencies, hacker houses and co-living programs where founders live and build
+          together. Find your people — anywhere in the world.
+        </p>
 
-        <div className="mt-6">
+        <div className="mt-6 flex flex-wrap items-center gap-2.5">
           <button
             onClick={closeIntro}
             className="rounded-full border border-transparent px-4 py-2.5 font-display text-[13px] font-bold text-[#0a0a0a] transition active:scale-95"
@@ -75,6 +64,13 @@ export default function IntroOverlay({ autoOpen = false }: { autoOpen?: boolean 
           >
             Enter orbit
           </button>
+          <a
+            href="/story"
+            onClick={closeIntro}
+            className="rounded-full border border-line2 px-4 py-2.5 font-display text-[13px] font-semibold text-text no-underline transition hover:border-a1"
+          >
+            Read the story →
+          </a>
         </div>
       </div>
     </div>

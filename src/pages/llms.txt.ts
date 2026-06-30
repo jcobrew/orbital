@@ -1,9 +1,9 @@
 import type { APIRoute } from 'astro';
 
-const BODY = `# Orbital — find where founders gather
+const BODY = `# Orbital — find your place to build
 
 > Orbital maps the residencies, hacker houses and co-living programs where founders live and
-> build together — the places with enough gravity to pull people across the world. Not a general
+> build together — find your people, anywhere in the world. Not a general
 > directory of accelerators, incubators, fellowships, grants or visas: a focused, live map of the
 > founder co-living landscape (e.g. HF0, FR8, The Residency, Arrayah).
 
@@ -120,7 +120,7 @@ Every page shares one header: brand · a Globe / List view toggle · Countries �
   panel, dense-city minimaps and the status legend are toggleable overlays.
 - [List](/explore): searchable, filterable card list with a program detail drawer.
 - [Map](/map): 2D interactive Leaflet map of the same data (also powers the globe's city minimaps).
-- [About](/about): what Orbital is + a guide to the co-living program types.
+- [Story](/story): why Orbital exists + a guide to the co-living program types.
 
 Each program also has a dedicated profile page at \`/programs/<slug>\` (slug = lowercased name,
 non-alphanumerics → hyphens), with schema.org \`EducationalOccupationalProgram\` JSON-LD.

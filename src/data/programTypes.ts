@@ -1,4 +1,4 @@
-// Program-type explainer content — shared by the /about page and the intro
+// Program-type explainer content — shared by the /story page and the intro
 // overlay so there's one source of truth. Secondary education: a founder mostly
 // already knows what the app is for; this just clarifies the categories.
 export interface ProgramTypeInfo {
