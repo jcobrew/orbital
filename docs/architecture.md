@@ -275,14 +275,14 @@ User on /submit
   → renders src/pages/submit.astro
       → mounts <SubmitForm client:load />   (src/components/SubmitForm.tsx)
           → on submit: calls buildIssueUrl(fields)  (src/lib/submit.ts)
-              → builds https://github.com/jcobrew/founder-atlas/issues/new
+              → builds https://github.com/jcobrew/orbital/issues/new
                   ?title=[New program] <name>
                   &body=<prefilled markdown>
                   &labels=program-submission | data-update
           → window.open() → opens the prefilled GitHub issue for the user to review and submit
 ```
 
-**No backend.** The form composes and opens a GitHub issue URL in the user's browser. The maintainer reviews the issue and, if valid, runs the `founder-atlas-refresh` skill to create a draft PR updating the data JSON files.
+**No backend.** The form composes and opens a GitHub issue URL in the user's browser. The maintainer reviews the issue and, if valid, runs the `0rbital-data-review` skill to create a draft PR updating the data JSON files.
 
 `buildIssueBody()` includes: program name, type, website URL, apply URL, city, country, living model, stage fit, sector, application status, deadline, funding, equity, housing, duration, source URL. Sensitive note at the bottom: "Submitted via the Orbital /submit form. Please verify against primary sources before merging."
 
@@ -358,7 +358,7 @@ These boundaries follow the file-ownership rules in `docs/mvp-implementation-pla
 | File | Owned by | Rule for others |
 |---|---|---|
 | `src/data/programs.ts` | **Stream 2** | Others import only; never destructively change existing exports |
-| `src/data/programs-data.json` | **Stream 3** | The single unified dataset; others read only; content edits require the `founder-atlas-refresh` skill draft-PR flow |
+| `src/data/programs-data.json` | **Stream 3** | The single unified dataset; others read only; content edits require the `0rbital-data-review` skill draft-PR flow |
 | `src/stores/filters.ts` | Stream 5 / Stream 6 can extend | Keep existing filter keys; add new ones additively |
 | `src/lib/filter.ts` | Stream 5 | Keep `passes()` / `sortPrograms()` / `defaultSort()` signatures stable |
 | `src/data/triggers.ts` | Stream 5 | Evolve presets alongside matching; keep existing presets working |

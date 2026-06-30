@@ -10,7 +10,7 @@ field/quality standard) and builds on the canonical taxonomy in
 
 > **Thesis.** The MVP is judged by *usefulness, not database size*. We want **100–200 curated,
 > high-trust records** across **3–5 ecosystems** and **6–8 program types** — not a global import
-> of every founder-support program. Quality and freshness beat completeness.
+> of every builder-environment program. Quality and freshness beat completeness.
 
 ---
 
@@ -145,7 +145,7 @@ We are at **67** curated records; the target is **100–200**. The gap is ~35–
 **do not** bulk-import or scrape a global directory. Instead we add curated, sourced records
 that close the distribution gaps above, prioritizing under-served ecosystems and the two empty
 MVP types. Each addition follows [`program-data-quality.md`](./program-data-quality.md) and the
-draft-PR discipline of the `founder-atlas-refresh` skill.
+draft-PR discipline of the `0rbital-data-review` skill.
 
 ### Priority gaps (add these first)
 
@@ -173,7 +173,7 @@ draft-PR discipline of the `founder-atlas-refresh` skill.
   fully-verified records.
 - **Stay within the 5 ecosystems and 8 types.** A great program outside the controlled
   vocabulary is *out of MVP scope* until the scope is formally widened — flag it, don't tag it.
-- **Set the `canonicalType` first** (see the `founder-atlas-refresh` skill): every record goes
+- **Set the `canonicalType` first** (see the `0rbital-data-review` skill): every record goes
   in the one unified `src/data/programs-data.json`, classified by its `canonicalType`. Live-in /
   relocation programs are `founder-residency` (or `hacker-house`) with `format: "live-in"` +
   `housing` in `supportModes` — not a separate file.

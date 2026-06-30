@@ -100,7 +100,7 @@ URL** on the proposal, or validation fails with `missing-source`:
    and **appends an audit entry** to `data/review-queue/audit-log.jsonl`.
 
 It is **always offline** and **never opens a PR or commits** — applying to the
-live site still goes through the `founder-atlas-refresh` draft-PR discipline.
+live site still goes through the `0rbital-data-review` draft-PR discipline.
 
 ```bash
 npm run apply-updates            # dry-run diff (default, writes nothing)

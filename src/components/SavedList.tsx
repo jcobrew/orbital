@@ -51,14 +51,14 @@ export default function SavedList({ programs }: { programs: Program[] }) {
           />
           <h2 className="relative m-0 mb-1.5 mt-12 font-display text-[16px] font-bold text-text">Your constellation is empty</h2>
           <p className="relative m-0 mb-4 text-[13px] text-muted">
-            Browse the houses and tap the <span className="text-a2">☆</span> to pull a few into your shortlist. Kept on this
+            Browse builder environments and tap the <span className="text-a2">☆</span> to pull a few into your shortlist. Kept on this
             device only.
           </p>
           <a
             href="/explore"
             className="relative inline-block rounded-full border border-line2 px-4 py-2.5 text-[13px] font-semibold text-text no-underline transition hover:border-a1"
           >
-            Browse houses
+            Explore programs
           </a>
         </div>
       ) : (

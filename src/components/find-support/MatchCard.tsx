@@ -82,7 +82,7 @@ export default function MatchCard({
       {/* Why matched */}
       {m.reasons.length > 0 && (
         <div className="mb-2.5">
-          <div className="mb-1 text-[10.5px] font-semibold uppercase tracking-wide text-muted">Why it matches</div>
+          <div className="mb-1 text-[10.5px] font-semibold uppercase tracking-wide text-muted">Why this might fit</div>
           <ul className="m-0 flex list-none flex-col gap-1 p-0">
             {m.reasons.map((r) => (
               <ReasonRow key={r.code} icon="✓" color="#6ee7a8" text={r.text} />
@@ -106,7 +106,7 @@ export default function MatchCard({
       {/* Cautions */}
       {m.cautions.length > 0 && (
         <div className="mb-2.5">
-          <div className="mb-1 text-[10.5px] font-semibold uppercase tracking-wide text-[#ffc24b]">Worth knowing</div>
+          <div className="mb-1 text-[10.5px] font-semibold uppercase tracking-wide text-[#ffc24b]">Potential tradeoffs</div>
           <ul className="m-0 flex list-none flex-col gap-1 p-0">
             {m.cautions.map((r) => (
               <ReasonRow key={r.code} icon="!" color="#ffc24b" text={r.text} />
@@ -123,7 +123,7 @@ export default function MatchCard({
 
       {/* Next step */}
       <p className="m-0 mb-3 rounded-sm border border-line2 bg-[rgba(16,16,16,.5)] px-2.5 py-2 text-[11.5px] leading-snug text-muted">
-        <span className="font-semibold text-text">Next step: </span>
+        <span className="font-semibold text-text">Suggested next step: </span>
         {m.suggestedNextStep}
       </p>
 

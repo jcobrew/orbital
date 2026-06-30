@@ -8,7 +8,7 @@ does **not** include the script.
 
 It is the companion to [`mvp-data-scope.md`](./mvp-data-scope.md) (which records are in scope)
 and builds on [`data-model.md`](./data-model.md) (the full field schema) and the
-`founder-atlas-refresh` skill (the editing/verification workflow).
+`0rbital-data-review` skill (the editing/verification workflow).
 
 > **Principle.** Smaller dataset, higher trust. Every MVP record must be *verifiable* (cites a
 > source), *fresh* (carries a last-verified date), and *honest* (shows "unknown" rather than
@@ -33,7 +33,7 @@ an MVP record and **how** they must be filled. It adds no new fields.
 
 ### 2.1 Always-required (every record, MVP or not — existing dataset invariant)
 
-These are the base keys the dataset and the `founder-atlas-refresh` skill already require:
+These are the base keys the dataset and the `0rbital-data-review` skill already require:
 
 `name` · `canonicalType` · `supportModes` · `type` (display label) · `city` · `country` ·
 `lat` · `lng` · `status` · `url`
@@ -111,7 +111,7 @@ literal `unknown`. The convention:
 ### 3.5 Correct `canonicalType`
 
 Every program lives in the one unified `src/data/programs-data.json` and must carry a correct
-**`canonicalType`** (per the `founder-atlas-refresh` skill). Live-in / relocation programs are
+**`canonicalType`** (per the `0rbital-data-review` skill). Live-in / relocation programs are
 `founder-residency` (or `hacker-house`) with `format: "live-in"` + `housing` in `supportModes` —
 there is no separate residential file. A wrong or missing `canonicalType` is a quality defect
 even if all other fields are present. (`type` is a display label only and does not need to match
@@ -206,7 +206,7 @@ on readiness failures for opt-in CI use.
 At the time of tagging, **67 of 123** records are `mvp: true`. Of those, only the **7** records
 that already carry `sourceUrls` + `lastVerified` would pass `REQ_SOURCE` + `REQ_VERIFIED_DATE`
 today; the remainder are **in scope but not yet launch-ready** and need verification passes via
-the `founder-atlas-refresh` skill before launch. Closing that gap — adding sources and verified
+the `0rbital-data-review` skill before launch. Closing that gap — adding sources and verified
 dates to the tagged records, and adding the missing `startup-visa` / `government-grant` records
 and European depth — is the data work between now and the first MVP milestone (see
 [`mvp-data-scope.md`](./mvp-data-scope.md) §5).

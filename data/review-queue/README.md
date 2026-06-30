@@ -34,7 +34,7 @@ never opens a PR and never commits.
 | `audit-log.jsonl` | Append-only record of every change actually applied (`--apply`). | written, not applied |
 
 A reviewer moves a file between directories (and updates its `status` field)
-by hand or via the `founder-atlas-refresh` skill. There is **no auto-approval**.
+by hand or via the `0rbital-data-review` skill. There is **no auto-approval**.
 
 ## Proposal format
 

@@ -1,23 +1,23 @@
 # Orbital — MVP-Scoped Implementation Plan & Orchestration Handoff
 
 > **Purpose of this document.** Convert the current working Orbital directory into a narrow,
-> high-signal **MVP** — a "founder-support compass" that proves the core experience (*founder
+> high-signal **MVP** — a "builder-environment compass" that proves the core experience (*founder
 > describes situation → gets a small set of relevant, trustworthy, explained matches*) — while
 > keeping the schema future-ready for the full landscape taxonomy. It is split into ten
 > independent **handoff streams**, each pasteable into its own coding-agent session.
 >
-> **This is not** a plan to build a complete global database of every founder-support program.
+> **This is not** a plan to build a complete global database of every builder-environment program.
 > Optimize for a trustworthy, useful matching experience that can later grow into the full map.
 
 ---
 
 ## Context
 
-Orbital is a working, fully-static Astro site that maps ~123 founder-support programs on a
+Orbital is a working, fully-static Astro site that maps ~123 builder-environment programs on a
 globe/list/map and exposes them via `/api/programs.json`, `/api/countries.json`, and `/llms.txt`.
 The data already carries a rich optional schema (`Program` interface in `src/data/programs.ts`),
 provenance fields (`lastVerified`, `verificationStatus`, `sourceUrls`), and a draft-PR-gated update
-skill (`founder-atlas-refresh`).
+skill (`0rbital-data-review`).
 
 The MVP thesis: *a founder can describe their situation and quickly discover a small set of
 relevant, trustworthy support options better than they could through Google, Twitter/X, F6S, or
@@ -25,7 +25,7 @@ generic accelerator lists.* The MVP is judged by **usefulness, not database size
 
 Positioning: **"A guided discovery tool for early-stage founders looking for the right accelerator,
 residency, fellowship, grant, visa, or founder community."** — not "a complete map of every
-startup-support program in the world."
+builder-environment program in the world."
 
 ---
 
@@ -48,11 +48,11 @@ startup-support program in the world."
   `/country/[slug]`, `/cities/[slug]`, `/programs/[slug]`, `/submit`, `/saved`); machine surfaces
   (`/api/programs.json`, `/api/countries.json`, `/llms.txt`) + schema.org JSON-LD on dashboard/program/country.
 - **Submission flow:** `/submit` → `src/components/SubmitForm.tsx` → `src/lib/submit.ts` builds a
-  prefilled GitHub issue URL (no backend). Data lands via the `founder-atlas-refresh` skill (draft PR).
+  prefilled GitHub issue URL (no backend). Data lands via the `0rbital-data-review` skill (draft PR).
 - **Gaps:** no `docs/`, no `scripts/`, no tests, no canonical taxonomy module, no `/find-support`
   guided flow, no normalized/MVP/typed exports, no review-queue structure, no freshness scripts.
-- **Domain docs:** the literal `founder-support-landscape.md` is absent; root files
-  `startup-support-programs-knowledge-base.md` + `traditional-startup-programs-knowledge-base.md`
+- **Domain docs:** the literal `builder-environment-landscape.md` is absent; root files
+  `builder-environment-programs-knowledge-base.md` + `traditional-startup-programs-knowledge-base.md`
   are the de-facto landscape docs and should seed `docs/program-taxonomy.md`.
 
 ---
@@ -62,7 +62,7 @@ startup-support program in the world."
 Static Astro 5 + React islands, Tailwind v4, nanostores, Vercel static deploy. One unified JSON
 dataset typed by `src/data/programs.ts` and consumed by every page plus the JSON/`llms.txt` surfaces.
 No backend, DB, auth, or tests. Contribution = prefilled GitHub issue → human verify → draft-PR data
-edit via `founder-atlas-refresh`.
+edit via `0rbital-data-review`.
 
 ## 2. Current product/data gap analysis
 
@@ -176,7 +176,7 @@ scripts (append-only; S7/S10 coordinate); the two `*-programs-data.json` files (
 
 ## 10. First MVP milestone definition
 
-> Orbital has a curated MVP-ready founder-support discovery system covering ~100–200
+> Orbital has a curated MVP-ready builder-environment discovery system covering ~100–200
 > high-quality records across the selected ecosystems and program types, with normalized taxonomy,
 > backward-compatible schema, basic provenance/freshness status, deterministic founder-needs
 > matching, a guided discovery UI, and machine-readable exports — while still building and deploying
@@ -248,7 +248,7 @@ streams below.
 - **Focus:** How the first 100–200 curated records are structured + maintained (no global import).
 - **Background:** ~123 records exist; many are out of MVP ecosystem/type scope. This stream curates,
   it does not bulk-import.
-- **Inspect:** both `*-programs-data.json`, `src/data/programs.ts`, `founder-atlas-refresh` SKILL.md.
+- **Inspect:** both `*-programs-data.json`, `src/data/programs.ts`, `0rbital-data-review` SKILL.md.
 - **Create/modify:** `docs/mvp-data-scope.md`, `docs/program-data-quality.md`, optional
   `scripts/check-mvp-readiness.ts` (reports MVP-readiness per record), a data-quality checklist. Tag
   in-scope records (e.g. additive `mvp: true` + `ecosystem`) — coordinate field name with Stream 2.
@@ -321,8 +321,8 @@ streams below.
 
 ### Stream 7 — Freshness & Update Pipeline · `feat/program-update-pipeline`
 - **Focus:** Maintainability without pretending automation is solved. Reports only — never auto-publish.
-- **Background:** No `scripts/` dir exists; data is refreshed manually via the `founder-atlas-refresh` skill.
-- **Inspect:** `src/data/programs.ts`, both data JSONs, `package.json` scripts, `founder-atlas-refresh` SKILL.md.
+- **Background:** No `scripts/` dir exists; data is refreshed manually via the `0rbital-data-review` skill.
+- **Inspect:** `src/data/programs.ts`, both data JSONs, `package.json` scripts, `0rbital-data-review` SKILL.md.
 - **Create/modify:** `scripts/check-program-freshness.ts`, `scripts/check-source-urls.ts`,
   `scripts/generate-update-report.ts`, `scripts/check-mvp-readiness.ts`; npm scripts; `docs/update-pipeline.md`.
 - **Tasks:** stale-record detection, source-URL health (optional/offline-safe), report generation;
@@ -338,7 +338,7 @@ streams below.
 - **Focus:** Stage user/agent/manual updates without blindly changing data.
 - **Background:** Current submission flow builds a prefilled GitHub issue (`src/lib/submit.ts`); keep
   it working. This adds a structured queue layer.
-- **Inspect:** `src/lib/submit.ts`, `src/components/SubmitForm.tsx`, data JSONs, `founder-atlas-refresh` SKILL.md.
+- **Inspect:** `src/lib/submit.ts`, `src/components/SubmitForm.tsx`, data JSONs, `0rbital-data-review` SKILL.md.
 - **Create/modify:** `ProposedProgramUpdate` model; `data/review-queue/*` (pending/approved/rejected);
   validation for proposed changes; `scripts/apply-updates.ts` (apply approved only); audit trail.
 - **Sensitive fields requiring sources:** deadline · application status · equity · funding amount ·
