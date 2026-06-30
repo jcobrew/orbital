@@ -101,9 +101,8 @@ Going one level up from individual programs: profiles of national startup ecosys
 considering relocation — summary, visa/residency routes, key organizations and links.
 
 - [Countries API](/api/countries.json): machine-readable profiles. Each country joins back to the
-  program data via the shared \`name\` field, and carries a \`programCount\`. Served with CORS.
-- [Countries index](/countries) and per-country pages at \`/country/<slug>\` (e.g. \`/country/usa\`).
-  Each country page also carries schema.org \`Country\` JSON-LD.
+  program data via the shared \`name\` field, and carries a \`programCount\`. Served with CORS. This
+  is the canonical country surface; the human-facing country pages are not in production yet.
 
 This dataset is intentionally small for now and growing; it is designed to move to an updatable
 cloud database without changing the API shape.

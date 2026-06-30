@@ -5,7 +5,7 @@ import { CITIES, getCity } from '../../data/cities';
 import { programSlug } from '../../data/programs';
 import { statusMeta } from '../../lib/status';
 import { livingModelLabel } from '../../lib/living';
-import { countrySlug, hasCountryProfile } from '../../data/countries';
+import { hasCountryProfile } from '../../data/countries';
 import { defaultSort } from '../../lib/filter';
 
 export function getStaticPaths() {
@@ -48,7 +48,7 @@ const description = `Founder residencies, hacker houses and co-living programs i
     <div class="mt-1.5 text-[13px] text-muted">
       {
         hasCountry ? (
-          <a href={`/country/${countrySlug(city.country)}`} class="font-semibold">{city.country} ↗</a>
+          <a href={`/explore?country=${encodeURIComponent(city.country)}`} class="font-semibold">{city.country} ↗</a>
         ) : (
           <span>{city.country}</span>
         )

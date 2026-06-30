@@ -22,6 +22,9 @@ export interface Trigger {
   needs?: Partial<FounderNeedsProfile>;
 }
 
+// Each trigger narrows the list via the free-text `q` (the living/working
+// `model` filter was retired in favour of the data-driven Sector/Country
+// filters, so triggers map to keyword presets the search hay can match).
 export const TRIGGERS: Trigger[] = [
   {
     label: 'I need funding',
@@ -29,19 +32,9 @@ export const TRIGGERS: Trigger[] = [
     needs: { fundingNeed: true, supportNeeds: ['funding', 'investor-access'] },
   },
   {
-    label: 'I need a place to live & build',
-    preset: { model: 'both' },
-    needs: { willingToRelocate: true, supportNeeds: ['housing', 'workspace', 'structure'] },
-  },
-  {
     label: 'I want a live-in residency',
-    preset: { model: 'co-living' },
+    preset: { q: 'live-in' },
     needs: { supportNeeds: ['housing', 'structure', 'community'] },
-  },
-  {
-    label: 'I just need a place to work',
-    preset: { model: 'co-working' },
-    needs: { supportNeeds: ['workspace', 'community'] },
   },
   {
     label: 'I need a cofounder or community',
@@ -52,11 +45,6 @@ export const TRIGGERS: Trigger[] = [
     label: 'I need deep focus',
     preset: { q: 'residency' },
     needs: { stage: 'idea', supportNeeds: ['structure', 'community'] },
-  },
-  {
-    label: 'I need to move to a startup hub',
-    preset: { model: 'both' },
-    needs: { willingToRelocate: true, supportNeeds: ['visa-support', 'community'] },
   },
 ];
 

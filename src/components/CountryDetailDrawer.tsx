@@ -32,6 +32,7 @@ export default function CountryDetailDrawer() {
   if (!country) return null;
 
   const dashboardHref = `/dashboard?country=${encodeURIComponent(country.name)}`;
+  const listHref = `/explore?country=${encodeURIComponent(country.name)}`;
   const count = country.programCount;
   const flag = flagSrc(country.slug);
 
@@ -114,9 +115,10 @@ export default function CountryDetailDrawer() {
             </p>
           )}
 
-          {/* Compact link row */}
+          {/* Compact link row — point into the filtered list/dashboard rather
+              than a dedicated country page (those are soft-hidden for now). */}
           <div className="mb-5 flex flex-col gap-1.5 text-[12.5px]">
-            <a href={`/country/${country.slug}`} className="font-semibold text-a2 hover:text-text">
+            <a href={listHref} className="font-semibold text-a2 hover:text-text">
               {count} house{count === 1 ? '' : 's'} & residenc{count === 1 ? 'y' : 'ies'} here →
             </a>
             <a href={dashboardHref} className="font-semibold text-a2 hover:text-text">

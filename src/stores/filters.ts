@@ -3,11 +3,10 @@
 // also stays in sync with the URL query string — the deep-link contract that
 // agents and humans use (e.g. /dashboard?model=both&country=USA&country=UK&status=open).
 //
-// The filter axis is intentionally small: a co-living/co-working/both `model`,
-// one-or-more `country` values, recruiting `status`, and free-text `q`. Older
-// links carrying removed params (type/format/stage/sector/housing/dataset) are
-// silently ignored. A legacy single `?country=USA` still works (parsed into a
-// one-element array).
+// The filter axis is intentionally small: one-or-more `sector` ids, one-or-more
+// `country` values, recruiting `status`, and free-text `q`. Older links carrying
+// removed params (type/format/stage/model/housing/dataset) are silently ignored.
+// A legacy single `?country=USA` still works (parsed into a one-element array).
 
 import { atom } from 'nanostores';
 import { EMPTY_FILTERS, type Filters } from '../lib/filter';
@@ -22,7 +21,7 @@ export function filtersFromURL(search = window.location.search): Filters {
   return {
     q: u.get('q') ?? '',
     status: status && status in STATUS ? status : '',
-    model: u.get('model') ?? '',
+    sector: u.getAll('sector').filter(Boolean),
     country: u.getAll('country').filter(Boolean),
   };
 }
@@ -31,7 +30,7 @@ export function filtersFromURL(search = window.location.search): Filters {
 export function filtersToQuery(f: Filters): string {
   const u = new URLSearchParams();
   if (f.q) u.set('q', f.q);
-  if (f.model) u.set('model', f.model);
+  for (const s of f.sector) u.append('sector', s);
   for (const c of f.country) u.append('country', c);
   if (f.status) u.set('status', f.status);
   return u.toString();
