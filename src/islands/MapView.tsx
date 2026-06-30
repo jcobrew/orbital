@@ -37,7 +37,9 @@ const CLUSTERS = [
   { id: 'ldn', label: 'London', bounds: [[51.25, -0.55], [51.72, 0.3]], anchor: [51.51, -0.12], place: [52.0, -40.0] }, // North Atlantic, above NYC
   { id: 'blr', label: 'Bangalore', bounds: [[12.78, 77.4], [13.18, 77.85]], anchor: [12.97, 77.59], place: [3.0, 80.0] }, // Indian Ocean
 ] as const;
-const INSET_MIN_MEMBERS = 3;
+// Strict: only true hubs (e.g. the SF Bay Area) earn an off-coast inset; thin
+// 2–4-program regions just render as normal map pins.
+const INSET_MIN_MEMBERS = 5;
 const INSET_SHOW_MAX_ZOOM = 5;
 
 // Spread markers sharing a coordinate so they don't fully overlap.

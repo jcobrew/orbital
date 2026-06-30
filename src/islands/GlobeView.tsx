@@ -70,10 +70,11 @@ const CLUSTERS = [
   { id: 'blr', label: 'Bangalore', bounds: [[12.78, 77.4], [13.18, 77.85]] },
 ] as const;
 const DEFAULT_CITY = 'sf';
-// A minimap/marker is only worthwhile where programs cluster too tightly to
-// click apart on the globe — i.e. this many or more in the box. At 3 the pins
-// already crowd into each other, so that's where the minimap takes over.
-const MIN_DENSITY = 3;
+// A minimap/marker is only worthwhile where programs genuinely cluster too
+// tightly to click apart on the globe — i.e. this many or more in the box. Kept
+// strict (5) so only true hubs (e.g. the SF Bay Area) earn a minimap; thin
+// 2–3-program "clusters" just render as normal pins instead.
+const MIN_DENSITY = 5;
 function inBounds(p: Program, b: readonly (readonly number[])[]) {
   return p.lat >= b[0][0] && p.lat <= b[1][0] && p.lng >= b[0][1] && p.lng <= b[1][1];
 }

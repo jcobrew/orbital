@@ -391,40 +391,6 @@
       "verificationStatus": "verified"
     },
     {
-      "name": "The Residency — Londinium",
-      "type": "Live-in Incubator",
-      "city": "London",
-      "country": "UK",
-      "lat": 51.5074,
-      "lng": -0.1278,
-      "focus": "AI researchers & startup founders",
-      "operator": "The Residency (livetheresidency)",
-      "stage": "Very early / exploratory",
-      "status": "rolling",
-      "status_detail": "AI-focused 5-bedroom home connected to central London.",
-      "domain": "livetheresidency.com",
-      "url": "https://www.livetheresidency.com/residencies",
-      "highlight": "London AI house in The Residency network.",
-      "mvp": true,
-      "ecosystem": "uk",
-      "canonicalType": "founder-residency",
-      "supportModes": [
-        "housing",
-        "workspace",
-        "community",
-        "structure",
-        "mentorship",
-        "funding",
-        "investor-access"
-      ],
-      "format": "live-in",
-      "sourceUrls": [
-        "https://www.livetheresidency.com/residencies"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
-    },
-    {
       "name": "The Residency — Bangalore",
       "type": "Live-in Incubator",
       "city": "Bangalore",
@@ -649,8 +615,8 @@
       "stage": "Student / pre-seed",
       "status": "rolling",
       "status_detail": "Collaborative 9-month build program for students.",
-      "domain": "gatech.edu",
-      "url": "https://www.techloy.com/17-of-the-best-hacker-houses-for-tech-talents-and-founders-around-the-world/",
+      "domain": "gthackerhouse.com",
+      "url": "https://www.gthackerhouse.com/",
       "highlight": "University-run hacker house for student founders.",
       "mvp": true,
       "ecosystem": "us-global-remote",
@@ -664,7 +630,7 @@
       "sourceUrls": [
         "https://www.techloy.com/17-of-the-best-hacker-houses-for-tech-talents-and-founders-around-the-world/"
       ],
-      "lastVerified": "2026-06-12",
+      "lastVerified": "2026-06-28",
       "verificationStatus": "needs-review"
     },
     {
@@ -682,34 +648,6 @@
       "domain": "hackerhousemerida.com",
       "url": "https://hackerhousemerida.com/",
       "highlight": "LatAm builder house in Mérida.",
-      "canonicalType": "hacker-house",
-      "supportModes": [
-        "housing",
-        "workspace",
-        "community"
-      ],
-      "format": "unknown",
-      "sourceUrls": [
-        "https://www.techloy.com/17-of-the-best-hacker-houses-for-tech-talents-and-founders-around-the-world/"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
-    },
-    {
-      "name": "AbadiaDev",
-      "type": "Hacker House (Web3)",
-      "city": "Buenos Aires",
-      "country": "Argentina",
-      "lat": -34.6037,
-      "lng": -58.3816,
-      "focus": "Web3, blockchain, crypto builders",
-      "operator": "AbadiaDev",
-      "stage": "Early",
-      "status": "rolling",
-      "status_detail": "Collaborative space for the Web3/crypto ecosystem.",
-      "domain": "abadiadev.com",
-      "url": "https://abadiadev.com/",
-      "highlight": "Argentina's Web3 builder community house.",
       "canonicalType": "hacker-house",
       "supportModes": [
         "housing",
@@ -777,151 +715,6 @@
       "format": "live-in",
       "sourceUrls": [
         "https://www.techloy.com/17-of-the-best-hacker-houses-for-tech-talents-and-founders-around-the-world/"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
-    },
-    {
-      "name": "Pluto (AI Hacker House)",
-      "type": "Hacker House",
-      "city": "Zurich",
-      "country": "Switzerland",
-      "lat": 47.3769,
-      "lng": 8.5417,
-      "focus": "AI & robotics builders",
-      "operator": "Pluto",
-      "stage": "Early",
-      "status": "rolling",
-      "status_detail": "AI/robotics residential workspace (also Paris).",
-      "domain": "pluto.community",
-      "url": "https://www.techloy.com/17-of-the-best-hacker-houses-for-tech-talents-and-founders-around-the-world/",
-      "highlight": "Shared residential workspace for AI/robotics builders.",
-      "mvp": true,
-      "ecosystem": "europe-wide",
-      "canonicalType": "hacker-house",
-      "supportModes": [
-        "housing",
-        "workspace",
-        "community"
-      ],
-      "format": "live-in",
-      "sourceUrls": [
-        "https://www.techloy.com/17-of-the-best-hacker-houses-for-tech-talents-and-founders-around-the-world/"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
-    },
-    {
-      "name": "HackerHouse.world",
-      "type": "Hacker House Network",
-      "city": "Bordeaux",
-      "country": "France",
-      "lat": 44.8378,
-      "lng": -0.5792,
-      "focus": "Entrepreneurs, nomads & developers",
-      "operator": "HackerHouse.world",
-      "stage": "Early / nomad",
-      "status": "rolling",
-      "status_detail": "Network across Bordeaux, Berlin, Venice, Rome, Dublin & London.",
-      "domain": "hackerhouse.world",
-      "url": "https://hackerhouse.world/",
-      "highlight": "Multi-city European hacker-house network.",
-      "mvp": true,
-      "ecosystem": "europe-wide",
-      "canonicalType": "hacker-house",
-      "supportModes": [
-        "housing",
-        "workspace",
-        "community"
-      ],
-      "format": "live-in",
-      "sourceUrls": [
-        "https://hackerhouse.world/"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
-    },
-    {
-      "name": "Bali Hacker House (The Collective)",
-      "type": "Hacker House / Coliving",
-      "city": "Bali",
-      "country": "Indonesia",
-      "lat": -8.4095,
-      "lng": 115.1889,
-      "focus": "Tech founders, AI developers & creators",
-      "operator": "The Collective",
-      "stage": "Early / nomad",
-      "status": "rolling",
-      "status_detail": "Residential hub for intense collaboration among builders.",
-      "domain": "thecollective.xyz",
-      "url": "https://www.thecollective.xyz/bali-hacker-house",
-      "highlight": "Southeast-Asia builder residence.",
-      "canonicalType": "hacker-house",
-      "supportModes": [
-        "housing",
-        "workspace",
-        "community"
-      ],
-      "format": "unknown",
-      "sourceUrls": [
-        "https://www.techloy.com/17-of-the-best-hacker-houses-for-tech-talents-and-founders-around-the-world/"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
-    },
-    {
-      "name": "Labsmart Hacker House",
-      "type": "Hacker House / Workspace",
-      "city": "Bangalore",
-      "country": "India",
-      "lat": 12.9116,
-      "lng": 77.6389,
-      "focus": "Early-stage founders, devs, product builders",
-      "operator": "Labsmart",
-      "stage": "Early",
-      "status": "rolling",
-      "status_detail": "Opened July 2025 in HSR Layout; build-and-ship-daily ethos.",
-      "domain": "labsmart.in",
-      "url": "https://startuptimes.net/labsmart-unveils-hacker-house-a-dedicated-workspace-for-startup-builders-in-bangalore",
-      "highlight": "Workspace for builders in Bangalore's startup hub.",
-      "canonicalType": "hacker-house",
-      "supportModes": [
-        "housing",
-        "workspace",
-        "community"
-      ],
-      "format": "unknown",
-      "sourceUrls": [
-        "https://startuptimes.net/labsmart-unveils-hacker-house-a-dedicated-workspace-for-startup-builders-in-bangalore"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
-    },
-    {
-      "name": "Build Club / Build Campus",
-      "type": "AI Residency + Campus",
-      "city": "Sydney",
-      "country": "Australia",
-      "lat": -33.8688,
-      "lng": 151.2093,
-      "focus": "AI engineers & founders",
-      "operator": "Annie Liao (out of Aura Ventures)",
-      "stage": "Early",
-      "status": "rolling",
-      "status_detail": "6-week AI residency; launching Build Campus as Australia's first permanent AI builder residency.",
-      "domain": "buildclub.ai",
-      "url": "https://buildclub.ai/",
-      "highlight": "Recreated SF hacker-house energy (AGI House, HF0, Founders Inc) in Australia.",
-      "canonicalType": "founder-residency",
-      "supportModes": [
-        "housing",
-        "workspace",
-        "community",
-        "structure"
-      ],
-      "format": "unknown",
-      "sourceUrls": [
-        "https://buildclub.ai/"
       ],
       "lastVerified": "2026-06-12",
       "verificationStatus": "needs-review"
@@ -1254,70 +1047,6 @@
       "verificationStatus": "verified"
     },
     {
-      "name": "London Founder House",
-      "type": "Hacker House / Residency",
-      "city": "London",
-      "country": "UK",
-      "lat": 51.523,
-      "lng": -0.11,
-      "focus": "'The most obsessed founders in London' (non-competing markets)",
-      "operator": "Haz Hubble (founder of Pally)",
-      "stage": "Early / funded",
-      "status": "open",
-      "status_detail": "Hacker house + residency + community. Notably asks residents to have raised ~$500k. Live-and-build SF energy in London.",
-      "domain": "londonfounderhouse.com",
-      "url": "https://www.londonfounderhouse.com/",
-      "highlight": "Founder mansion offering acceptance & community against startup loneliness.",
-      "mvp": true,
-      "ecosystem": "uk",
-      "canonicalType": "founder-residency",
-      "supportModes": [
-        "housing",
-        "workspace",
-        "community",
-        "structure",
-        "mentorship"
-      ],
-      "format": "live-in",
-      "sourceUrls": [
-        "https://www.londonfounderhouse.com/"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
-    },
-    {
-      "name": "Threshold (UK) — upcoming",
-      "type": "Residency (Upcoming)",
-      "city": "London",
-      "country": "UK",
-      "lat": 51.5085,
-      "lng": -0.09,
-      "focus": "Early-stage founders (details emerging)",
-      "operator": "Not yet public",
-      "stage": "Early",
-      "status": "opening-soon",
-      "status_detail": "Flagged as an upcoming UK founder program. As of June 2026 there is little public/indexed information — placeholder pending verification of location, terms & operator.",
-      "domain": "",
-      "url": "https://www.google.com/search?q=Threshold+founder+residency+UK",
-      "highlight": "UNVERIFIED — added on user tip; confirm details before relying on this entry.",
-      "mvp": true,
-      "ecosystem": "uk",
-      "canonicalType": "founder-residency",
-      "supportModes": [
-        "housing",
-        "workspace",
-        "community",
-        "structure",
-        "mentorship"
-      ],
-      "format": "live-in",
-      "sourceUrls": [
-        "https://www.google.com/search?q=Threshold+founder+residency+UK"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
-    },
-    {
       "name": "The Residency — Inventors (SF)",
       "type": "Live-in Incubator",
       "city": "San Francisco",
@@ -1567,66 +1296,6 @@
       "verificationStatus": "needs-review"
     },
     {
-      "name": "Hive Coliving (Founder House)",
-      "type": "Hacker House / Coliving",
-      "city": "San Francisco",
-      "country": "USA",
-      "lat": 37.7785,
-      "lng": -122.4055,
-      "focus": "Techpreneurs, hackers & founders",
-      "operator": "Hive Coliving",
-      "stage": "Early",
-      "status": "rolling",
-      "status_detail": "50-bedroom co-living + co-working house at 1040 Folsom St, SoMa.",
-      "domain": "hivecolivingsf.com",
-      "url": "https://www.hivecolivingsf.com/home-techpreneurs",
-      "highlight": "Large SoMa co-living house oriented to founders & builders.",
-      "mvp": true,
-      "ecosystem": "us-global-remote",
-      "canonicalType": "hacker-house",
-      "supportModes": [
-        "housing",
-        "workspace",
-        "community"
-      ],
-      "format": "live-in",
-      "sourceUrls": [
-        "https://www.hivecolivingsf.com/home-techpreneurs"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
-    },
-    {
-      "name": "Launch House",
-      "type": "Hacker House / Coliving",
-      "city": "Los Angeles",
-      "country": "USA",
-      "lat": 34.0901,
-      "lng": -118.4065,
-      "focus": "Founders — live-in residency + membership community",
-      "operator": "Michael Houck, Brett Goldstein & Jacob Peters",
-      "stage": "Early",
-      "status": "closed",
-      "status_detail": "Pioneered the 4-week live-in residency (a Beverly Hills mansion) + year-long community; the live-in model later wound down / pivoted. Listed for reference.",
-      "domain": "launchhouse.com",
-      "url": "https://techcrunch.com/2021/08/19/launch-house-raises-millions-to-launch-houses-and-the-next-big-startups/",
-      "highlight": "Iconic early-2020s 'new-age hacker house' that popularized the live-in founder residency.",
-      "mvp": true,
-      "ecosystem": "us-global-remote",
-      "canonicalType": "hacker-house",
-      "supportModes": [
-        "housing",
-        "workspace",
-        "community"
-      ],
-      "format": "live-in",
-      "sourceUrls": [
-        "https://techcrunch.com/2021/08/19/launch-house-raises-millions-to-launch-houses-and-the-next-big-startups/"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
-    },
-    {
       "name": "Hexa House",
       "type": "Hacker House / Coliving",
       "city": "San Francisco",
@@ -1652,64 +1321,6 @@
       "format": "live-in",
       "sourceUrls": [
         "https://www.hexa.com/blog/news/hexa-opens-hexa-house-san-francisco-a-new-home-for-ai-founders-in-the-bay-area"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
-    },
-    {
-      "name": "Project6",
-      "type": "Founder Residency (Short-form)",
-      "city": "Singapore",
-      "country": "Singapore",
-      "lat": 1.3521,
-      "lng": 103.8198,
-      "focus": "Founders — short high-intensity residencies",
-      "operator": "Project6",
-      "stage": "Early",
-      "status": "open",
-      "status_detail": "Runs 48-hour founder residencies in rented mansions; first cohorts (2026) in Johor Bahru, Kuala Lumpur & Singapore (with AI.SEA).",
-      "domain": "buildproject6.com",
-      "url": "https://buildproject6.com/",
-      "highlight": "Southeast-Asian experiment in ultra-short, intense founder residencies.",
-      "canonicalType": "founder-residency",
-      "supportModes": [
-        "housing",
-        "workspace",
-        "community",
-        "structure"
-      ],
-      "format": "unknown",
-      "sourceUrls": [
-        "https://vulcanpost.com/910822/project6-founder-residency/"
-      ],
-      "lastVerified": "2026-06-12",
-      "verificationStatus": "needs-review"
-    },
-    {
-      "name": "SHACK15",
-      "type": "Coworking Community / Club",
-      "city": "San Francisco",
-      "country": "USA",
-      "lat": 37.7955,
-      "lng": -122.3937,
-      "focus": "Founders, innovators & changemakers",
-      "operator": "SHACK15",
-      "stage": "Early → growth",
-      "status": "rolling",
-      "status_detail": "46,000 sq ft community & coworking club in the Ferry Building (Scandinavian design). Not residential, but a major founder gathering hub.",
-      "domain": "shack15.com",
-      "url": "https://www.shack15.com/",
-      "highlight": "SF's Ferry Building founder community & events club.",
-      "mvp": true,
-      "ecosystem": "us-global-remote",
-      "canonicalType": "hacker-house",
-      "supportModes": [
-        "workspace",
-        "community"
-      ],
-      "format": "in-person",
-      "sourceUrls": [
-        "https://www.shack15.com/"
       ],
       "lastVerified": "2026-06-12",
       "verificationStatus": "needs-review"
@@ -1785,8 +1396,8 @@
       "stage": "Student / pre-seed",
       "status": "running",
       "status_detail": "Summer 2026 (late May–July): 12 Yale founders in a Nob Hill house for 10 weeks. Sponsored by Raymond Tonsing (Caffeinated Capital). First edition.",
-      "domain": "yesyale.org",
-      "url": "https://www.yesyale.org/programs/yale-hacker-house",
+      "domain": "yalehackerhouse.com",
+      "url": "https://www.yalehackerhouse.com/",
       "highlight": "Yale's first SF hacker house — elite student founders plugging directly into the Bay Area ecosystem for a summer.",
       "mvp": true,
       "ecosystem": "us-global-remote",
@@ -1800,7 +1411,7 @@
       "sourceUrls": [
         "https://www.yesyale.org/programs/yale-hacker-house"
       ],
-      "lastVerified": "2026-06-12",
+      "lastVerified": "2026-06-28",
       "verificationStatus": "needs-review"
     },
     {
@@ -5035,6 +4646,37 @@
         "https://www.boost.vc/accelerator"
       ],
       "lastVerified": "2026-06-21",
+      "verificationStatus": "needs-review"
+    },
+    {
+      "name": "Pluto (AI Hacker House)",
+      "type": "Hacker House",
+      "city": "Zurich",
+      "country": "Switzerland",
+      "lat": 47.3769,
+      "lng": 8.5417,
+      "focus": "AI & robotics builders",
+      "operator": "Pluto",
+      "stage": "Early",
+      "status": "rolling",
+      "status_detail": "Roving AI/robotics builder residency (most recent cohort: Munich; also Zurich/Paris). Active on LinkedIn.",
+      "domain": "joinpluto.io",
+      "url": "https://joinpluto.io",
+      "highlight": "Roving live-in residency for AI/robotics builders.",
+      "notes": "Moving/pop-up program: each cohort runs in a different city, so an ended location is not a closure. Domain moved pluto.community -> joinpluto.io; verify cadence via LinkedIn.",
+      "mvp": true,
+      "ecosystem": "europe-wide",
+      "canonicalType": "hacker-house",
+      "supportModes": [
+        "housing",
+        "workspace",
+        "community"
+      ],
+      "format": "live-in",
+      "sourceUrls": [
+        "https://joinpluto.io"
+      ],
+      "lastVerified": "2026-06-29",
       "verificationStatus": "needs-review"
     }
   ]
