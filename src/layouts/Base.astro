@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import IntroOverlay from '../components/IntroOverlay.tsx';
 import CountryDetailDrawer from '../components/CountryDetailDrawer.tsx';
+import ApplyTrackPrompt from '../components/ApplyTrackPrompt.tsx';
 
 interface Props {
   title: string;
@@ -35,5 +36,11 @@ const autoIntro = ['/', '/explore'].includes(Astro.url.pathname);
     <slot />
     <IntroOverlay autoOpen={autoIntro} client:load />
     <CountryDetailDrawer client:load />
+    {/* Compare (CompareTray/CompareDrawer + CompareButton) is built but disabled
+        until per-program data is dense enough to compare — most founder-schema
+        fields are still unfilled, so a side-by-side table would be mostly
+        "Unknown". The components/stores/tests remain in the repo; re-mount the
+        tray + drawer here and restore the CompareButtons to switch it back on. */}
+    <ApplyTrackPrompt client:load />
   </body>
 </html>

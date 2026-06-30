@@ -74,26 +74,24 @@ export default function SiteNav({ current }: { current?: NavCurrent }) {
             Countries
           </a>
         )}
-        {/* Saved shortlist — the ☆ buttons live on every card, so the list it
-            fills needs a way back to it. Kept off the globe (like Countries) to
-            leave the globe panel uncluttered; shows a live count when non-empty. */}
-        {current !== 'globe' && (
-          <a
-            href="/saved"
-            aria-current={current === 'saved' ? 'page' : undefined}
-            className={`inline-flex items-center gap-1 rounded-[3px] px-2.5 py-1.5 font-display text-[12px] font-semibold no-underline transition ${
-              current === 'saved' ? 'text-text' : 'text-a2 hover:text-text'
-            }`}
-          >
-            <span aria-hidden="true">{saved.length ? '★' : '☆'}</span>
-            Saved
-            {saved.length > 0 && (
-              <span className="rounded-full border border-line2 px-1.5 text-[10px] leading-[1.4] text-muted">
-                {saved.length}
-              </span>
-            )}
-          </a>
-        )}
+        {/* Saved shortlist — the ☆ buttons live on every card and on the globe's
+            program popup, so every view (the globe included) needs a way back to
+            the list they fill; shows a live count when non-empty. */}
+        <a
+          href="/saved"
+          aria-current={current === 'saved' ? 'page' : undefined}
+          className={`inline-flex items-center gap-1 rounded-[3px] px-2.5 py-1.5 font-display text-[12px] font-semibold no-underline transition ${
+            current === 'saved' ? 'text-text' : 'text-a2 hover:text-text'
+          }`}
+        >
+          <span aria-hidden="true">{saved.length ? '★' : '☆'}</span>
+          Saved
+          {saved.length > 0 && (
+            <span className="rounded-full border border-line2 px-1.5 text-[10px] leading-[1.4] text-muted">
+              {saved.length}
+            </span>
+          )}
+        </a>
         <button
           type="button"
           onClick={openIntro}

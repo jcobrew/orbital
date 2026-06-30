@@ -7,7 +7,7 @@ import { PROGRAMS, programSlug, type Program } from '../../data/programs';
 import { citySlug } from '../../data/cities';
 import { statusMeta } from '../../lib/status';
 import { livingModelLabel } from '../../lib/living';
-import { applyHref } from '../../components/ProgramCard';
+import ApplyButton from '../../components/ApplyButton.tsx';
 import { UNKNOWN, displayVal, displayBool, displayDuration, whatYouGet } from '../../lib/display';
 import { windowsForSlug } from '../../data/applicationWindows';
 import { provenanceForSlug } from '../../data/sources';
@@ -124,16 +124,15 @@ const description = `${p.name} — a ${p.type} in ${p.city}, ${p.country} where 
     </div>
 
     <!-- CTAs -->
-    <div class="mb-7 flex flex-wrap gap-2.5">
-      <a
-        href={applyHref(p)}
-        target="_blank"
-        rel="noopener"
-        class="rounded-[3px] border border-transparent px-5 py-2.5 font-display text-[13px] font-bold text-[#0a0a0a] no-underline"
-        style="background:var(--grad)"
-      >
-        {p.applyUrl ? 'Apply' : 'Visit site'} →
-      </a>
+    <div class="mb-7 flex flex-wrap items-center gap-2.5">
+      <ApplyButton
+        slug={slug}
+        name={p.name}
+        url={p.url}
+        applyUrl={p.applyUrl}
+        status={p.status}
+        client:load
+      />
       {p.applyUrl && (
         <a
           href={p.url}
