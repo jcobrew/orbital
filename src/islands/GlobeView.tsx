@@ -4,7 +4,7 @@ import Globe from 'globe.gl';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Program } from '../data/programs';
-import { programModel, withOriginPins } from '../data/programs';
+import { programModel, programSlug, withOriginPins } from '../data/programs';
 import { passes, defaultSort } from '../lib/filter';
 import { statusMeta, STATUS_ORDER } from '../lib/status';
 import { logoMarkupHTML, installLogoFallback } from '../lib/logo';
@@ -14,6 +14,7 @@ import { countrySlug, hasCountryProfile } from '../data/countries';
 import FilterSidebar from '../components/FilterSidebar';
 import Logo from '../components/Logo';
 import StatusBadge from '../components/StatusBadge';
+import SaveButton from '../components/SaveButton';
 import SiteNav from '../components/SiteNav';
 import BootSequence from '../components/BootSequence';
 import { useTypewriter } from '../lib/useTypewriter';
@@ -765,15 +766,18 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
                 {selected.status_detail && <div><b>Details: </b>{selected.status_detail}</div>}
               </div>
               {selected.highlight && <div className="orbit-highlight">{selected.highlight}</div>}
-              <a
-                href={selected.url}
-                target="_blank"
-                rel="noopener"
-                className="mt-3 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-bold text-[#0a0a0a] no-underline"
-                style={{ background: 'var(--grad)' }}
-              >
-                Visit program →
-              </a>
+              <div className="mt-3 flex items-center gap-2">
+                <a
+                  href={selected.url}
+                  target="_blank"
+                  rel="noopener"
+                  className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-bold text-[#0a0a0a] no-underline"
+                  style={{ background: 'var(--grad)' }}
+                >
+                  Visit program →
+                </a>
+                <SaveButton slug={programSlug(selected.name)} name={selected.name} size="md" />
+              </div>
             </div>
           </div>
         </div>
