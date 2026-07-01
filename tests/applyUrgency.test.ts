@@ -36,9 +36,13 @@ describe('applyUrgency — legacy-status fallback (no window data)', () => {
     });
   });
 
-  it('maps opening-soon to "Opening soon"', () => {
+  it('maps coming-soon (and the opening-soon alias) to "Coming soon"', () => {
+    expect(applyUrgency('no-window-slug', 'coming-soon', NOW)).toEqual({
+      label: 'Coming soon',
+      tone: 'upcoming',
+    });
     expect(applyUrgency('no-window-slug', 'opening-soon', NOW)).toEqual({
-      label: 'Opening soon',
+      label: 'Coming soon',
       tone: 'upcoming',
     });
   });

@@ -6,7 +6,6 @@ import StatusBadge from './StatusBadge';
 import SaveButton from './SaveButton';
 import { applyHref } from './ProgramCard';
 import { noteApplyIntent } from '../stores/applyIntent';
-import { applyUrgency } from '../lib/applyUrgency';
 import { livingModelLabel } from '../lib/living';
 import { UNKNOWN, displayVal as val, displayBool as boolVal, displayDuration as duration } from '../lib/display';
 
@@ -41,7 +40,6 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
   if (!p) return null;
   const sources = p.sourceUrls ?? [];
   const slug = programSlug(p.name);
-  const urgency = applyUrgency(slug, p.status);
 
   return (
     <div className="fixed inset-0 z-[1000]" role="presentation">
@@ -79,48 +77,41 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
         </div>
 
         <div className="flex-1 overflow-y-auto p-5">
-          {/* CTAs */}
+          {/* CTAs — blocky/rectangular, matching the full page + list. Icon
+              buttons (bookmark/close) stay circular in the header. */}
           <div className="mb-5 flex flex-wrap items-center gap-2">
             <a
               href={applyHref(p)}
               target="_blank"
               rel="noopener"
               onClick={() => noteApplyIntent({ slug, name: p.name })}
-              className="rounded-full border border-transparent px-4 py-2.5 font-display text-[13px] font-bold text-[#0a0a0a] no-underline"
+              className="rounded-[3px] border border-transparent px-5 py-2.5 font-display text-[13px] font-bold text-[#0a0a0a] no-underline"
               style={{ background: 'var(--grad)' }}
             >
               {p.applyUrl ? 'Apply' : 'Visit site'} →
             </a>
-            {urgency && (
-              <span className="inline-flex items-center rounded-full border border-a2 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-a2">
-                {urgency.label}
-              </span>
-            )}
             {p.applyUrl && (
               <a
                 href={p.url}
                 target="_blank"
                 rel="noopener"
-                className="rounded-full border border-line2 px-4 py-2.5 text-[13px] font-semibold text-text no-underline transition hover:border-a1"
+                className="rounded-[3px] border border-line2 px-5 py-2.5 text-[13px] font-semibold text-text no-underline transition hover:border-a1"
               >
                 Visit site
               </a>
             )}
-            <a
-              href={`/programs/${programSlug(p.name)}`}
-              className="rounded-full border border-line2 px-4 py-2.5 text-[13px] font-semibold text-text no-underline transition hover:border-a1"
-            >
-              Open full page ↗
-            </a>
-            <a
-              href={`/submit?program=${encodeURIComponent(p.name)}&mode=update`}
-              className="rounded-full border border-line2 px-4 py-2.5 text-[13px] font-semibold text-muted no-underline transition hover:border-a1 hover:text-text"
-            >
-              Report update
-            </a>
           </div>
 
-          <div className="orbit-divider my-5" aria-hidden="true" />
+          {/* Notes — surfaced high so the human context reads before the facts grid. */}
+          {(p.highlight || p.status_detail || p.notes) && (
+            <>
+              <h3 className="m-0 mb-2 font-display text-[13px] font-bold text-text">Notes</h3>
+              {p.highlight && <p className="m-0 mb-2 text-[12.5px] leading-normal text-muted">{p.highlight}</p>}
+              {p.status_detail && <p className="m-0 mb-2 text-[12.5px] leading-normal text-muted">{p.status_detail}</p>}
+              {p.notes && <p className="m-0 mb-2 text-[12.5px] leading-normal text-muted">{p.notes}</p>}
+              <div className="orbit-divider my-5" aria-hidden="true" />
+            </>
+          )}
 
           {/* Quick facts */}
           <h3 className="m-0 mb-2 font-display text-[13px] font-bold text-text">Quick facts</h3>
@@ -147,16 +138,6 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
             {p.founderFit && p.founderFit.length ? p.founderFit.join(', ') : 'Not yet categorized — verify on the official site.'}
           </p>
 
-          {/* Notes */}
-          {(p.highlight || p.status_detail || p.notes) && (
-            <>
-              <h3 className="m-0 mb-2 font-display text-[13px] font-bold text-text">Notes</h3>
-              {p.highlight && <p className="m-0 mb-2 text-[12.5px] leading-normal text-muted">{p.highlight}</p>}
-              {p.status_detail && <p className="m-0 mb-2 text-[12.5px] leading-normal text-muted">{p.status_detail}</p>}
-              {p.notes && <p className="m-0 mb-2 text-[12.5px] leading-normal text-muted">{p.notes}</p>}
-            </>
-          )}
-
           <div className="orbit-divider my-5" aria-hidden="true" />
 
           {/* Sources */}
@@ -173,6 +154,14 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
           </ul>
           <p className="m-0 mt-3 text-[11px] italic text-muted">
             Last checked: {val(p.lastVerified)}. Application status and terms change often — confirm on the official site before applying.
+          </p>
+          <p className="m-0 mt-3 text-[11px]">
+            <a
+              href={`/submit?program=${encodeURIComponent(p.name)}&mode=update`}
+              className="text-muted underline decoration-line2 underline-offset-2 transition hover:text-text"
+            >
+              Something off? Report an update
+            </a>
           </p>
         </div>
       </div>

@@ -48,7 +48,7 @@ function daysUntilClose(w: ApplicationWindow, now: Date): number | null {
  * Precedence:
  *  1. A real, currently-open window closing within URGENT_WITHIN_DAYS → "Closes in N days".
  *  2. Resolved application status `open` → "Applications open".
- *  3. Legacy `closing-soon` / `opening-soon` → "Closing soon" / "Opening soon".
+ *  3. `closing-soon` (window-derived) → "Closing soon"; `coming-soon` → "Coming soon".
  *  4. Everything else (closed / upcoming-far / unknown) → null.
  */
 export function applyUrgency(
@@ -84,8 +84,9 @@ export function applyUrgency(
     return { label: 'Applications open', tone: 'open' };
   }
 
-  // 4. Opening soon (legacy upcoming hint when there's no window to be precise).
-  if (legacy === 'opening-soon') return { label: 'Opening soon', tone: 'upcoming' };
+  // 4. Coming soon (upcoming hint when there's no window to be precise). Accepts
+  //    the retired `opening-soon` alias too.
+  if (legacy === 'coming-soon' || legacy === 'opening-soon') return { label: 'Coming soon', tone: 'upcoming' };
 
   // 5. Nothing encouraging to say.
   return null;

@@ -92,7 +92,7 @@ export const PROGRAM_SCHEMA: SchemaField[] = [
   { field: 'founderFit', meaning: 'Founder archetypes served (FounderFit[]).', requirement: 'optional', kind: 'legacy-optional', type: 'enum[]' },
 
   // ---- Application / cohort (legacy optional) ----
-  { field: 'status', meaning: 'Recruiting status enum (rolling/open/closing-soon/opening-soon/running/closed).', requirement: 'mvp-required', kind: 'legacy', type: 'string' },
+  { field: 'status', meaning: 'Recruiting status enum (open/coming-soon/running/closed).', requirement: 'mvp-required', kind: 'legacy', type: 'string' },
   { field: 'status_detail', meaning: 'Human-readable recruiting detail.', requirement: 'optional', kind: 'legacy', type: 'string' },
   { field: 'applyUrl', meaning: 'Direct application URL (falls back to url).', requirement: 'optional', kind: 'legacy-optional', type: 'string' },
   { field: 'applicationDeadline', meaning: 'Next application deadline (ISO date).', requirement: 'optional', kind: 'legacy-optional', type: 'date-iso' },

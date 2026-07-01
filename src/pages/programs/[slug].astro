@@ -107,11 +107,6 @@ const description = `${p.name} — a ${p.type} in ${p.city}, ${p.country} where 
           >
             {s.label}
           </span>
-          {living && (
-            <span class="inline-flex items-center rounded-[3px] border border-a2 px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide text-a2">
-              {living}
-            </span>
-          )}
           {/* Stream 4: derived application status (only when window data exists,
               so legacy-status-only programs keep their single existing badge). */}
           {hasWindowData && <ApplicationStatusBadge status={appStatus.status} client:load />}

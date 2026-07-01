@@ -8,7 +8,7 @@ import { STATUS_ORDER, type StatusKey } from './status';
 export interface Filters {
   /** Free-text search across name, city, country, focus, operator. */
   q: string;
-  /** Recruiting status (rolling, open, closing-soon, …) or '' for any. */
+  /** Recruiting status (open, coming-soon, running, closed) or '' for any. */
   status: string;
   /** Selected sector ids (see data/sectors.ts), OR-matched. Empty = any. */
   sector: string[];

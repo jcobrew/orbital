@@ -77,8 +77,8 @@ Founder fields (optional; absent/"unknown" until verified & filled): \`format\`,
 Funding/Mentorship/InvestorAccess/DemoDay/VisaSupport), \`applyUrl\`, \`sourceUrls[]\`, \`lastVerified\`,
 \`verificationStatus\`, \`tags[]\`, \`notes\`. See \`schema\` in the API for descriptions.
 
-\`status\` enum: \`rolling\` (always open) | \`open\` (cohort window open) | \`closing-soon\` |
-\`opening-soon\` | \`running\` (cohort in session) | \`closed\` (check next cycle).
+\`status\` enum: \`open\` (applications open — rolling or a cohort window) |
+\`coming-soon\` (announced, not launched yet) | \`running\` (cohort in session) | \`closed\`.
 
 ## Dashboard — navigable by URL (best for agents)
 

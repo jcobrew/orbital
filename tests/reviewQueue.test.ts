@@ -35,7 +35,7 @@ function prog(p: Partial<Program>): Program {
 }
 
 const PROGRAMS_FIXTURE: Program[] = [
-  prog({ name: 'Y Combinator', status: 'rolling', status_detail: 'old detail' }),
+  prog({ name: 'Y Combinator', status: 'open', status_detail: 'old detail' }),
   prog({ name: 'HF0 (Hacker Fellowship Zero)', dataset: 'residential', status: 'closed' }),
 ];
 
@@ -170,18 +170,18 @@ describe('diff + merge helpers', () => {
   });
 
   it('computeDiff returns only changed fields', () => {
-    const existing = prog({ name: 'Y Combinator', status: 'rolling', status_detail: 'old detail' });
-    const diff = computeDiff({ status_detail: 'new detail', status: 'rolling' }, existing);
+    const existing = prog({ name: 'Y Combinator', status: 'open', status_detail: 'old detail' });
+    const diff = computeDiff({ status_detail: 'new detail', status: 'open' }, existing);
     expect(diff).toHaveLength(1);
     expect(diff[0]).toMatchObject({ field: 'status_detail', before: 'old detail', after: 'new detail' });
   });
 
   it('applyChanges is a non-destructive shallow merge', () => {
-    const existing = prog({ name: 'YC', status: 'rolling' });
+    const existing = prog({ name: 'YC', status: 'closed' });
     const merged = applyChanges({ status: 'open' }, existing);
     expect(merged.status).toBe('open');
     expect(merged.name).toBe('YC');
-    expect(existing.status).toBe('rolling'); // original untouched
+    expect(existing.status).toBe('closed'); // original untouched
   });
 });
 
@@ -246,7 +246,7 @@ describe('buildPlan (apply-updates planning)', () => {
           proposal: baseProposal({
             id: 'noop',
             status: 'approved',
-            changes: { status: 'rolling' }, // already rolling, with a source so it validates
+            changes: { status: 'open' }, // already open, with a source so it validates
             sources: [{ url: 'https://x.com' }],
           }),
         },

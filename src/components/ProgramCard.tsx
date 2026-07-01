@@ -2,7 +2,6 @@ import type { Program } from '../data/programs';
 import { programSlug } from '../data/programs';
 import Logo from './Logo';
 import StatusBadge from './StatusBadge';
-import LivingModelBadge from './LivingModelBadge';
 import SaveButton from './SaveButton';
 import { noteApplyIntent } from '../stores/applyIntent';
 import { applyUrgency } from '../lib/applyUrgency';
@@ -49,7 +48,6 @@ export default function ProgramCard({ program: p, onSelect }: { program: Program
       {p.highlight && <p className="m-0 mb-3 line-clamp-2 text-[12px] leading-normal text-muted">{p.highlight}</p>}
 
       <div className="mb-3 flex flex-wrap items-center gap-1.5">
-        <LivingModelBadge format={p.format} />
         {p.stage && <Badge>{p.stage}</Badge>}
         {p.providesHousing === true && <Badge>Housing</Badge>}
         {p.fundingAmount && <Badge>{p.fundingAmount}</Badge>}
