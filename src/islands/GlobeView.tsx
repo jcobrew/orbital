@@ -9,13 +9,14 @@ import { passes, defaultSort } from '../lib/filter';
 import { statusMeta, STATUS_ORDER } from '../lib/status';
 import { logoMarkupHTML, installLogoFallback } from '../lib/logo';
 import { $filters, initFiltersFromURL } from '../stores/filters';
+import { $saved, initSaved } from '../stores/saved';
 import { openCountry } from '../stores/country';
 import { countrySlug, hasCountryProfile } from '../data/countries';
 import FilterSidebar from '../components/FilterSidebar';
 import Logo from '../components/Logo';
 import StatusBadge from '../components/StatusBadge';
 import SaveButton from '../components/SaveButton';
-import SiteNav from '../components/SiteNav';
+import SiteNav, { ViewToggle } from '../components/SiteNav';
 import BootSequence from '../components/BootSequence';
 import { useTypewriter } from '../lib/useTypewriter';
 import { createAsciiRenderer, type AsciiRenderer } from '../lib/asciiGlobe';
@@ -145,6 +146,7 @@ const IconRotate = () => (<svg {...svg}><path d="M13.5 8a5.5 5.5 0 1 1-1.7-3.97"
 const IconReset = () => (<svg {...svg}><circle cx="8" cy="8" r="5.3" /><path d="M8 1v2.2M8 12.8V15M1 8h2.2M12.8 8H15" /></svg>);
 const IconMinimap = () => (<svg {...svg}><path d="M2 4.3l4-1.6 4 1.6 4-1.6v9l-4 1.6-4-1.6-4 1.6z" /><path d="M6 2.7v9M10 4.3v9" /></svg>);
 const IconLegend = () => (<svg {...svg}><circle cx="3.3" cy="4" r="1.3" /><circle cx="3.3" cy="8" r="1.3" /><circle cx="3.3" cy="12" r="1.3" /><path d="M6.6 4h7.4M6.6 8h7.4M6.6 12h7.4" /></svg>);
+const IconSaved = () => (<svg {...svg} fill="currentColor" stroke="none"><path d="M8 1.7l1.9 3.8 4.2.6-3 3 .7 4.2L8 11.3l-3.8 2 .7-4.2-3-3 4.2-.6L8 1.7z" /></svg>);
 
 // Escape user/data strings before injecting into the imperative pin markup.
 const esc = (s: string) =>
@@ -161,6 +163,7 @@ type MiniRec = { map: L.Map; layer: L.LayerGroup; fitted: boolean };
 
 export default function GlobeView({ programs }: { programs: Program[] }) {
   const filters = useStore($filters);
+  const saved = useStore($saved);
   const globeWrapEl = useRef<HTMLDivElement>(null);
   const globeEl = useRef<HTMLDivElement>(null);
   const worldRef = useRef<GlobeInstance>(null);
@@ -308,6 +311,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
   // ---- mount the globe ----
   useEffect(() => {
     initFiltersFromURL();
+    initSaved();
     installLogoFallback();
     if (!globeEl.current || !globeWrapEl.current || worldRef.current) return;
 
@@ -659,17 +663,29 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         )}
       </div>
 
-      {/* Top-left: brand wordmark that opens the programs panel (hidden while it's open) */}
+      {/* Top-left: brand, view switcher, and saved shortcut are visible before the panel opens. */}
       {!panelOpen && (
-        <button
-          onClick={() => setPanelOpen(true)}
-          aria-label="Open programs panel"
-          className="absolute left-4 top-4 z-20 inline-flex items-center gap-2 rounded-full border border-line2 bg-[rgba(16,16,16,.78)] px-3 py-2 font-display text-[13px] font-bold text-text backdrop-blur transition hover:border-a1"
-        >
-          <IconMenu />
-          <span className="orbit-node" aria-hidden="true" />
-          <span>0rbital</span>
-        </button>
+        <div className="absolute left-4 top-4 z-20 flex flex-wrap items-center gap-2 max-[760px]:right-16">
+          <button
+            onClick={() => setPanelOpen(true)}
+            aria-label="Open programs panel"
+            className="inline-flex items-center gap-2 rounded-full border border-line2 bg-[rgba(16,16,16,.78)] px-3 py-2 font-display text-[13px] font-bold text-text backdrop-blur transition hover:border-a1"
+          >
+            <IconMenu />
+            <span className="orbit-node" aria-hidden="true" />
+            <span>0rbital</span>
+          </button>
+          <ViewToggle current="globe" className="bg-[rgba(16,16,16,.78)] backdrop-blur" />
+          <a
+            href="/saved"
+            aria-label={saved.length ? `${saved.length} saved programs` : 'Saved programs'}
+            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line2 bg-[rgba(16,16,16,.78)] px-3 font-display text-[12px] font-semibold text-a2 no-underline backdrop-blur transition hover:border-a1 hover:text-text"
+          >
+            <IconSaved />
+            <span>Saved</span>
+            {saved.length > 0 && <span className="rounded-full border border-line2 px-1.5 text-[10px] leading-[1.4] text-text">{saved.length}</span>}
+          </a>
+        </div>
       )}
 
       {/* Top-right: icon controls — rotate / reset, then panel toggles */}
@@ -760,7 +776,11 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
                 <StatusBadge status={selected.status} full />
               </div>
               <div className="orbit-meta">
-                <div className="text-text"><b>Location: </b>{selected.city}, {selected.country}</div>
+                <div className="text-text"><b>Location: </b>{selected.city}, {hasCountryProfile(selected.country) ? (
+                  <button type="button" onClick={() => openCountry(countrySlug(selected.country))} className="font-semibold text-a2 transition hover:text-text">
+                    {selected.country}
+                  </button>
+                ) : selected.country}</div>
                 <div><b>Focus: </b>{selected.focus}</div>
                 <div><b>Run by: </b>{selected.operator || 'Not publicly listed'}</div>
                 <div><b>Stage: </b>{selected.stage}</div>
@@ -851,7 +871,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
             {tagline}
             <span className="term-cursor" />
           </div>
-          <div className="max-w-[300px] text-[11.5px] leading-normal text-muted">{title.s}</div>
+          <div className="max-w-[300px] text-[11.5px] leading-normal text-text">{title.s}</div>
         </div>
         <div className="px-5 py-3">
           <FilterSidebar programs={programs} variant="sidebar" />
@@ -876,7 +896,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
                 <Logo name={p.name} domain={p.domain} size={38} />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[13px] font-semibold">{p.name}</span>
-                  <span className="mt-0.5 block truncate text-[11px] text-muted">
+                  <span className="mt-0.5 block truncate text-[11px] text-text">
                     {p.city}, {p.country} · {p.type}
                   </span>
                 </span>
