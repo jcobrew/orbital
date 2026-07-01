@@ -1,87 +1,87 @@
 ---
 name: 0rbital-data-review
 description: >-
-  Refresh the Orbital program dataset. Use when asked to update, refresh,
-  re-verify, or add to the founder-program data (src/data/programs-data.json) —
+  Refresh the Orbital co-living program dataset. Use when asked to update, refresh,
+  re-verify, or add to the founder co-living data (src/data/programs-data.json) —
   whether run interactively or from a scheduled routine. Gathers via web research,
   verifies, dedupes against existing entries, edits the JSON, and opens a DRAFT PR.
   Never pushes data straight to the live site.
 ---
 
-# Orbital — data refresh
+# Orbital — co-living data refresh
 
-You are maintaining the data behind a public, auto-deploying map of founder programs.
-The JSON file is the **single source of truth** and Vercel deploys `master` on push —
-so a bad entry is live immediately. Your job is to gather and curate carefully, then
-**open a draft PR for human review**. Do not push data to `master`.
+You are maintaining the data behind a public, auto-deploying map of **co-living founder
+programs** — founder residencies and hacker/founder houses where people live and build
+together for a fixed term. The JSON file is the **single source of truth** and Vercel
+deploys `master` on push — so a bad entry is live immediately. Your job is to gather and
+curate carefully, then **open a draft PR for human review**. Do not push data to
+`master`.
 
 This skill encodes the *steady-state refresh* process. Big discovery passes, taxonomy
 changes, and judgment-heavy curation are done interactively (in Cowork), and any new
 rules learned there should be folded back into this file.
 
-## The dataset (one unified file)
+## Scope — co-living only
 
-There is **one** dataset:
+Orbital is scoped to **co-living founder programs**. Every record in the dataset is a
+live-in / residential cohort. Concretely, a program belongs here **only if** it is:
 
-- `src/data/programs-data.json` — **every** builder-environment program in a single
-  top-level `programs` array. Residencies, hacker houses, accelerators, fellowships,
-  government grants, startup visas, co-founder communities — all live here together.
+- `canonicalType: "founder-residency"` — a live-in / relocation cohort built around
+  focus; you move into a house/campus for a fixed term, **or**
+- `canonicalType: "hacker-house"` — a shared house / coliving organized around a tech
+  scene; the value is builder density (often pay-rent), **or**
+- any program with `format: "live-in"` (a residential cohort that lives together).
+
+**Everything else is out of scope and must NOT be added:** commute-in accelerators,
+pre-accelerators, founder fellowships, government grants, startup visas, co-founder
+matching / online communities, startup campuses, incubators, studios. Those program
+types were removed from the dataset when Orbital narrowed to co-living. A great program
+that isn't residential is still out of scope — **flag it, don't add it.**
+
+> The test for inclusion is **"a selective founder cohort that lives together for a
+> fixed term."** Not "has a building," not "is a good program." Generic / nomad
+> co-living (pay-by-the-month housing open to anyone), pure co-working, one-off retreats,
+> and online communities are all out (see `program-liveness-audit` for the fuller
+> out-of-scope list).
+
+## The dataset (one file)
+
+- `src/data/programs-data.json` — **every** co-living founder program in a single
+  top-level `programs` array.
 
 > **There is no residential vs traditional split.** The old two-file model
-> (`startup-programs-data.json` / `traditional-programs-data.json`) and the
-> `residential`/`traditional` dataset axis are **retired**. A program is no longer
-> classified by *which file it goes in*; it is classified by its **`canonicalType`**
-> plus the other canonical dimensions below. (`dataset` survives only as a derived
-> back-compat value in the legacy `/api/programs.json` shim — never set it by hand,
-> never use it to decide where a record goes.)
+> (`startup-programs-data.json` / `traditional-programs-data.json`) is **retired**, and
+> the dataset no longer carries non-co-living records at all. (`dataset` survives only
+> as a derived back-compat value — always `"residential"` now — in the legacy
+> `/api/programs.json` shim; never set it by hand.)
 
-The "lives in a house / must relocate" quality that the old `residential` file tried to
-capture is now expressed **on the record itself**: `format: "live-in"` (or
-`"relocation"`) plus `housing` in `supportModes`. A live-in residency and a commute-in
-accelerator are two `canonicalType` values in the same file, not two files.
+The "lives in a house / must relocate" quality is expressed **on the record itself**:
+`format: "live-in"` (or `"relocation"`) plus `housing` in `supportModes`.
 
-## Step 1 — pick the `canonicalType`
+## Step 1 — confirm it's co-living, then pick the `canonicalType`
 
-The **first question** when adding (or re-checking) a program is: *what is its
-`canonicalType`?* This is the canonical machine ID from
+The **first question** when adding (or re-checking) a program is: *is this a residential
+cohort that lives together?* If not, stop — it's out of scope. If yes, pick its
+`canonicalType`, the canonical machine ID from
 [`src/data/taxonomy.ts`](../../../src/data/taxonomy.ts) (`programType` dimension),
-documented in [`docs/program-taxonomy.md`](../../../docs/program-taxonomy.md). The **8
-MVP categories** are:
+documented in [`docs/program-taxonomy.md`](../../../docs/program-taxonomy.md). Only two
+in-scope values:
 
 | `canonicalType` | Use it when… |
 | --- | --- |
 | `founder-residency` | Live-in / relocation cohort built around focus — you move into a house/campus for a fixed term (HF0, The Residency, Neo). |
 | `hacker-house` | Shared house / coliving organized around a tech scene; the value is builder density, often pay-rent (AGI House, STAK, Foundry). |
-| `accelerator` | Fixed-length cohort: small cheque + mentorship + demo day, usually for equity (Y Combinator, Techstars). |
-| `pre-accelerator` | Earlier, lighter-touch program that preps idea / pre-product founders for a full accelerator or first raise. |
-| `founder-fellowship` | Membership + capital that backs the person before (or independent of) an idea (South Park Commons, Afore FIR). |
-| `government-grant` | Public, non-dilutive funding / grant-backed program — money without equity (Start-Up Chile, national innovation grants). |
-| `startup-visa` | Visa, relocation, or soft-landing program that lets a founder build in a country (Estonia / France / UK startup visas, Hub71). |
-| `cofounder-matching` | Talent-investor or online community whose core value is finding a co-founder, peers, or a first cheque (Entrepreneur First, Antler, On Deck). |
-
-Future / non-MVP types are also representable (`incubator`, `startup-studio`,
-`corporate-accelerator`, `university-program`, `tech-transfer`, `deep-tech-program`,
-`startup-campus`, `venture-debt`, `pop-up-village`, `ecosystem-support`, `other`). Use
-them when a program genuinely fits, but remember they are **not** part of the MVP set
-(see `docs/mvp-data-scope.md`), so they will not be tagged `mvp: true`.
 
 **How to choose:**
 
-- **Live-in / relocation → `founder-residency`** (with `format: "live-in"` and `housing`
-  in `supportModes`). Do **not** route it to a separate file — the file is the same.
-- **Shared house, pay-rent, network-first → `hacker-house`** (`housing` in
+- **Curated, focus-first, you move in for a fixed cohort → `founder-residency`** (with
+  `format: "live-in"` and `housing` in `supportModes`).
+- **Shared house, pay-rent, network/scene-first → `hacker-house`** (`housing` in
   `supportModes`, usually `format: "live-in"`, `costFundingModel: "fee"`).
-- **Cohort + cheque + demo day → `accelerator`**; an earlier, lighter prep program →
-  `pre-accelerator`.
-- **Backs the person pre-idea → `founder-fellowship`**; matches you to a co-founder or
-  is an online founder community → `cofounder-matching`.
-- **Non-dilutive public money → `government-grant`**; visa / soft-landing →
-  `startup-visa`.
-- **Hybrid programs** (e.g. a cohort accelerator with a relocation phase) get their
-  *primary* `canonicalType`, with the nuance captured in `format` and `notes` — do not
-  invent a new type. If the primary type is genuinely ambiguous, **flag it in the PR**
-  rather than guessing.
-- If nothing fits, use `other` and **flag it** so a human can extend the taxonomy.
+- **Borderline** (e.g. a residency with a small cheque, or a house that also runs a
+  cohort program): pick the *primary* co-living type and capture the nuance in `format`
+  and `notes` — do not reach for a non-co-living type. If you genuinely can't tell
+  whether it's even co-living, **flag it in the PR** rather than adding it.
 
 ## Entry schema
 
@@ -146,23 +146,42 @@ Whenever you add a record or change a fact, supply provenance:
 - `lastVerified`: ISO date you confirmed it (e.g. `"2026-06-12"`).
 - `verificationStatus`: `verified` | `needs-review` | `unverified`.
 
-### Other optional founder fields (fill when verifiable — never guess)
+### Founder-facing fields the UI actually renders (collect these every time)
 
-They show as **"Unknown"** in the product until populated, so only add a field when a
-**primary source** states it.
+**These are not "nice to have."** The program card and detail drawer/full page render a
+"Quick facts" grid built from the fields below. If the skill doesn't populate them, the
+UI shows a wall of **"Unknown"** to every visitor forever — the data never fills itself.
+So on **every add and every refresh**, actively look for each of these on the program's
+own site (about / apply / FAQ / pricing pages) and fill what a **primary source** states.
+Still never *guess* — but "I didn't bother looking" is not an acceptable reason for a
+blank field. If a value genuinely isn't public, leave it unset and note it.
 
+Displayed in the card/drawer — chase these first:
+
+- `providesHousing`: `true` | `false` | `null` — **the defining co-living signal; set it
+  on every record.** A co-living program is almost always `true`.
+- `providesWorkspace`: `true` | `false` | `null` — is there a workspace / desks too?
+- `format`: living-model badge (`live-in` / `relocation` / `hybrid` / `in-person` /
+  `remote`) — set it explicitly; don't leave `unknown` on a co-living record.
 - `stageFit`: array from `pre-idea, idea, pre-product, mvp, pre-seed, seed, series-a-plus, repeat-founder, student, researcher`
-- `founderFit`: array from `first-time-founder, solo-founder, technical-builder, domain-expert, repeat-founder, student-founder, researcher, international-founder, relocating-founder, fundraising-soon, needs-focus, needs-community, needs-customers, needs-capital`
-- `sectorFocus`: array of sector tags (e.g. `["AI","climate"]`)
-- `applicationDeadline`, `nextCohortStart`: ISO dates
-- `durationWeeksMin`, `durationWeeksMax`: numbers; `cohortSize`: free text
-- `fundingAmount`, `equityTaken`, `cost`: free text (e.g. `"$250K"`, `"7%"`)
-- `providesHousing` / `providesWorkspace` / `providesFunding` / `providesMentorship` /
-  `providesInvestorAccess` / `providesDemoDay` / `providesVisaSupport`: `true` | `false` | `null`
-- `applyUrl`: direct application URL (distinct from `url`)
-- `mvp`: `true` only for a curated, in-scope record (MVP `canonicalType` **and** MVP
-  ecosystem — see `docs/mvp-data-scope.md`); `ecosystem`: one controlled string when `mvp`.
-- `tags`, `notes`: optional free-form
+- `founderFit`: array from `first-time-founder, solo-founder, technical-builder, domain-expert, repeat-founder, student-founder, researcher, international-founder, relocating-founder, fundraising-soon, needs-focus, needs-community, needs-customers, needs-capital` (drives the "Best for" line)
+- `sectorFocus`: array of sector tags (e.g. `["AI","climate"]`) — falls back to `focus`.
+- `durationWeeksMin`, `durationWeeksMax`: numbers (cohort length)
+- `cohortSize`: free text (e.g. `"~20 founders"`)
+- `cost`: free text — rent / program fee (e.g. `"$1,800/mo"`); central for hacker houses.
+- `fundingAmount`, `equityTaken`: free text (e.g. `"$250K"`, `"7%"`) when the program
+  invests; leave unset for pure pay-rent houses.
+
+Other useful fields:
+
+- `nextCohortStart`: ISO date; `applyUrl`: direct application URL (distinct from `url`).
+- `providesFunding` / `providesMentorship` / `providesInvestorAccess` / `providesDemoDay`:
+  `true` | `false` | `null`.
+- `mvp`: `true` only for a curated, in-scope record; `ecosystem`: one controlled string
+  when `mvp` (see `docs/mvp-data-scope.md`). `tags`, `notes`: optional free-form.
+
+> **Do not add `applicationDeadline`.** It changes constantly, is unverifiable at rest,
+> and the UI no longer renders it — put timing context in `status_detail` instead.
 
 Coordinates: `lat`/`lng` are decimal degrees for the program's city/building. Use a
 known landmark or the operator's stated location; do not invent precise rooftop
@@ -176,12 +195,18 @@ coordinates. A city-center coordinate is fine — the UI jitters overlapping pin
    source list below and fresh web search. Prefer primary sources (the program's own
    site / X) over aggregators.
 3. **Refresh existing entries.** For each program, re-verify `status` / `status_detail`
-   (cohorts open/close often) and fix anything stale. Touch only fields that changed,
-   and bump `lastVerified` when you re-confirm.
-4. **Add clearly-verified new programs**, using the schema — `canonicalType` first.
+   (cohorts open/close often) and fix anything stale. Bump `lastVerified` when you
+   re-confirm. **Backfill the UI fields** (previous section): while you're on the site,
+   fill any blank `providesHousing`, `format`, `cost`, `cohortSize`, `durationWeeks*`,
+   `stageFit`, `founderFit`, `sectorFocus`, `fundingAmount`/`equityTaken` that a primary
+   source states — a refresh that only bumps the date but leaves the drawer full of
+   "Unknown" is a missed opportunity.
+4. **Add clearly-verified new co-living programs**, using the schema — confirm it's
+   residential (Step 1) first, then `canonicalType`.
    - Skip anything you cannot corroborate on the program's own site or two independent
-     sources.
+     sources, and anything that isn't a live-in / residential cohort.
    - De-dupe: do not add a program whose `name` or `domain` already exists.
+   - Fill the UI fields above at add time, not "later" — later never comes.
 5. **Flag, don't guess.** Anything uncertain — unverifiable existence, ambiguous
    `canonicalType`, missing coordinates, suspected duplicate — goes in the **PR body as
    a checklist**, not silently into the data. (Precedent: "Threshold (UK)" was kept out
@@ -193,8 +218,11 @@ coordinates. A city-center coordinate is fine — the UI jitters overlapping pin
 
 - **PR-gated, never direct to `master`.** Always open a *draft* PR.
 - **Refresh + verified additions only.** Do not restructure the taxonomy, rename
-  fields, remove programs in bulk, or add new `canonicalType` IDs. Those are
-  interactive decisions — surface them in the PR body instead.
+  fields, remove programs in bulk, add new `canonicalType` IDs, or re-broaden the scope
+  beyond co-living. Those are interactive decisions — surface them in the PR body instead.
+- **Co-living only.** Never add an accelerator, fellowship, grant, visa, co-founder
+  community, or any non-residential program, even a famous one. It will be filtered out
+  of scope and just clutter the dataset.
 - **When in doubt, flag it.** A short PR with a few solid updates and a list of "needs
   human review" items is the success case. A large diff full of low-confidence
   additions is a failure.
@@ -244,19 +272,25 @@ Dataset remains the source of truth; merging triggers a Vercel deploy.
 Keep the PR focused; if a change is large or judgment-heavy, describe it in "Needs
 human review" rather than committing it.
 
-## Trusted sources (starting set — extend as you learn)
+## Trusted sources (co-living; extend as you learn)
 
-- Program sites: f.inc, southparkcommons.com, hf0.com, agihouse.ai,
-  livetheresidency.com, forgeresidency.com, arrayah.city, ns.com, thefoundery.in,
-  londonfounderhouse.com, neo.com, buildclub.ai, edgeesmeralda.com
-- Aggregators / news: cleverhack.com/2026-ai-startup-founder-resources, Sifted,
-  TechCrunch, Bloomberg, SF Standard, Capital Brief, SmartCompany, Entrepreneur India
+- Residency / hacker-house sites: hf0.com, agihouse.ai, livetheresidency.com,
+  forgeresidency.com, arrayah.city, neo.com, buildclub.ai — plus each program's own
+  site + LinkedIn/X for cohort activity.
 - The Residency publishes its full house network on its homes page — pull from there
   rather than memory, as it changes.
+- News / context (never the sole source, never the program `url`): Sifted, TechCrunch,
+  SF Standard, Capital Brief.
+
+> Old non-co-living seed sites (f.inc, southparkcommons.com, government/visa programs,
+> accelerator directories) were dropped when the scope narrowed — don't re-add programs
+> from them.
 
 ## Known watch-items (check each run)
 
 - **Threshold (UK)** — was an unverified placeholder; de-flag only with a real source.
 - **Forge Dubai**, **Arrayah Melbourne & Brisbane** — "opening-soon"; catch first cohorts.
+- **Roving residencies** (Pluto, The Residency themed houses) — a house wrapping ≠ the
+  program dying; look for the next cohort/city before changing `status`.
 </content>
 </invoke>

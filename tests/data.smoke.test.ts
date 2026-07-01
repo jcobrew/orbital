@@ -6,7 +6,7 @@
  * source/schema/data files.
  */
 import { describe, it, expect } from 'vitest';
-import { PROGRAMS, ALL_PROGRAMS, FACETS, deriveDataset } from '@/data/programs';
+import { PROGRAMS, FACETS, deriveDataset } from '@/data/programs';
 import { isProgramTypeId } from '@/data/taxonomy';
 
 describe('PROGRAMS', () => {
@@ -45,21 +45,15 @@ describe('PROGRAMS', () => {
     expect(others, `programs with canonicalType "other": ${others.join(', ')}`).toHaveLength(0);
   });
 
-  it('every co-living program Orbital ships is residential', () => {
-    // PROGRAMS is the co-living-filtered view, so every record here must be residential.
+  it('every program is co-living (residential) — the dataset is co-living-only', () => {
+    // The source JSON is now co-living-only, so every shipped record must be a
+    // founder-residency / hacker-house / live-in cohort, i.e. `dataset: residential`.
     for (const p of PROGRAMS) {
       expect(p.dataset, `${p.name} should be residential`).toBe('residential');
-    }
-  });
-
-  it('dataset derivation holds across the full corpus', () => {
-    // Validate the derivation over every source record, not just the co-living subset.
-    for (const p of ALL_PROGRAMS) {
-      const expected = deriveDataset(p);
-      expect(p.dataset).toBe(expected);
-      if (p.canonicalType === 'founder-residency' || p.canonicalType === 'hacker-house' || p.format === 'live-in') {
-        expect(p.dataset, `${p.name} should be residential`).toBe('residential');
-      }
+      expect(deriveDataset(p), `${p.name} derivation mismatch`).toBe(p.dataset);
+      const isCoLiving =
+        p.canonicalType === 'founder-residency' || p.canonicalType === 'hacker-house' || p.format === 'live-in';
+      expect(isCoLiving, `${p.name} is not a co-living record`).toBe(true);
     }
   });
 });

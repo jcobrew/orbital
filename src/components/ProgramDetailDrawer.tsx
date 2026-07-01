@@ -133,7 +133,6 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
             <Fact label="Equity" value={val(p.equityTaken)} />
             <Fact label="Cost" value={val(p.cost)} />
             <Fact label="Cohort size" value={val(p.cohortSize)} />
-            <Fact label="Deadline" value={val(p.applicationDeadline)} />
             <Fact label="Last verified" value={val(p.lastVerified)} />
           </dl>
 

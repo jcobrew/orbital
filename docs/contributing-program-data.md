@@ -33,13 +33,15 @@ The file has a top-level `programs` array. Add your entry there, following the e
 shape. Required fields per MVP standard:
 
 - `name` — official program name
-- `canonicalType` — the canonical program category (machine ID), one of
-  `founder-residency`, `hacker-house`, `accelerator`, `pre-accelerator`,
-  `founder-fellowship`, `government-grant`, `startup-visa`, `cofounder-matching` (the 8
-  MVP types; see [`docs/program-taxonomy.md`](./program-taxonomy.md)). **Pick this first.**
-- `supportModes` — array of what the program provides (`funding`, `housing`, `workspace`,
-  `mentorship`, `investor-access`, `demo-day`, `visa-support`, `community`,
-  `co-founder-matching`, `structure`, …)
+- `canonicalType` — the canonical program category (machine ID). Orbital is **co-living
+  only**, so this is one of `founder-residency` or `hacker-house` (see
+  [`docs/program-taxonomy.md`](./program-taxonomy.md)). **Pick this first.** A program
+  that isn't a live-in / residential cohort is out of scope — don't submit it.
+- `supportModes` — array of what the program provides; **`housing` should be present**
+  (it's a co-living program). Others: `workspace`, `funding`, `mentorship`,
+  `investor-access`, `community`, `co-founder-matching`, `structure`, …
+- `providesHousing` — set this (`true` for a co-living program); it's the defining signal
+  and drives the card/drawer "Housing" fact.
 - `type` — short human-readable **label** (e.g. "Accelerator", "Residency",
   "Fellowship"). This is display text only; `canonicalType` is the category.
 - `url` — canonical website or application URL
