@@ -29,7 +29,7 @@ skill works for any agent visiting the live site, with or without repo write acc
 
 Enumerate every program from the agent-friendly endpoint (no scraping needed):
 
-- `https://founder-atlas.vercel.app/api/programs.json` → `programs[]`, each with
+- `https://0rbital.app/api/programs.json` → `programs[]`, each with
   `name`, `operator`, `url`, `domain`, `city`, `country`, `status`, `lastVerified`.
 - Working in the repo instead? Read `src/data/programs-data.json`.
 

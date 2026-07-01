@@ -203,20 +203,6 @@ export function deriveDataset(p: Pick<Program, 'canonicalType' | 'format'>): Dat
 }
 
 /**
- * Predicate for the co-living niche Orbital focuses on: founder residencies and
- * hacker/founder houses where people live and build together. This is exactly
- * the set {@link deriveDataset} labels `'residential'`; expressed here as a named
- * predicate so it reads at the call site and stays the single source of truth.
- */
-export function isCoLiving(p: Pick<Program, 'canonicalType' | 'format'>): boolean {
-  return (
-    p.canonicalType === 'founder-residency' ||
-    p.canonicalType === 'hacker-house' ||
-    p.format === 'live-in'
-  );
-}
-
-/**
  * The single program-facing filter axis Orbital exposes: does a place give you
  * somewhere to live, somewhere to work, or both? Derived from the populated
  * `supportModes` (housing/workspace) with the explicit booleans as a stronger
@@ -236,22 +222,23 @@ export function programModel(
 }
 
 /**
- * The full source corpus (all records), with the derived `dataset` field. This
- * is the escape hatch for tooling/tests that need every record; the live site
- * and the public APIs all go through the co-living-filtered {@link PROGRAMS}.
+ * The dataset every page, island and API route consumes. The source JSON is now
+ * co-living-only (founder residencies and hacker/founder houses — see
+ * `src/data/programs-data.json`), so there is no wider corpus to filter against:
+ * every record here is a live-in / residential cohort. Facets, country/city
+ * counts, static-path generation and the APIs all derive from this single array.
  */
-export const ALL_PROGRAMS: Program[] = source.programs.map((p) => ({
+export const PROGRAMS: Program[] = source.programs.map((p) => ({
   ...(p as SourceProgram),
   dataset: deriveDataset(p as Program),
 }));
 
 /**
- * The dataset every page, island and API route consumes. Orbital is scoped to
- * co-living programs only, so this is the co-living-filtered view of
- * {@link ALL_PROGRAMS}. Filtering here is the single chokepoint — facets,
- * country/city counts, static-path generation and the APIs all derive from it.
+ * @deprecated Back-compat alias. The dataset used to carry non-co-living records
+ * that were filtered out at runtime; now the JSON itself is co-living-only, so
+ * `ALL_PROGRAMS` and {@link PROGRAMS} are the same set. Prefer `PROGRAMS`.
  */
-export const PROGRAMS: Program[] = ALL_PROGRAMS.filter(isCoLiving);
+export const ALL_PROGRAMS: Program[] = PROGRAMS;
 
 function countBy(items: Program[], key: keyof Program): Record<string, number> {
   const out: Record<string, number> = {};
