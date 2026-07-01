@@ -5,10 +5,21 @@ import StatusBadge from './StatusBadge';
 import SaveButton from './SaveButton';
 import { noteApplyIntent } from '../stores/applyIntent';
 import { applyUrgency } from '../lib/applyUrgency';
+import { countrySlug, hasCountryProfile } from '../data/countries';
 
 /** Apply link prefers an explicit applyUrl, else the program's site. */
 export function applyHref(p: Program): string {
   return p.applyUrl || p.url;
+}
+
+function CountryLink({ country }: { country: string }) {
+  return hasCountryProfile(country) ? (
+    <a href={`/country/${countrySlug(country)}`} className="font-semibold text-a2 no-underline hover:text-text">
+      {country}
+    </a>
+  ) : (
+    <>{country}</>
+  );
 }
 
 function Badge({ children }: { children: React.ReactNode }) {
@@ -36,7 +47,7 @@ export default function ProgramCard({ program: p, onSelect }: { program: Program
             {p.name}
           </a>
           <div className="mt-0.5 truncate text-[11.5px] text-muted">
-            {p.type} · {p.city}, {p.country}
+            {p.type} · {p.city}, <CountryLink country={p.country} />
           </div>
         </div>
         <div className="flex flex-none items-center gap-1.5">
@@ -45,7 +56,7 @@ export default function ProgramCard({ program: p, onSelect }: { program: Program
         </div>
       </div>
 
-      {p.highlight && <p className="m-0 mb-3 line-clamp-2 text-[12px] leading-normal text-muted">{p.highlight}</p>}
+      {p.highlight && <p className="m-0 mb-3 line-clamp-2 text-[12px] leading-normal text-text">{p.highlight}</p>}
 
       <div className="mb-3 flex flex-wrap items-center gap-1.5">
         {p.stage && <Badge>{p.stage}</Badge>}

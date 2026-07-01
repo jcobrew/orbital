@@ -5,6 +5,7 @@ import Logo from '../../components/Logo.tsx';
 import SaveButton from '../../components/SaveButton.tsx';
 import { PROGRAMS, programSlug, type Program } from '../../data/programs';
 import { citySlug } from '../../data/cities';
+import { countrySlug, hasCountryProfile } from '../../data/countries';
 import { statusMeta } from '../../lib/status';
 import { livingModelLabel } from '../../lib/living';
 import ApplyButton from '../../components/ApplyButton.tsx';
@@ -61,7 +62,6 @@ const quickFacts: [string, string][] = [
   ['Cost', displayVal(p.cost)],
   ['Housing', displayBool(p.providesHousing)],
   ['Workspace', displayBool(p.providesWorkspace)],
-  ['Deadline', displayVal(p.applicationDeadline)],
   ['Last verified', displayVal(p.lastVerified)],
 ];
 
@@ -97,7 +97,9 @@ const description = `${p.name} — a ${p.type} in ${p.city}, ${p.country} where 
       <div class="min-w-0 flex-1">
         <h1 class="m-0 font-display text-[26px] font-bold leading-[1.12] text-text">{p.name}</h1>
         <div class="mt-1 text-[13px] text-muted">
-          {p.type} · <a href={`/cities/${citySlug(p.city)}`} class="font-semibold text-muted hover:text-text">{p.city}</a>, {p.country}
+          {p.type} · <a href={`/cities/${citySlug(p.city)}`} class="font-semibold text-a2 hover:text-text">{p.city}</a>, {hasCountryProfile(p.country) ? (
+            <a href={`/country/${countrySlug(p.country)}`} class="font-semibold text-a2 hover:text-text">{p.country}</a>
+          ) : p.country}
         </div>
         <div class="mt-1 text-[12px] text-muted">Run by {p.operator || UNKNOWN}</div>
         <div class="mt-2.5 flex flex-wrap items-center gap-1.5">
@@ -179,9 +181,9 @@ const description = `${p.name} — a ${p.type} in ${p.city}, ${p.country} where 
       (p.highlight || p.status_detail || p.notes) && (
         <section class="mb-7">
           <h2 class="m-0 mb-2.5 font-display text-[15px] font-bold text-text">Notes</h2>
-          {p.highlight && <p class="m-0 mb-2 text-[13px] leading-relaxed text-muted">{p.highlight}</p>}
-          {p.status_detail && <p class="m-0 mb-2 text-[13px] leading-relaxed text-muted">{p.status_detail}</p>}
-          {p.notes && <p class="m-0 mb-2 text-[13px] leading-relaxed text-muted">{p.notes}</p>}
+          {p.highlight && <p class="m-0 mb-2 text-[13px] leading-relaxed text-text">{p.highlight}</p>}
+          {p.status_detail && <p class="m-0 mb-2 text-[13px] leading-relaxed text-text">{p.status_detail}</p>}
+          {p.notes && <p class="m-0 mb-2 text-[13px] leading-relaxed text-text">{p.notes}</p>}
         </section>
       )
     }

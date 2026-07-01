@@ -4,17 +4,20 @@
 
 The product is **0rbital**, pronounced **Orbital**.
 
-0rbital helps early-stage builders, founders, researchers, hackers, and creative technologists compare builder environments.
+0rbital helps early-stage builders, founders, researchers, hackers, and creative technologists compare **co-living founder programs** — places where builders live and build together for a fixed term.
 
 The main included categories are:
 
-* founder residencies
-* hacker houses
-* startup campuses
-* co-living programs
-* builder environments
+* founder residencies (live-in / relocation cohorts)
+* hacker / founder houses (coliving organized around a builder scene)
 
-The product should not drift into a generic startup-support, accelerator, grant, or visa database.
+That is the whole scope: **co-living only.** Every record is a residential cohort
+(`canonicalType` `founder-residency` or `hacker-house`, or `format: live-in`). The old
+broader "builder-environment" set (accelerators, fellowships, government grants, startup
+visas, co-founder matching, startup campuses, incubators, studios) was **removed** when
+0rbital narrowed to co-living — do not re-add it.
+
+The product should not drift into a generic startup-support, accelerator, grant, visa, or non-residential builder-environment database.
 
 ## Brand system
 
