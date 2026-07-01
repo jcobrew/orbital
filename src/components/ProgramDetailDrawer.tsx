@@ -3,6 +3,7 @@ import type { Program } from '../data/programs';
 import { programSlug } from '../data/programs';
 import Logo from './Logo';
 import StatusBadge from './StatusBadge';
+import SaveButton from './SaveButton';
 import { applyHref } from './ProgramCard';
 import { noteApplyIntent } from '../stores/applyIntent';
 import { applyUrgency } from '../lib/applyUrgency';
@@ -65,11 +66,12 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
             </div>
           </div>
           <div className="flex flex-none items-center gap-1.5">
+            <SaveButton slug={slug} name={p.name} size="md" />
             <button
               ref={closeRef}
               onClick={onClose}
               aria-label="Close"
-              className="rounded-sm border border-line2 px-2 py-1 text-[14px] leading-none text-muted hover:text-text"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-line2 text-[14px] leading-none text-muted transition hover:border-a1 hover:text-text"
             >
               ✕
             </button>

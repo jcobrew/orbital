@@ -4,7 +4,7 @@ import Globe from 'globe.gl';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Program } from '../data/programs';
-import { programSlug, withOriginPins } from '../data/programs';
+import { withOriginPins } from '../data/programs';
 import { passes, defaultSort } from '../lib/filter';
 import { statusMeta, STATUS_ORDER } from '../lib/status';
 import { logoMarkupHTML, installLogoFallback } from '../lib/logo';
@@ -13,8 +13,7 @@ import { openCountry } from '../stores/country';
 import { countrySlug, hasCountryProfile } from '../data/countries';
 import FilterSidebar from '../components/FilterSidebar';
 import Logo from '../components/Logo';
-import StatusBadge from '../components/StatusBadge';
-import SaveButton from '../components/SaveButton';
+import ProgramDetailDrawer from '../components/ProgramDetailDrawer';
 import SiteNav from '../components/SiteNav';
 import BootSequence from '../components/BootSequence';
 import { useTypewriter } from '../lib/useTypewriter';
@@ -133,14 +132,6 @@ const IconClose = () => (<svg {...svg}><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" /></
 const IconRotate = () => (<svg {...svg}><path d="M13.5 8a5.5 5.5 0 1 1-1.7-3.97" /><path d="M13.6 2.3v2.4h-2.4" /></svg>);
 const IconReset = () => (<svg {...svg}><circle cx="8" cy="8" r="5.3" /><path d="M8 1v2.2M8 12.8V15M1 8h2.2M12.8 8H15" /></svg>);
 const IconLegend = () => (<svg {...svg}><circle cx="3.3" cy="4" r="1.3" /><circle cx="3.3" cy="8" r="1.3" /><circle cx="3.3" cy="12" r="1.3" /><path d="M6.6 4h7.4M6.6 8h7.4M6.6 12h7.4" /></svg>);
-// Small rocket for the program card's "Visit" pill (dark glyph on the light pill).
-const IconRocket = () => (
-  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M8 1.5c2 1.6 3 4.1 3 6.6L9.8 9.3H6.2L5 8.1C5 5.6 6 3.1 8 1.5Z" />
-    <circle cx="8" cy="5.6" r="1" />
-    <path d="M6.2 9.3 5 12l1.6-1M9.8 9.3 11 12l-1.6-1" />
-  </svg>
-);
 
 // Escape user/data strings before injecting into the imperative pin markup.
 const esc = (s: string) =>
@@ -415,16 +406,16 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
 
     world.htmlElementsData(globePins);
     // Origin→host links (e.g. The Bridge London→SF, SILTA Helsinki→SF). Kept
-    // deliberately minimal: a thin, dim, *solid* line in a uniform grey. The
-    // ASCII overlay samples the whole globe, so animated per-status dashes used
-    // to read as a noisy scatter of glyphs — a continuous faint arc samples as a
-    // clean single line instead.
+    // deliberately minimal: a thin, finely-dashed, flat arc. The ASCII overlay
+    // samples the whole globe by average cell brightness, so a thin dotted line
+    // that hugs the surface covers little of each cell and reads as a faint trail
+    // of small glyphs (·,) rather than a bold sweeping sign.
     world
-      .arcColor(() => 'rgba(255,255,255,0.38)')
-      .arcStroke(0.32)
-      .arcAltitudeAutoScale(0.4)
-      .arcDashLength(1)
-      .arcDashGap(0)
+      .arcColor(() => 'rgba(255,255,255,0.5)')
+      .arcStroke(0.15)
+      .arcAltitudeAutoScale(0.25)
+      .arcDashLength(0.035)
+      .arcDashGap(0.07)
       .arcDashAnimateTime(0)
       .arcsData(arcs);
     world.pointOfView({ lat: 22, lng: 8, altitude: 1.9 }, 0);
@@ -733,59 +724,10 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         </div>
       )}
 
-      {selected && (
-        <div className="pointer-events-none absolute inset-0 z-[25] flex items-center justify-center p-4 max-[640px]:items-end max-[640px]:p-0">
-          <div className="pointer-events-auto relative w-full max-w-[360px] rounded-2xl border border-line2 bg-[rgba(12,12,13,.96)] p-5 shadow-[0_30px_90px_rgba(0,0,0,.72)] backdrop-blur-[18px] max-[640px]:max-h-[82dvh] max-[640px]:max-w-full max-[640px]:overflow-y-auto max-[640px]:rounded-b-none">
-            <button
-              onClick={() => setSelected(null)}
-              aria-label="Close"
-              className={`${iconBtn} absolute right-3 top-3 h-8 w-8`}
-            >
-              <IconClose />
-            </button>
-
-            {/* Header: circular logo + name/type/status */}
-            <div className="flex items-start gap-3 pr-9">
-              <Logo name={selected.name} domain={selected.domain} size={46} />
-              <div className="min-w-0 flex-1">
-                <div className="truncate font-display text-[16px] font-bold leading-tight text-text">{selected.name}</div>
-                <div className="mt-0.5 truncate text-[11px] font-semibold text-a2">{selected.type}</div>
-                <div className="mt-2">
-                  <StatusBadge status={selected.status} full />
-                </div>
-              </div>
-            </div>
-
-            {/* Facts */}
-            <div className="mt-3.5 flex flex-col gap-1.5 text-[12px] leading-snug text-muted">
-              <div className="text-text"><b className="font-semibold text-muted">Location </b>{selected.city}, {selected.country}</div>
-              <div><b className="font-semibold">Focus </b>{selected.focus}</div>
-              <div><b className="font-semibold">Run by </b>{selected.operator || 'Not publicly listed'}</div>
-              <div><b className="font-semibold">Stage </b>{selected.stage}</div>
-              {selected.status_detail && <div><b className="font-semibold">Details </b>{selected.status_detail}</div>}
-            </div>
-
-            {selected.highlight && (
-              <p className="m-0 mt-3 line-clamp-3 text-[11.5px] italic leading-normal text-muted">{selected.highlight}</p>
-            )}
-
-            {/* Actions */}
-            <div className="mt-4 flex items-center gap-2">
-              <a
-                href={selected.url}
-                target="_blank"
-                rel="noopener"
-                className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[12.5px] font-bold text-[#0a0a0a] no-underline"
-                style={{ background: 'var(--grad)' }}
-              >
-                <IconRocket />
-                Visit
-              </a>
-              <SaveButton slug={programSlug(selected.name)} name={selected.name} size="md" />
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Program detail — the shared right-side drawer (same shell as the country
+          info drawer and the list view), shown when a pin/list row is selected.
+          openDetail still flies the globe to the program behind the scrim. */}
+      <ProgramDetailDrawer program={selected} onClose={() => setSelected(null)} />
 
       {/* City minimap — a round, bottom-right "orbital" window. Cities are picked
           by clicking their markers on the globe; this shows the active one. */}
