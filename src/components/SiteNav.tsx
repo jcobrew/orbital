@@ -17,14 +17,46 @@ const VIEWS: { key: NavCurrent; href: string; label: string }[] = [
  * globe (in List mode and beyond) to keep the globe panel uncluttered; the
  * toggle carries the live filter query so filters persist across views.
  */
-export default function SiteNav({ current }: { current?: NavCurrent }) {
+export function ViewToggle({ current, className = 'bg-[rgba(16,16,16,.5)]' }: { current?: NavCurrent; className?: string }) {
   const filters = useStore($filters);
+  const qs = filtersToQuery(filters);
+  const suffix = qs ? '?' + qs : '';
+
+  return (
+    <div
+      className={`inline-flex gap-1 rounded-full border border-line2 p-1 ${className}`}
+      role="tablist"
+      aria-label="View"
+    >
+      {VIEWS.map((v) => {
+        const active = v.key === current;
+        return (
+          <a
+            key={v.key}
+            href={v.href + suffix}
+            role="tab"
+            aria-selected={active}
+            aria-current={active ? 'page' : undefined}
+            className={`rounded-full px-3 py-1 font-display text-[12px] font-semibold no-underline transition active:scale-95 ${
+              active
+                ? 'text-[#0a0a0a] shadow-[0_2px_10px_rgba(0,0,0,.4)]'
+                : 'text-a2 hover:bg-[rgba(255,255,255,.07)] hover:text-text'
+            }`}
+            style={active ? { background: 'var(--grad)' } : undefined}
+          >
+            {v.label}
+          </a>
+        );
+      })}
+    </div>
+  );
+}
+
+export default function SiteNav({ current }: { current?: NavCurrent }) {
   const saved = useStore($saved);
   useEffect(() => {
     initSaved();
   }, []);
-  const qs = filtersToQuery(filters);
-  const suffix = qs ? '?' + qs : '';
 
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -33,32 +65,7 @@ export default function SiteNav({ current }: { current?: NavCurrent }) {
         0rbital
       </a>
 
-      <div
-        className="inline-flex gap-1 rounded-full border border-line2 bg-[rgba(16,16,16,.5)] p-1"
-        role="tablist"
-        aria-label="View"
-      >
-        {VIEWS.map((v) => {
-          const active = v.key === current;
-          return (
-            <a
-              key={v.key}
-              href={v.href + suffix}
-              role="tab"
-              aria-selected={active}
-              aria-current={active ? 'page' : undefined}
-              className={`rounded-full px-3 py-1 font-display text-[12px] font-semibold no-underline transition active:scale-95 ${
-                active
-                  ? 'text-[#0a0a0a] shadow-[0_2px_10px_rgba(0,0,0,.4)]'
-                  : 'text-a2 hover:bg-[rgba(255,255,255,.07)] hover:text-text'
-              }`}
-              style={active ? { background: 'var(--grad)' } : undefined}
-            >
-              {v.label}
-            </a>
-          );
-        })}
-      </div>
+      <ViewToggle current={current} />
 
       <nav className="ml-auto flex items-center gap-1" aria-label="Sections">
         {/* Countries lives off the globe — surfaced in List mode (and other

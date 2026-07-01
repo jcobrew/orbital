@@ -8,6 +8,17 @@ import { noteApplyIntent } from '../stores/applyIntent';
 import { applyUrgency } from '../lib/applyUrgency';
 import { livingModelLabel } from '../lib/living';
 import { UNKNOWN, displayVal as val, displayBool as boolVal, displayDuration as duration } from '../lib/display';
+import { countrySlug, hasCountryProfile } from '../data/countries';
+
+function CountryLink({ country }: { country: string }) {
+  return hasCountryProfile(country) ? (
+    <a href={`/country/${countrySlug(country)}`} className="font-semibold text-a2 no-underline hover:text-text">
+      {country}
+    </a>
+  ) : (
+    <>{country}</>
+  );
+}
 
 function Fact({ label, value }: { label: string; value: string }) {
   const unknown = value === UNKNOWN;
@@ -57,7 +68,7 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
           <div className="min-w-0 flex-1">
             <h2 className="m-0 font-display text-[17px] font-bold leading-tight text-text">{p.name}</h2>
             <div className="mt-1 text-[12px] text-muted">
-              {p.type} · {p.city}, {p.country}
+              {p.type} · {p.city}, <CountryLink country={p.country} />
             </div>
             <div className="mt-1 text-[11.5px] text-muted">Run by {p.operator || UNKNOWN}</div>
             <div className="mt-2">
@@ -140,7 +151,7 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
 
           {/* Best for */}
           <h3 className="m-0 mb-2 font-display text-[13px] font-bold text-text">Best for</h3>
-          <p className="m-0 mb-5 text-[12.5px] leading-normal text-muted">
+          <p className="m-0 mb-5 text-[12.5px] leading-normal text-text">
             {p.founderFit && p.founderFit.length ? p.founderFit.join(', ') : 'Not yet categorized — verify on the official site.'}
           </p>
 
@@ -148,9 +159,9 @@ export default function ProgramDetailDrawer({ program: p, onClose }: { program: 
           {(p.highlight || p.status_detail || p.notes) && (
             <>
               <h3 className="m-0 mb-2 font-display text-[13px] font-bold text-text">Notes</h3>
-              {p.highlight && <p className="m-0 mb-2 text-[12.5px] leading-normal text-muted">{p.highlight}</p>}
-              {p.status_detail && <p className="m-0 mb-2 text-[12.5px] leading-normal text-muted">{p.status_detail}</p>}
-              {p.notes && <p className="m-0 mb-2 text-[12.5px] leading-normal text-muted">{p.notes}</p>}
+              {p.highlight && <p className="m-0 mb-2 text-[12.5px] leading-normal text-text">{p.highlight}</p>}
+              {p.status_detail && <p className="m-0 mb-2 text-[12.5px] leading-normal text-text">{p.status_detail}</p>}
+              {p.notes && <p className="m-0 mb-2 text-[12.5px] leading-normal text-text">{p.notes}</p>}
             </>
           )}
 
