@@ -68,20 +68,10 @@ export default function SiteNav({ current }: { current?: NavCurrent }) {
       <ViewToggle current={current} />
 
       <nav className="ml-auto flex items-center gap-1" aria-label="Sections">
-        {/* Countries lives off the globe — surfaced in List mode (and other
-            pages) so the globe's side panel stays uncluttered. */}
-        {current !== 'globe' && (
-          <a
-            href="/countries"
-            aria-current={current === 'countries' ? 'page' : undefined}
-            className={`rounded-[3px] px-2.5 py-1.5 font-display text-[12px] font-semibold no-underline transition ${
-              current === 'countries' ? 'text-text' : 'text-a2 hover:text-text'
-            }`}
-          >
-            Countries
-          </a>
-        )}
-        {/* Saved shortlist — the ☆ buttons live on every card and on the globe's
+        {/* Countries is soft-hidden from production for now (the dedicated
+            pages aren't ready). Country data still surfaces in-context via the
+            globe's country info drawer and the data API. */}
+        {/* Saved shortlist — the bookmark buttons live on every card and on the globe's
             program popup, so every view (the globe included) needs a way back to
             the list they fill; shows a live count when non-empty. */}
         <a
@@ -91,7 +81,18 @@ export default function SiteNav({ current }: { current?: NavCurrent }) {
             current === 'saved' ? 'text-text' : 'text-a2 hover:text-text'
           }`}
         >
-          <span aria-hidden="true">{saved.length ? '★' : '☆'}</span>
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 16 16"
+            fill={saved.length ? 'currentColor' : 'none'}
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M4 2.5h8a.5.5 0 0 1 .5.5v10.5L8 11l-4.5 2.5V3a.5.5 0 0 1 .5-.5Z" />
+          </svg>
           Saved
           {saved.length > 0 && (
             <span className="rounded-full border border-line2 px-1.5 text-[10px] leading-[1.4] text-muted">

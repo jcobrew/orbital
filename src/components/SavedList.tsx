@@ -51,8 +51,8 @@ export default function SavedList({ programs }: { programs: Program[] }) {
           />
           <h2 className="relative m-0 mb-1.5 mt-12 font-display text-[16px] font-bold text-text">Your constellation is empty</h2>
           <p className="relative m-0 mb-4 text-[13px] text-muted">
-            Browse builder environments and tap the <span className="text-a2">☆</span> to pull a few into your shortlist. Kept on this
-            device only.
+            Browse builder environments and tap the <span className="text-a2">bookmark</span> to pull a few into your shortlist. Kept on
+            this device only.
           </p>
           <a
             href="/explore"

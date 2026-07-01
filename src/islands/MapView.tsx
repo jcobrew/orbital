@@ -16,17 +16,6 @@ const TITLE_ALL = {
   t: 'Where founders gather',
   s: 'Find the residencies, hacker houses and co-living programs where founders live and build together — click a pin or list item for details. Status as of June 2026 — verify on each site.',
 };
-const MODEL_TITLES: Record<string, string> = {
-  'co-living': 'Live-in residencies',
-  'co-working': 'Co-working bases',
-  both: 'Live & build together',
-};
-/** Heading when a living/working model is selected. */
-function titleFor(model: string): { t: string; s: string } {
-  if (!model || !MODEL_TITLES[model]) return TITLE_ALL;
-  const t = MODEL_TITLES[model];
-  return { t, s: `${t} — click a pin for details. Status as of June 2026 — verify on each site.` };
-}
 
 // Off-coast cluster callouts for dense regions (ported from index.html).
 // `place` is an open-ocean lat/lng where the card floats; `anchor` is the true
@@ -348,7 +337,7 @@ export default function MapView({ programs }: { programs: Program[] }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shown]);
 
-  const title = titleFor(filters.model);
+  const title = TITLE_ALL;
 
   return (
     <div className="flex h-screen">

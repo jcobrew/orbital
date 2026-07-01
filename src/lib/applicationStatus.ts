@@ -29,7 +29,7 @@ export interface ApplicationStatusMeta {
 
 export const APPLICATION_STATUS_META: Record<ApplicationStatus, ApplicationStatusMeta> = {
   open: { label: 'Applications open', color: '#25e0a4' },
-  upcoming: { label: 'Opening soon', color: '#b388ff' },
+  upcoming: { label: 'Coming soon', color: '#b388ff' },
   closed: { label: 'Applications closed', color: '#707a9c' },
   unknown: { label: 'Status unknown', color: '#9aa3bd' },
 };
@@ -100,10 +100,12 @@ export function statusFromWindows(
  */
 export function statusFromLegacy(legacyStatus?: string | null): ApplicationStatus {
   switch ((legacyStatus ?? '').trim().toLowerCase()) {
-    case 'rolling':
+    // `rolling` / `closing-soon` are retired aliases kept for old links + data.
     case 'open':
+    case 'rolling':
     case 'closing-soon':
       return 'open';
+    case 'coming-soon':
     case 'opening-soon':
       return 'upcoming';
     case 'closed':

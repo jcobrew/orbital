@@ -17,7 +17,7 @@ export function getStaticPaths() {
 
 const { slug } = Astro.params;
 const country = getCountry(slug!);
-if (!country) return Astro.redirect('/countries');
+if (!country) return Astro.redirect('/');
 
 const dashboardHref = `/dashboard?country=${encodeURIComponent(country.name)}`;
 const flag = flagSrc(country.slug);
@@ -40,8 +40,8 @@ const jsonLd = {
   <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} slot="head" />
 
   <header class="mx-auto max-w-[900px] px-7 pt-6">
-    <SiteNav current="countries" client:load />
-    <a href="/countries" class="mt-5 inline-block text-[12px] text-muted hover:text-text">← All countries</a>
+    <SiteNav current="list" client:load />
+    <a href="/" class="mt-5 inline-block text-[12px] text-muted hover:text-text">← Back to the globe</a>
     <div class="mb-2 mt-1 flex items-center gap-3">
       {flag && (
         <img

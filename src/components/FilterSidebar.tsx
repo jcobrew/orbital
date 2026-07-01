@@ -1,24 +1,31 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useStore } from '@nanostores/react';
-import type { Program, WorkLiveModel } from '../data/programs';
-import { programModel } from '../data/programs';
+import type { Program } from '../data/programs';
 import { STATUS_ORDER, statusMeta, shortStatusLabel } from '../lib/status';
+import { passes } from '../lib/filter';
 import { $filters, setFilters, initFiltersFromURL } from '../stores/filters';
 import { hasCountryProfile, countrySlug } from '../data/countries';
 import { openCountry } from '../stores/country';
-import CountryMultiSelect from './CountryMultiSelect';
+import { sectorsInData, sectorLabel } from '../data/sectors';
+import { flagSrc } from '../lib/flag';
+import CheckboxDropdown from './CheckboxDropdown';
 
 type Variant = 'dashboard' | 'sidebar';
 
-/** The whole program filter axis: where you live / where you work / both. */
-const MODELS: { id: WorkLiveModel; label: string }[] = [
-  { id: 'co-living', label: 'Co-living' },
-  { id: 'co-working', label: 'Co-working' },
-  { id: 'both', label: 'Both' },
-];
-
 const inputCls =
   'w-full rounded-full border border-line2 bg-[rgba(16,16,16,.6)] px-3 py-2.5 text-[13px] text-text outline-none transition focus:border-a1';
+
+const toolBtn =
+  'inline-flex items-center gap-1.5 rounded-full border border-line2 bg-[rgba(16,16,16,.6)] px-3.5 py-2.5 text-[12.5px] font-semibold text-text no-underline transition hover:border-a1';
+
+/** Round flag for a country, used as the per-row icon in the country dropdown. */
+function Flag({ name }: { name: string }) {
+  const src = flagSrc(countrySlug(name));
+  if (src) {
+    return <img src={src} alt="" aria-hidden="true" className="h-[15px] w-[15px] flex-none rounded-full object-cover" />;
+  }
+  return <span className="orbit-node flex-none" aria-hidden="true" />;
+}
 
 export default function FilterSidebar({
   programs,
@@ -34,23 +41,14 @@ export default function FilterSidebar({
     initFiltersFromURL();
   }, []);
 
-  // All countries present in the data — the typeahead suggests from these so a
-  // pick always yields results.
+  // Filter options are drawn from the data so a pick always yields results.
   const countries = useMemo(() => [...new Set(programs.map((p) => p.country))].sort(), [programs]);
-  // Model chip counts reflect the active country selection.
-  const byCountry = useMemo(
-    () => (filters.country.length ? programs.filter((p) => filters.country.includes(p.country)) : programs),
-    [programs, filters.country],
-  );
-  const modelCounts = useMemo(() => {
-    const m: Record<WorkLiveModel, number> = { 'co-living': 0, 'co-working': 0, both: 0 };
-    for (const p of byCountry) m[programModel(p)] += 1;
-    return m;
-  }, [byCountry]);
-  // Status-chip counts reflect the active model + country selection.
+  const sectors = useMemo(() => sectorsInData(programs), [programs]);
+
+  // Status-chip counts honour the active sector/country/search (everything but status).
   const slice = useMemo(
-    () => byCountry.filter((p) => !filters.model || programModel(p) === filters.model),
-    [byCountry, filters.model],
+    () => programs.filter((p) => passes(p, { ...filters, status: '' })),
+    [programs, filters],
   );
 
   async function copyLink() {
@@ -63,57 +61,25 @@ export default function FilterSidebar({
     }
   }
 
-  const wrap =
-    variant === 'dashboard'
-      ? 'flex flex-col gap-3'
-      : 'flex flex-col gap-3';
+  /** Download the currently-filtered programs as a JSON file. */
+  function exportJSON() {
+    const filtered = programs.filter((p) => passes(p, filters));
+    const blob = new Blob([JSON.stringify(filtered, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'orbital-programs.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 
   const single = filters.country.length === 1 ? filters.country[0] : null;
+  const rowCls = variant === 'dashboard' ? 'flex flex-wrap items-center gap-2.5' : 'flex flex-col gap-2.5';
 
   return (
-    <div className={wrap}>
-      {/* The one program filter: co-living / co-working / both. */}
-      <div
-        className="inline-flex flex-wrap gap-1 rounded-full border border-line2 bg-[rgba(16,16,16,.5)] p-1"
-        role="tablist"
-        aria-label="Living / working model"
-      >
-        <button
-          role="tab"
-          aria-selected={!filters.model}
-          onClick={() => setFilters({ model: '' })}
-          className={`rounded-full px-3 py-2 font-display text-[12.5px] font-semibold transition active:scale-95 ${
-            !filters.model
-              ? 'text-[#0a0a0a] shadow-[0_2px_10px_rgba(0,0,0,.4)]'
-              : 'text-a2 hover:bg-[rgba(255,255,255,.07)] hover:text-text'
-          }`}
-          style={!filters.model ? { background: 'var(--grad)' } : undefined}
-        >
-          All
-        </button>
-        {MODELS.map((m) => {
-          const active = filters.model === m.id;
-          return (
-            <button
-              key={m.id}
-              role="tab"
-              aria-selected={active}
-              onClick={() => setFilters({ model: active ? '' : m.id })}
-              className={`rounded-full px-3 py-2 font-display text-[12.5px] font-semibold transition active:scale-95 ${
-                active
-                  ? 'text-[#0a0a0a] shadow-[0_2px_10px_rgba(0,0,0,.4)]'
-                  : 'text-a2 hover:bg-[rgba(255,255,255,.07)] hover:text-text'
-              }`}
-              style={active ? { background: 'var(--grad)' } : undefined}
-            >
-              {m.label} <span className="opacity-60">{modelCounts[m.id]}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Search + country */}
-      <div className={variant === 'dashboard' ? 'flex flex-wrap items-center gap-2.5' : 'flex flex-col gap-2.5'}>
+    <div className="flex flex-col gap-3">
+      {/* Search + sector + country */}
+      <div className={rowCls}>
         <div className={variant === 'dashboard' ? 'relative min-w-[240px] flex-1' : 'relative'}>
           <svg
             className="absolute left-3 top-1/2 -translate-y-1/2 opacity-50"
@@ -136,12 +102,24 @@ export default function FilterSidebar({
             className={inputCls + ' pl-9'}
           />
         </div>
-        <CountryMultiSelect
-          countries={countries}
-          selected={filters.country}
-          onChange={(next) => setFilters({ country: next })}
+
+        <CheckboxDropdown
+          label="Sector"
+          options={sectors.map((id) => ({ value: id, label: sectorLabel(id) }))}
+          selected={filters.sector}
+          onChange={(next) => setFilters({ sector: next })}
           fullWidth={variant === 'sidebar'}
         />
+
+        <CheckboxDropdown
+          label="Country"
+          options={countries.map((c) => ({ value: c, label: c }))}
+          selected={filters.country}
+          onChange={(next) => setFilters({ country: next })}
+          renderIcon={(v) => <Flag name={v} />}
+          fullWidth={variant === 'sidebar'}
+        />
+
         {single && hasCountryProfile(single) && (
           <button
             type="button"
@@ -151,20 +129,20 @@ export default function FilterSidebar({
             View {single} →
           </button>
         )}
+
         {variant === 'dashboard' && (
           <>
-            <button
-              onClick={copyLink}
-              title="Copy a link to this exact filtered view"
-              className="inline-flex items-center gap-1.5 rounded-full border border-line2 bg-[rgba(16,16,16,.6)] px-3.5 py-2.5 text-[12.5px] font-semibold text-text transition hover:border-a1"
-            >
+            <button onClick={copyLink} title="Copy a link to this exact filtered view" className={toolBtn}>
               Copy link
             </button>
-            <a
-              href="/api/programs.json"
-              className="inline-flex items-center gap-1.5 rounded-full border border-line2 bg-[rgba(16,16,16,.6)] px-3.5 py-2.5 text-[12.5px] font-semibold text-text transition hover:border-a1"
-            >
+            <button onClick={exportJSON} title="Download the filtered programs as JSON" className={toolBtn}>
+              ↓ Export
+            </button>
+            <a href="/api/programs.json" className={toolBtn}>
               {'{ }'} API
+            </a>
+            <a href="/llms.txt" className={toolBtn} title="Machine-readable summary for AI agents">
+              Agents
             </a>
           </>
         )}

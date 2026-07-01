@@ -4,7 +4,7 @@ import Globe from 'globe.gl';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Program } from '../data/programs';
-import { programModel, programSlug, withOriginPins } from '../data/programs';
+import { withOriginPins } from '../data/programs';
 import { passes, defaultSort } from '../lib/filter';
 import { statusMeta, STATUS_ORDER } from '../lib/status';
 import { logoMarkupHTML, installLogoFallback } from '../lib/logo';
@@ -14,8 +14,7 @@ import { openCountry } from '../stores/country';
 import { countrySlug, hasCountryProfile } from '../data/countries';
 import FilterSidebar from '../components/FilterSidebar';
 import Logo from '../components/Logo';
-import StatusBadge from '../components/StatusBadge';
-import SaveButton from '../components/SaveButton';
+import ProgramDetailDrawer from '../components/ProgramDetailDrawer';
 import SiteNav, { ViewToggle } from '../components/SiteNav';
 import BootSequence from '../components/BootSequence';
 import { useTypewriter } from '../lib/useTypewriter';
@@ -49,17 +48,6 @@ const TITLE_ALL = {
   t: 'Find your orbit. Launch what’s next.',
   s: 'The right environment changes your trajectory. Compare founder residencies, hacker houses, startup campuses, and co-living programs where builders gather momentum for their next launch.',
 };
-const MODEL_TITLES: Record<string, string> = {
-  'co-living': 'Live-in residencies',
-  'co-working': 'Co-working bases',
-  both: 'Live & build together',
-};
-/** Heading when a living/working model is selected. */
-function titleFor(model: string): { t: string; s: string } {
-  if (!model || !MODEL_TITLES[model]) return TITLE_ALL;
-  const t = MODEL_TITLES[model];
-  return { t, s: `${t} — spin or pick a place to fly there; dense cities are mapped below.` };
-}
 
 // Dense regions can get their own crisp, interactive minimap (shown one at a
 // time). Membership is by lat/lng box. `pin` optionally places the clickable
@@ -144,7 +132,6 @@ const IconMenu = () => (<svg {...svg}><path d="M2 4h12M2 8h12M2 12h12" /></svg>)
 const IconClose = () => (<svg {...svg}><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" /></svg>);
 const IconRotate = () => (<svg {...svg}><path d="M13.5 8a5.5 5.5 0 1 1-1.7-3.97" /><path d="M13.6 2.3v2.4h-2.4" /></svg>);
 const IconReset = () => (<svg {...svg}><circle cx="8" cy="8" r="5.3" /><path d="M8 1v2.2M8 12.8V15M1 8h2.2M12.8 8H15" /></svg>);
-const IconMinimap = () => (<svg {...svg}><path d="M2 4.3l4-1.6 4 1.6 4-1.6v9l-4 1.6-4-1.6-4 1.6z" /><path d="M6 2.7v9M10 4.3v9" /></svg>);
 const IconLegend = () => (<svg {...svg}><circle cx="3.3" cy="4" r="1.3" /><circle cx="3.3" cy="8" r="1.3" /><circle cx="3.3" cy="12" r="1.3" /><path d="M6.6 4h7.4M6.6 8h7.4M6.6 12h7.4" /></svg>);
 const IconSaved = () => (<svg {...svg} fill="currentColor" stroke="none"><path d="M8 1.7l1.9 3.8 4.2.6-3 3 .7 4.2L8 11.3l-3.8 2 .7-4.2-3-3 4.2-.6L8 1.7z" /></svg>);
 
@@ -205,12 +192,9 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
 
   const shown = useMemo(() => defaultSort(data.filter((p) => passes(p, filters))), [data, filters]);
 
-  // Dock membership tracks the program-type filter only (not search/status), so
-  // each dense-city minimap is a stable overview and doesn't rebuild on every keystroke.
-  const cityData = useMemo(
-    () => data.filter((p) => !filters.model || programModel(p) === filters.model),
-    [data, filters.model],
-  );
+  // Dock membership ignores search/status, so each dense-city minimap is a stable
+  // overview of every program in the box and doesn't rebuild on every keystroke.
+  const cityData = data;
   const cityCounts = useMemo(() => {
     const m: Record<string, number> = {};
     CLUSTERS.forEach((c) => {
@@ -425,13 +409,18 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
       });
 
     world.htmlElementsData(globePins);
+    // Origin→host links (e.g. The Bridge London→SF, SILTA Helsinki→SF). Kept
+    // deliberately minimal: a thin, finely-dashed, flat arc. The ASCII overlay
+    // samples the whole globe by average cell brightness, so a thin dotted line
+    // that hugs the surface covers little of each cell and reads as a faint trail
+    // of small glyphs (·,) rather than a bold sweeping sign.
     world
-      .arcColor('color')
-      .arcStroke(0.5)
-      .arcAltitudeAutoScale(0.4)
-      .arcDashLength(0.5)
-      .arcDashGap(0.25)
-      .arcDashAnimateTime(reduceMotion ? 0 : 2600)
+      .arcColor(() => 'rgba(255,255,255,0.5)')
+      .arcStroke(0.15)
+      .arcAltitudeAutoScale(0.25)
+      .arcDashLength(0.035)
+      .arcDashGap(0.07)
+      .arcDashAnimateTime(0)
       .arcsData(arcs);
     world.pointOfView({ lat: 22, lng: 8, altitude: 1.9 }, 0);
     const controls = world.controls();
@@ -625,7 +614,7 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
     seedRings(null);
   }
 
-  const title = titleFor(filters.model);
+  const title = TITLE_ALL;
   const tagline = useTypewriter('~/ 0rbital maps builder environments', { speed: 46, startDelay: 2600, loop: true });
 
   return (
@@ -703,15 +692,8 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
           <IconReset />
         </button>
         <div className="mx-auto my-0.5 h-px w-5 bg-line2" />
-        <button
-          className={`${iconBtn} ${dockOpen ? iconBtnOn : ''}`}
-          onClick={() => setDockOpen((v) => !v)}
-          aria-pressed={dockOpen}
-          aria-label="Toggle city minimaps"
-          title="City minimaps"
-        >
-          <IconMinimap />
-        </button>
+        {/* City minimaps open by clicking a city marker (◍) on the globe — no
+            separate toggle. */}
         <button
           className={`${iconBtn} ${legendOpen ? iconBtnOn : ''}`}
           onClick={() => setLegendOpen((v) => !v)}
@@ -758,51 +740,10 @@ export default function GlobeView({ programs }: { programs: Program[] }) {
         </div>
       )}
 
-      {selected && (
-        <div className="orbit-overlay">
-          <div className="orbit-stage">
-            {/* white ball orbiting the card */}
-            <div className="orbit-card-ring">
-              <span className="orbit-ball" />
-            </div>
-            <div className="orbit-card">
-              <button className="orbit-close" onClick={() => setSelected(null)} aria-label="Close">
-                ✕
-              </button>
-              <Logo name={selected.name} domain={selected.domain} size={46} />
-              <div className="mt-2 font-display text-[17px] font-bold leading-tight">{selected.name}</div>
-              <div className="mt-0.5 text-[11px] font-semibold text-a2">{selected.type}</div>
-              <div className="mt-2.5">
-                <StatusBadge status={selected.status} full />
-              </div>
-              <div className="orbit-meta">
-                <div className="text-text"><b>Location: </b>{selected.city}, {hasCountryProfile(selected.country) ? (
-                  <button type="button" onClick={() => openCountry(countrySlug(selected.country))} className="font-semibold text-a2 transition hover:text-text">
-                    {selected.country}
-                  </button>
-                ) : selected.country}</div>
-                <div><b>Focus: </b>{selected.focus}</div>
-                <div><b>Run by: </b>{selected.operator || 'Not publicly listed'}</div>
-                <div><b>Stage: </b>{selected.stage}</div>
-                {selected.status_detail && <div><b>Details: </b>{selected.status_detail}</div>}
-              </div>
-              {selected.highlight && <div className="orbit-highlight">{selected.highlight}</div>}
-              <div className="mt-3 flex items-center gap-2">
-                <a
-                  href={selected.url}
-                  target="_blank"
-                  rel="noopener"
-                  className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-bold text-[#0a0a0a] no-underline"
-                  style={{ background: 'var(--grad)' }}
-                >
-                  Visit program →
-                </a>
-                <SaveButton slug={programSlug(selected.name)} name={selected.name} size="md" />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Program detail — the shared right-side drawer (same shell as the country
+          info drawer and the list view), shown when a pin/list row is selected.
+          openDetail still flies the globe to the program behind the scrim. */}
+      <ProgramDetailDrawer program={selected} onClose={() => setSelected(null)} />
 
       {/* City minimap — a round, bottom-right "orbital" window. Cities are picked
           by clicking their markers on the globe; this shows the active one. */}

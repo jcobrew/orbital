@@ -290,12 +290,10 @@ export const TYPES = Object.keys(countBy(PROGRAMS, 'type')).sort();
 export const COUNTRIES = Object.keys(FACETS.country).sort();
 
 export const STATUS_LEGEND: Record<string, string> = {
-  rolling: 'Accepts applications on a rolling/always-open basis',
-  open: 'A specific cohort window is currently open',
-  'closing-soon': 'Open but with an imminent deadline',
-  'opening-soon': 'Next cohort applications announced, opening shortly',
+  open: 'Applications are open (rolling or a current cohort window)',
+  'coming-soon': 'Announced but not open/launched yet',
   running: 'Cohort currently in session',
-  closed: 'Latest cohort closed; check site for next cycle',
+  closed: 'Applications closed; check the site for the next cycle',
 };
 
 export const API_SCHEMA: Record<string, string> = {
