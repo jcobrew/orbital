@@ -349,7 +349,6 @@ These boundaries follow the file-ownership rules in `docs/mvp-implementation-pla
 | `data/review-queue/` (new dir) | Stream 8 — pending/approved/rejected proposals |
 | `docs/` | Stream 1 owns this; Stream 10 can add further docs |
 | `tests/` (new dir) | Stream 10 |
-| `examples/` (new dir) | Stream 10 |
 | `.github/workflows/` (new dir) | Stream 10 |
 | `vitest.config.ts` (new) | Stream 10 |
 

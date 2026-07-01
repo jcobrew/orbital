@@ -36,7 +36,6 @@ Every page shares one header (`SiteNav`): **0rbital · a Globe / List view toggl
 - `src/islands/` — map and globe React islands.
 - `src/pages/` — routes, API endpoints, and `llms.txt`.
 
-Legacy `*-knowledge-base.md` research notes are preserved as historical landscape notes. The canonical product direction is 0rbital for builder environments.
 
 ## Updating the data
 

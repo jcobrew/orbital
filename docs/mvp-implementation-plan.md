@@ -48,12 +48,9 @@ builder-environment program in the world."
   `/country/[slug]`, `/cities/[slug]`, `/programs/[slug]`, `/submit`, `/saved`); machine surfaces
   (`/api/programs.json`, `/api/countries.json`, `/llms.txt`) + schema.org JSON-LD on dashboard/program/country.
 - **Submission flow:** `/submit` → `src/components/SubmitForm.tsx` → `src/lib/submit.ts` builds a
-  prefilled GitHub issue URL (no backend). Data lands via the `0rbital-data-review` skill (draft PR).
-- **Gaps:** no `docs/`, no `scripts/`, no tests, no canonical taxonomy module, no `/find-support`
-  guided flow, no normalized/MVP/typed exports, no review-queue structure, no freshness scripts.
-- **Domain docs:** the literal `builder-environment-landscape.md` is absent; root files
-  `builder-environment-programs-knowledge-base.md` + `traditional-startup-programs-knowledge-base.md`
-  are the de-facto landscape docs and should seed `docs/program-taxonomy.md`.
+  prefilled GitHub issue URL (no backend). Data changes should land through reviewed pull requests.
+- **Historical note:** this plan predates the current tests, scripts, review queue, and taxonomy docs;
+  use the current `docs/` files as canonical implementation references.
 
 ---
 
@@ -168,7 +165,7 @@ Safest order: **1 → 2 → (3, 4, 5, 7 parallel) → 6 → 9 → 8**, with **10
 | **S7 freshness** | `scripts/*freshness*`, `scripts/check-source-urls.ts`, `scripts/generate-update-report.ts`, `scripts/check-mvp-readiness.ts`; npm scripts. |
 | **S8 review queue** | `data/review-queue/*`, `scripts/apply-updates.ts`. |
 | **S9 exports** | new routes under `src/pages/api/*`, `public/schemas/*`; sole owner of `src/pages/llms.txt.ts`. |
-| **S10 tests/docs** | `docs/*`, `examples/*`, `tests/*`, `vitest.config.ts`, CI workflow. |
+| **S10 tests/docs** | `docs/*`, `tests/*`, `vitest.config.ts`, CI workflow. |
 
 **Shared, edit-with-care:** `src/data/programs.ts` (S2 owns; others import only); `package.json`
 scripts (append-only; S7/S10 coordinate); the two `*-programs-data.json` files (S3 owns content edits).
@@ -376,7 +373,7 @@ streams below.
 - **Create/modify:** add Vitest (`vitest.config.ts`, test script); tests for taxonomy, normalization,
   matching, freshness, application windows, review-queue validation; `docs/` set
   (`data-model.md`, `program-taxonomy.md`, `mvp-data-scope.md`, `update-pipeline.md`,
-  `founder-matching.md`, `contributing-program-data.md`); `examples/*` JSON matching schemas; CI workflow.
+  `contributing-program-data.md`); CI workflow.
 - **Tasks:** stand up test runner + first tests early (taxonomy/normalization), expand as streams land;
   write docs; add CI.
 - **Dependencies:** can begin immediately; deepens per stream.
