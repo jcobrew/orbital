@@ -93,19 +93,21 @@ Founder submits issue / PR
 Maintainer verifies against source URLs
         │
         ▼
-Maintainer or agent reviews the issue / PR:
+0rbital-data-review skill runs:
+  - reads the issue or PR description
   - researches the program via web search
   - edits the JSON data file (`src/data/programs-data.json`)
-  - opens a pull request for human review
+  - opens a DRAFT pull request for human review
         │
         ▼
-Maintainer reviews the PR, adjusts if needed, merges
+Maintainer reviews the draft PR, adjusts if needed, merges
         │
         ▼
 Vercel auto-deploys the updated static site
 ```
 
-Agents and maintainers should use the same verification rules in this document and keep data changes in pull requests. Never auto-merge data updates.
+The `0rbital-data-review` skill is a Claude Code skill (`.claude/skills/`) that
+handles the research, verification, and draft-PR steps. It never auto-merges.
 
 ## What not to submit
 
